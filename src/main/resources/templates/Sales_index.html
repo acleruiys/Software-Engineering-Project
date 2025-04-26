@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시간별 매출 관리</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        .calendar-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #c25555;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fcf0f0;
+            border: 1px solid #ffd7d7;
+        }
+
+        .tab.active {
+            background-color: #ffd7d7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #ffd7d7;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .time-cell {
+            font-weight: bold;
+        }
+
+        .scrollable-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .footer {
+            display: flex;
+            padding: 10px;
+            gap: 5px;
+            justify-content: space-between;
+        }
+
+        .footer-button {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #ffd7d7;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="date-selector">
+            <input type="date" class="date-input" value="2025-04-04">
+            <div class="calendar-icon">17</div>
+        </div>
+        <div class="close-btn">✕</div>
+    </div>
+
+    <div class="tab-container">
+        <div class="tab active">일별(시간대별)</div>
+        <div class="tab">월별</div>
+        <div class="tab">년도별</div>
+    </div>
+
+    <div class="scrollable-container">
+        <table>
+            <thead>
+            <tr>
+                <th>시간</th>
+                <th>현금</th>
+                <th>카드</th>
+                <th>포인트</th>
+                <th>기타</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="time-cell">00시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">01시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">02시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">03시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">04시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">05시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">06시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">07시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">08시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">09시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">10시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">11시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">12시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">13시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">14시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">15시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">16시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">17시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">18시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">19시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">20시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="time-cell">21시</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <div class="footer-button">현금</div>
+        <div class="footer-button">카드</div>
+        <div class="footer-button">포인트</div>
+        <div class="footer-button">기타</div>
+        <div class="footer-button">총매출</div>
+    </div>
+</div>
+
+<script>
+    // 매출 버튼 클릭 시 이 UI를 표시하는 함수
+    function showSalesUI() {
+        document.querySelector('.container').style.display = 'block';
+    }
+
+    // 닫기 버튼 클릭 시 이 UI를 숨기는 함수
+    document.querySelector('.close-btn').addEventListener('click', function() {
+        window.location.href = '/Index';
+    });
+
+    // 탭 전환 기능
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>

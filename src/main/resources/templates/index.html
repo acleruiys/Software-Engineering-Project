@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean POS System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff5ec;
+        }
+        
+        .header {
+            background-color: #f9e5cf;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            align-items: center;
+            border-bottom: 1px solid #e0d0c1;
+        }
+        
+        .header-left {
+            font-weight: bold;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 30px;
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 190px);
+        }
+
+
+        .left-panel {
+            width: 450px;
+            background-color: #fff;
+            border-right: 1px solid #e0d0c1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .menu-tabs {
+            background-color: #ffd7d7;
+            display: flex;
+            border-bottom: 1px solid #e0d0c1;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            text-align: center;
+            flex: 1;
+            border-right: 1px solid #e0d0c1;
+        }
+        
+        .order-list {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .total-section {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-top: 1px solid #e0d0c1;
+        }
+        
+        .total-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+        
+        .button-row {
+            display: flex;
+            gap: 5px;
+            padding: 5px;
+            background-color: white;
+        }
+        
+        .button {
+            flex: 1;
+            padding: 10px;
+            background-color: #ffe5e5;
+            border: 1px solid #e0d0c1;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .right-panel {
+            flex: 1;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            grid-auto-rows: minmax(60px, auto);
+            overflow: hidden;
+        }
+        
+        .category-row {
+            grid-column: 1 / span 7;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .category-button {
+            flex: 1;
+            background-color: #ffbdbd;
+            padding: 10px;
+            text-align: center;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .menu-item {
+            background-color: #ffecd9;
+            padding: 10px;
+            text-align: center;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .footer {
+            bottom: 0;
+            left: 0;
+            display: flex;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+        }
+        
+        .footer-button {
+            flex: 1;
+            text-align: center;
+            padding: 20px 0;
+            cursor: pointer;
+            button:focus {
+                outline: none;
+            }
+        }
+        
+        .footer-button.pink {
+            background-color: #ffd7d7;
+        }
+        
+        .footer-button.green {
+            background-color: #d7ffd7;
+        }
+        
+        .footer-button.blue {
+            background-color: #d7e5ff;
+        }
+        
+        .operation-button {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffe5e5;
+            cursor: pointer;
+        }
+
+        #clock {
+            font-size: 1em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Sales UI 스타일 추가 */
+        .sales-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            max-width: 700px;
+            width: 90%;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+        }
+
+        /* Sales UI 추가 스타일 */
+        .sales-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        .calendar-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #c25555;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .sales-tab-container {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sales-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fcf0f0;
+            border: 1px solid #ffd7d7;
+        }
+
+        .sales-tab.active {
+            background-color: #ffd7d7;
+        }
+
+        .sales-scrollable-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sales-table th {
+            background-color: #ffd7d7;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .sales-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .time-cell {
+            font-weight: bold;
+        }
+
+        .sales-footer {
+            display: flex;
+            padding: 10px;
+            gap: 5px;
+            justify-content: space-between;
+        }
+
+        .sales-footer-button {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #ffd7d7;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div>회사명</div>
+            <ul>
+                <li>날짜 및 시간 : <a id="clock" ></a></li>
+                <li>관리자</li>
+            </ul>
+            <script>
+                function updateClock() {
+                    const now = new Date();
+                    const day = now.getDate();
+                    const month = now.getMonth() + 1;
+                    const year = now.getFullYear();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    const timeString = `${year}-${month}-${day}/${hours}:${minutes}:${seconds}`;
+                    document.getElementById('clock').textContent = timeString;
+                }
+                updateClock();
+                setInterval(updateClock, 500);
+            </script>
+        </div>
+        <div class="header-right">
+            <div onclick="showSalesUI()">매출</div>
+            <div>재고</div>
+            <div>직원</div>
+            <div>설정</div>
+            <div>-</div>
+            <div>X</div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="left-panel">
+            <div class="menu-tabs">
+                <div class="tab">번호</div>
+                <div class="tab">메뉴</div>
+                <div class="tab">수량</div>
+                <div class="tab">가격</div>
+            </div>
+            
+            <div class="order-list">
+                <!-- Order items will go here -->
+            </div>
+            
+            <div class="total-section">
+                <div class="total-item">
+                    <div class="button">바코드</div>
+                    <div class="button">상품검색</div>
+                    <div class="button">주문상세</div>
+                    <div class="button">위</div>
+                    <div class="button">위</div>
+                </div>
+                <div class="total-item">
+                    <div>주문금액</div>
+                    <div>0</div>
+                    <div>청구금액</div>
+                </div>
+                <div class="total-item">
+                    <div>서비스</div>
+                    <div>0</div>
+                </div>
+                <div class="total-item">
+                    <div>할인금액</div>
+                    <div>0</div>
+                    <div>주문수량</div>
+                </div>
+                <div class="total-item">
+                    <div>봉사료</div>
+                    <div>0</div>
+                </div>
+            </div>
+            
+            <div class="button-row">
+                <div class="button"></div>
+                <div class="button"></div>
+                <div class="button"></div>
+                <div class="operation-button">+</div>
+                <div class="operation-button">-</div>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="category-row">
+                <div class="category-button">커피</div>
+                <div class="category-button">디카페인</div>
+                <div class="category-button">논커피/<br>과일라떼</div>
+                <div class="category-button">티</div>
+                <div class="category-button">스무디<br>프라페</div>
+                <div class="category-button">에이드<br>주스</div>
+                <div class="category-button"><</div>
+            </div>
+            
+            <div class="category-row">
+                <div class="category-button">시즌메뉴</div>
+                <div class="category-button">빵</div>
+                <div class="category-button"></div>
+                <div class="category-button"></div>
+                <div class="category-button"></div>
+                <div class="category-button"></div>
+                <div class="category-button">></div>
+            </div>
+            
+            <!-- Menu items grid, 7x8 grid -->
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+            <div class="menu-item"></div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-button"></div>
+        <div class="footer-button pink">회원 검색</div>
+        <div class="footer-button pink">반품</div>
+        <div class="footer-button pink"></div>
+        <div class="footer-button green">분할</div>
+        <div class="footer-button green">복합</div>
+        <div class="footer-button blue">현금</div>
+        <div class="footer-button blue">카드</div>
+    </div>
+
+    <!-- Sales UI 오버레이 -->
+    <div class="overlay"></div>
+
+    <!-- Sales UI -->
+    <div class="sales-container">
+        <div class="sales-header">
+            <div class="date-selector">
+                <input type="date" class="date-input" value="2025-04-04">
+                <div class="calendar-icon">17</div>
+            </div>
+            <div class="close-btn">✕</div>
+        </div>
+
+        <div class="sales-tab-container">
+            <div class="sales-tab active">일별(시간대별)</div>
+            <div class="sales-tab">월별</div>
+            <div class="sales-tab">년도별</div>
+        </div>
+
+        <div class="sales-scrollable-container">
+            <table class="sales-table">
+                <thead>
+                    <tr>
+                        <th>시간</th>
+                        <th>현금</th>
+                        <th>카드</th>
+                        <th>포인트</th>
+                        <th>기타</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 00시부터 21시까지의 행 -->
+                    <tr>
+                        <td class="time-cell">00시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <!-- 나머지 시간대 행들 (01시~21시) -->
+                    <tr>
+                        <td class="time-cell">01시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <!-- 02시부터 20시까지 동일한 구조로 반복 -->
+                    <tr>
+                        <td class="time-cell">02시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">03시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">04시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">05시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">06시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">07시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">08시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">09시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">10시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">11시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">12시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">13시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">14시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">15시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">16시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">17시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">18시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">19시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">20시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">21시</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sales-footer">
+            <div class="sales-footer-button">현금</div>
+            <div class="sales-footer-button">카드</div>
+            <div class="sales-footer-button">포인트</div>
+            <div class="sales-footer-button">기타</div>
+            <div class="sales-footer-button">총매출</div>
+        </div>
+    </div>
+
+    <script>
+        function showSalesUI() {
+            document.querySelector('.overlay').style.display = 'block';
+            document.querySelector('.sales-container').style.display = 'block';
+        }
+
+        // 닫기 버튼 이벤트
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.querySelector('.overlay').style.display = 'none';
+            document.querySelector('.sales-container').style.display = 'none';
+        });
+
+        // 오버레이 클릭 시 닫기
+        document.querySelector('.overlay').addEventListener('click', function() {
+            document.querySelector('.overlay').style.display = 'none';
+            document.querySelector('.sales-container').style.display = 'none';
+        });
+
+        // Sales 탭 전환 기능
+        const salesTabs = document.querySelectorAll('.sales-tab');
+        salesTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                salesTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 날짜 입력 시 자동 업데이트
+        document.querySelector('.date-input').addEventListener('change', function(e) {
+            // 여기에 날짜 변경 시 처리할 로직 추가(예정)
+            console.log('Selected date:', e.target.value);
+        });
+    </script>
+</body>
+</html>
