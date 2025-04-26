@@ -1,6 +1,7 @@
 package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.entity.Menu;
+import com.example.cafecontrolsystem.entity.MenuCategory;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ public class MenuService {
     @Autowired
     private MenuRepository menuRepository;
     
-    public List<Menu> getMenusByCategory(CategoryType category) {
-        return menuRepository.findByCategory(category);
+    public List<Menu> getMenusByCategory(CategoryType categoryType) {
+        return menuRepository.findByCategoryType(categoryType);
     }
     
     public List<Menu> getAllAvailableMenus() {

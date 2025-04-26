@@ -1,3 +1,5 @@
+// 메뉴 관련 기능은 MenuController로 이동했으므로 이 컨트롤러는 더 이상 사용하지 않습니다.
+/*
 package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.entity.Menu;
@@ -36,3 +38,4 @@ public class MainController {
         menuService.deleteMenu(id);
     }
 }
+*/

@@ -2,6 +2,7 @@ package com.example.cafecontrolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
@@ -17,9 +18,10 @@ public class Menu {
     @Column(nullable = false)
     private int price;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
-    private CategoryType category;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties("menus")
+    private MenuCategory category;
     
     @Column(length = 500)
     private String description;
