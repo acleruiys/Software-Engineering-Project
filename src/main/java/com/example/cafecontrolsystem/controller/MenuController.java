@@ -1,10 +1,12 @@
 package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.entity.Menu;
-import com.example.cafecontrolsystem.entity.MenuCategory;
+import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,20 +17,32 @@ public class MenuController {
     private MenuService menuService;
     
     @GetMapping
-    public List<Menu> getMenusByCategory(@RequestParam(required = false) MenuCategory category) {
+    public ResponseEntity<List<Menu>> getMenusByCategory(@RequestParam(required = false) CategoryType category) {
         if (category != null) {
-            return menuService.getMenusByCategory(category);
+            return ResponseEntity.ok(menuService.getMenusByCategory(category));
         }
-        return menuService.getAllAvailableMenus();
+        return ResponseEntity.ok(menuService.getAllAvailableMenus());
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Menu> getMenu(@PathVariable Long id) {
+        return ResponseEntity.ok(menuService.getMenu(id));
     }
     
     @PostMapping
-    public Menu addMenu(@RequestBody Menu menu) {
-        return menuService.saveMenu(menu);
+    public ResponseEntity<Menu> addMenu(@RequestBody Menu menu) {
+        return ResponseEntity.ok(menuService.saveMenu(menu));
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Menu> updateMenu(@PathVariable Long id, @RequestBody Menu menu) {
+        menu.setId(id);
+        return ResponseEntity.ok(menuService.saveMenu(menu));
     }
     
     @DeleteMapping("/{id}")
-    public void deleteMenu(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
         menuService.deleteMenu(id);
+        return ResponseEntity.ok().build();
     }
 } 

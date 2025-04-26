@@ -294,6 +294,214 @@
             border: 1px solid #ddd;
             cursor: pointer;
         }
+
+        /* 메뉴 관리 모달 스타일 */
+        .menu-manage-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .menu-manage-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 20px;
+        }
+
+        .menu-manage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .menu-manage-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .menu-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-form input,
+        .menu-form textarea,
+        .menu-form select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .menu-table-container {
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .menu-table th,
+        .menu-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .menu-table th {
+            background-color: #f5f5f5;
+        }
+
+        /* 메뉴 수정 모달 스타일 */
+        .menu-edit-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1002;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-edit-modal form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-button.active {
+            background-color: #ff9999;
+        }
+
+        /* 공통 모달 스타일 */
+        .menu-manage-overlay,
+        .category-manage-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .menu-manage-container,
+        .category-manage-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 20px;
+        }
+
+        .menu-manage-header,
+        .category-manage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .menu-manage-content,
+        .category-manage-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .menu-form,
+        .category-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-form input,
+        .menu-form textarea,
+        .menu-form select,
+        .category-form input,
+        .category-form textarea,
+        .category-form select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .menu-table-container,
+        .category-table-container {
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .menu-table,
+        .category-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .menu-table th,
+        .menu-table td,
+        .category-table th,
+        .category-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .menu-table th,
+        .category-table th {
+            background-color: #f5f5f5;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #ff0000;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #ffd7d7;
+            border: 1px solid #ffb3b3;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ffb3b3;
+        }
     </style>
 </head>
 <body>
@@ -382,23 +590,23 @@
 
     <div class="right-panel">
         <div class="category-row">
-            <div class="category-button" onclick="loadMenuByCategory('COFFEE')">커피</div>
-            <div class="category-button">디카페인</div>
-            <div class="category-button">논커피/<br>과일라떼</div>
-            <div class="category-button">티</div>
-            <div class="category-button">스무디<br>프라페</div>
-            <div class="category-button">에이드<br>주스</div>
-            <div class="category-button"><</div>
+            <div class="category-button" data-category="COFFEE">커피</div>
+            <div class="category-button" data-category="DECAF">디카페인</div>
+            <div class="category-button" data-category="NON_COFFEE">논커피/<br>과일라떼</div>
+            <div class="category-button" data-category="TEA">티</div>
+            <div class="category-button" data-category="SMOOTHIE">스무디<br>프라페</div>
+            <div class="category-button" data-category="ADE">에이드<br>주스</div>
+            <div class="category-button" onclick="openCategoryManageModal()">카테고리<br>관리</div>
         </div>
 
         <div class="category-row">
-            <div class="category-button">시즌메뉴</div>
-            <div class="category-button">빵</div>
+            <div class="category-button" data-category="SEASON">시즌메뉴</div>
+            <div class="category-button" data-category="BREAD">빵</div>
             <div class="category-button"></div>
             <div class="category-button"></div>
             <div class="category-button"></div>
             <div class="category-button"></div>
-            <div class="category-button">></div>
+            <div class="category-button" onclick="openMenuManageModal()">메뉴<br>관리</div>
         </div>
 
         <!-- Menu items grid, 7x8 grid -->
@@ -706,103 +914,446 @@
 </script>
 <!-- 메뉴 업데이트 로직 -->
 <script>
-    // 메뉴 데이터 (API 호출 대신 샘플 데이터 사용)
-    const menuData = {
-        'COFFEE': [
-            { name: '아메리카노', price: 4500 },
-            { name: '카페라떼', price: 5000 },
-            { name: '카푸치노', price: 5000 },
-            { name: '바닐라라떼', price: 5500 },
-            { name: '카라멜마끼아또', price: 5500 },
-            { name: '에스프레소', price: 4000 },
-            { name: '콜드브루', price: 5500 },
-            { name: '아인슈페너', price: 6000 },
-            { name: '플랫화이트', price: 5000 },
-            { name: '카페모카', price: 5500 },
-            { name: '아포가토', price: 6000 },
-            { name: '연유라떼', price: 5500 },
-            { name: '흑당라떼', price: 5500 },
-            { name: '더치커피', price: 5500 }
-        ]
-    };
+    // 메뉴 관리 모달 열기
+    function openMenuManageModal() {
+        document.querySelector('.menu-manage-overlay').style.display = 'block';
+        document.querySelector('.menu-manage-container').style.display = 'block';
+        loadMenus();
+        loadCategoriesForSelect();
+    }
 
-    // 메뉴 로드 함수 - 메뉴 제거 대신 업데이트 방식으로 변경
-    function loadMenuByCategory(category) {
+    // 메뉴 관리 모달 닫기
+    function closeMenuManageModal() {
+        document.querySelector('.menu-manage-overlay').style.display = 'none';
+        document.querySelector('.menu-manage-container').style.display = 'none';
+    }
+
+    // 메뉴 로드 함수 - API 연동
+    async function loadMenus() {
         try {
-            // 실제 서버 API 호출 대신 샘플 데이터 사용
-            const menus = menuData[category] || [];
+            const response = await fetch('/api/menus');
+            const menus = await response.json();
+            
+            const menuTableBody = document.querySelector('.menu-table tbody');
+            menuTableBody.innerHTML = '';
+            
+            menus.forEach(menu => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${menu.name}</td>
+                    <td>${menu.price}원</td>
+                    <td>${menu.category.name}</td>
+                    <td>${menu.description || ''}</td>
+                    <td>${menu.available ? '판매중' : '판매중지'}</td>
+                    <td>
+                        <button onclick="editMenu(${menu.id})">수정</button>
+                        <button onclick="deleteMenu(${menu.id})">삭제</button>
+                    </td>
+                `;
+                menuTableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('메뉴 로드 중 오류 발생:', error);
+        }
+    }
 
-            // 메뉴 아이템 요소 선택
-            const menuItems = document.querySelectorAll('.right-panel .menu-item');
+    // 메뉴 추가 함수
+    async function addMenu(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const menuData = {
+            name: formData.get('name'),
+            price: parseInt(formData.get('price')),
+            category: { id: parseInt(formData.get('category')) },
+            description: formData.get('description'),
+            available: formData.get('available') === 'true'
+        };
 
-            // 모든 메뉴 아이템 초기화
-            menuItems.forEach(item => {
-                item.innerHTML = '';
-                item.onclick = null;
+        try {
+            const response = await fetch('/api/menus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(menuData)
             });
 
-            // 가져온 메뉴 데이터로 메뉴 아이템 업데이트
+            if (!response.ok) throw new Error('메뉴 추가 실패');
+
+            loadMenus();
+            event.target.reset();
+        } catch (error) {
+            console.error('메뉴 추가 중 오류 발생:', error);
+        }
+    }
+
+    // 메뉴 수정 함수
+    async function editMenu(menuId) {
+        try {
+            const response = await fetch(`/api/menus/${menuId}`);
+            const menu = await response.json();
+            
+            // 수정 폼에 데이터 채우기
+            document.getElementById('editMenuId').value = menu.id;
+            document.getElementById('editMenuName').value = menu.name;
+            document.getElementById('editMenuPrice').value = menu.price;
+            document.getElementById('editMenuDescription').value = menu.description;
+            document.getElementById('editMenuAvailable').checked = menu.available;
+            
+            // 수정 모달 열기
+            document.querySelector('.menu-edit-modal').style.display = 'block';
+        } catch (error) {
+            console.error('메뉴 정보 로드 중 오류 발생:', error);
+        }
+    }
+
+    // 메뉴 삭제 함수
+    async function deleteMenu(menuId) {
+        if (!confirm('메뉴를 삭제하시겠습니까?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/menus/${menuId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('메뉴 삭제 실패');
+            }
+
+            loadMenus();
+        } catch (error) {
+            console.error('메뉴 삭제 중 오류 발생:', error);
+        }
+    }
+
+    // 메뉴 수정 제출 함수
+    async function submitMenuEdit(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const menuId = formData.get('id');
+        const menuData = {
+            name: formData.get('name'),
+            price: parseInt(formData.get('price')),
+            description: formData.get('description'),
+            available: formData.get('available') === 'true'
+        };
+
+        try {
+            const response = await fetch(`/api/menus/${menuId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(menuData)
+            });
+
+            if (!response.ok) {
+                throw new Error('메뉴 수정 실패');
+            }
+
+            loadMenus();
+            document.querySelector('.menu-edit-modal').style.display = 'none';
+        } catch (error) {
+            console.error('메뉴 수정 중 오류 발생:', error);
+        }
+    }
+
+    let currentCategory = null;
+
+    // 카테고리 버튼 클릭 이벤트 핸들러
+    function handleCategoryClick(event) {
+        const category = event.target.dataset.category;
+        if (!category) return; // 관리 버튼 등은 처리하지 않음
+        
+        currentCategory = category;
+        loadMenuByCategory(category);
+        
+        // 카테고리 버튼 스타일 업데이트
+        document.querySelectorAll('.category-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+
+    // 카테고리별 메뉴 로드 함수
+    async function loadMenuByCategory(category) {
+        try {
+            const response = await fetch(`/api/menus?category=${category}`);
+            const menus = await response.json();
+            
+            // 모든 메뉴 아이템 초기화
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.innerHTML = '';
+                item.style.cursor = 'default';
+            });
+            
+            // 받아온 메뉴 데이터로 메뉴 아이템 업데이트
             menus.forEach((menu, index) => {
                 if (index < menuItems.length) {
                     menuItems[index].innerHTML = `
-                            <div>${menu.name}</div>
-                            <div>${menu.price}원</div>
-                        `;
+                        <div>${menu.name}</div>
+                        <div>${menu.price}원</div>
+                    `;
+                    menuItems[index].style.cursor = 'pointer';
                     menuItems[index].onclick = () => addToOrder(menu);
                 }
             });
-
-            console.log(`${category} 메뉴 ${menus.length}개 업데이트 완료`);
         } catch (error) {
-            console.error('메뉴 업데이트 중 오류 발생:', error);
+            console.error('메뉴 로드 중 오류 발생:', error);
         }
     }
 
     // 주문에 메뉴 추가 함수
     function addToOrder(menu) {
-        const orderList = document.querySelector('.order-list');
-        const orderItem = document.createElement('div');
-        orderItem.className = 'order-item';
-        orderItem.innerHTML = `
-                <div>${menu.name}</div>
-                <div>1</div>
-                <div>${menu.price}원</div>
-            `;
-        orderList.appendChild(orderItem);
-        updateTotal();
+        // TODO: 주문 목록에 메뉴 추가 구현
+        console.log('메뉴 추가:', menu);
     }
 
-    // 총액 업데이트 함수
-    function updateTotal() {
-        const orderItems = document.querySelectorAll('.order-item');
-        let total = 0;
-        let quantity = 0;
+    // 카테고리 버튼에 클릭 이벤트 리스너 추가
+    document.querySelectorAll('.category-button').forEach(button => {
+        button.addEventListener('click', handleCategoryClick);
+    });
 
-        orderItems.forEach(item => {
-            const priceText = item.querySelector('div:last-child').textContent;
-            const quantityText = item.querySelector('div:nth-child(2)').textContent;
+    // 초기 로딩 시 첫 번째 카테고리 선택
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstCategory = document.querySelector('.category-button');
+        if (firstCategory) {
+            firstCategory.click();
+        }
+    });
 
-            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-            const qty = parseInt(quantityText);
+    // 카테고리 관리 함수들
+    function openCategoryManageModal() {
+        document.querySelector('.category-manage-overlay').style.display = 'block';
+        document.querySelector('.category-manage-container').style.display = 'block';
+        loadCategories();
+        loadCategoryTypes();
+    }
 
-            total += price;
-            quantity += qty;
-        });
+    function closeCategoryManageModal() {
+        document.querySelector('.category-manage-overlay').style.display = 'none';
+        document.querySelector('.category-manage-container').style.display = 'none';
+    }
 
-        // 주문금액 및 청구금액 업데이트
-        document.querySelector('.total-item:nth-child(2) div:nth-child(2)').textContent = total;
-
-        // 주문수량 업데이트 (해당 요소가 있는 경우)
-        const quantityElement = document.querySelector('.total-item:nth-child(4) div:nth-child(3)');
-        if (quantityElement) {
-            quantityElement.textContent = quantity;
+    async function loadCategories() {
+        try {
+            const response = await fetch('/api/categories');
+            const categories = await response.json();
+            
+            const categoryTableBody = document.querySelector('.category-table tbody');
+            categoryTableBody.innerHTML = '';
+            
+            categories.forEach(category => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${category.type}</td>
+                    <td>${category.name}</td>
+                    <td>${category.description || ''}</td>
+                    <td>${category.status}</td>
+                    <td>
+                        <button onclick="editCategory(${category.id})">수정</button>
+                        <button onclick="deleteCategory(${category.id})">삭제</button>
+                    </td>
+                `;
+                categoryTableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('카테고리 로드 중 오류 발생:', error);
         }
     }
 
-    // 초기 로딩 시 커피 메뉴 표시
-    document.addEventListener('DOMContentLoaded', function() {
-        loadMenuByCategory('COFFEE');
-    });
+    async function loadCategoryTypes() {
+        try {
+            const response = await fetch('/api/categories/types');
+            const types = await response.json();
+            
+            const typeSelect = document.querySelector('select[name="type"]');
+            typeSelect.innerHTML = '<option value="">카테고리 타입 선택</option>';
+            
+            types.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                typeSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('카테고리 타입 로드 중 오류 발생:', error);
+        }
+    }
+
+    async function loadCategoriesForSelect() {
+        try {
+            const response = await fetch('/api/categories');
+            const categories = await response.json();
+            
+            const categorySelect = document.querySelector('select[name="category"]');
+            categorySelect.innerHTML = '<option value="">카테고리 선택</option>';
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('카테고리 로드 중 오류 발생:', error);
+        }
+    }
+
+    // 카테고리 추가/수정/삭제 함수들
+    async function addCategory(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const categoryData = {
+            type: formData.get('type'),
+            name: formData.get('name'),
+            description: formData.get('description'),
+            status: formData.get('status') === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE'
+        };
+
+        try {
+            const response = await fetch('/api/categories', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(categoryData)
+            });
+
+            if (!response.ok) throw new Error('카테고리 추가 실패');
+
+            loadCategories();
+            event.target.reset();
+        } catch (error) {
+            console.error('카테고리 추가 중 오류 발생:', error);
+        }
+    }
+
+    async function deleteCategory(id) {
+        if (!confirm('이 카테고리를 삭제하시겠습니까?')) return;
+
+        try {
+            const response = await fetch(`/api/categories/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('카테고리 삭제 실패');
+
+            loadCategories();
+        } catch (error) {
+            console.error('카테고리 삭제 중 오류 발생:', error);
+        }
+    }
 </script>
+
+<!-- 메뉴 관리 모달 -->
+<div class="menu-manage-overlay"></div>
+<div class="menu-manage-container">
+    <div class="menu-manage-header">
+        <h2>메뉴 관리</h2>
+        <button onclick="closeMenuManageModal()" class="close-btn">✕</button>
+    </div>
+    
+    <div class="menu-manage-content">
+        <!-- 메뉴 추가 폼 -->
+        <form onsubmit="addMenu(event)" class="menu-form">
+            <h3>새 메뉴 추가</h3>
+            <input type="text" name="name" placeholder="메뉴명" required>
+            <input type="number" name="price" placeholder="가격" required>
+            <textarea name="description" placeholder="설명"></textarea>
+            <select name="category" required>
+                <option value="">카테고리 선택</option>
+            </select>
+            <label>
+                <input type="checkbox" name="available" value="true" checked>
+                판매 가능
+            </label>
+            <button type="submit">메뉴 추가</button>
+        </form>
+
+        <!-- 메뉴 목록 테이블 -->
+        <div class="menu-table-container">
+            <h3>메뉴 목록</h3>
+            <table class="menu-table">
+                <thead>
+                    <tr>
+                        <th>메뉴명</th>
+                        <th>가격</th>
+                        <th>카테고리</th>
+                        <th>설명</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 메뉴 항목들은 JavaScript로 동적 추가 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 메뉴 수정 모달 -->
+<div class="menu-edit-modal">
+    <div class="modal-content">
+        <h2>메뉴 수정</h2>
+        <form onsubmit="submitMenuEdit(event)">
+            <input type="hidden" id="editMenuId" name="id">
+            <input type="text" id="editMenuName" name="name" placeholder="메뉴명" required>
+            <input type="number" id="editMenuPrice" name="price" placeholder="가격" required>
+            <textarea id="editMenuDescription" name="description" placeholder="설명"></textarea>
+            <label>
+                <input type="checkbox" id="editMenuAvailable" name="available" value="true">
+                판매 가능
+            </label>
+            <button type="submit">수정 완료</button>
+            <button type="button" onclick="document.querySelector('.menu-edit-modal').style.display='none'">취소</button>
+        </form>
+    </div>
+</div>
+
+<!-- 카테고리 관리 모달 -->
+<div class="category-manage-overlay"></div>
+<div class="category-manage-container">
+    <div class="category-manage-header">
+        <h2>카테고리 관리</h2>
+        <button onclick="closeCategoryManageModal()" class="close-btn">✕</button>
+    </div>
+    
+    <div class="category-manage-content">
+        <!-- 카테고리 추가 폼 -->
+        <form onsubmit="addCategory(event)" class="category-form">
+            <h3>새 카테고리 추가</h3>
+            <select name="type" required>
+                <option value="">카테고리 타입 선택</option>
+            </select>
+            <input type="text" name="name" placeholder="카테고리명" required>
+            <textarea name="description" placeholder="설명"></textarea>
+            <label>
+                <input type="checkbox" name="status" value="ACTIVE" checked>
+                활성화
+            </label>
+            <button type="submit">카테고리 추가</button>
+        </form>
+
+        <!-- 카테고리 목록 테이블 -->
+        <div class="category-table-container">
+            <h3>카테고리 목록</h3>
+            <table class="category-table">
+                <thead>
+                    <tr>
+                        <th>타입</th>
+                        <th>이름</th>
+                        <th>설명</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 카테고리 항목들은 JavaScript로 동적 추가 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

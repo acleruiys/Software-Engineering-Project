@@ -15,6 +15,10 @@ public class MenuCategory {
     @Column(name = "category_id")
     private Long id; // 카테고리 ID
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CategoryType type;
+
     @Column(nullable = false)
     private String name; // 카테고리 이름
 

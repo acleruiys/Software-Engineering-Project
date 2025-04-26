@@ -11,13 +11,18 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(nullable = false)
     private String name;
+    
+    @Column(nullable = false)
     private int price;
     
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private MenuCategory category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private CategoryType category;
     
+    @Column(length = 500)
     private String description;
-    private boolean available;
+    
+    private boolean available = true;
 } 
