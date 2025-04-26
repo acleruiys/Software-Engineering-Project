@@ -382,7 +382,7 @@
         
         <div class="right-panel">
             <div class="category-row">
-                <div class="category-button">커피</div>
+                <div class="category-button" onclick="loadMenuByCategory('COFFEE')">커피</div>
                 <div class="category-button">디카페인</div>
                 <div class="category-button">논커피/<br>과일라떼</div>
                 <div class="category-button">티</div>
@@ -703,6 +703,56 @@
             // 여기에 날짜 변경 시 처리할 로직 추가(예정)
             console.log('Selected date:', e.target.value);
         });
+
+        // 메뉴 로드 함수 추가
+        function loadMenuByCategory(category) {
+            fetch(`/api/menus?category=${category}`)
+                .then(response => response.json())
+                .then(menus => {
+                    const menuGrid = document.querySelector('.right-panel');
+                    // 기존 메뉴 아이템 제거
+                    const existingMenuItems = menuGrid.querySelectorAll('.menu-item');
+                    existingMenuItems.forEach(item => item.remove());
+
+                    // 새로운 메뉴 아이템 추가
+                    menus.forEach(menu => {
+                        const menuItem = document.createElement('div');
+                        menuItem.className = 'menu-item';
+                        menuItem.innerHTML = `
+                            <div>${menu.name}</div>
+                            <div>${menu.price}원</div>
+                        `;
+                        menuItem.onclick = () => addToOrder(menu);
+                        menuGrid.appendChild(menuItem);
+                    });
+                })
+                .catch(error => console.error('메뉴 로드 중 오류 발생:', error));
+        }
+
+        // 주문에 메뉴 추가 함수
+        function addToOrder(menu) {
+            const orderList = document.querySelector('.order-list');
+            const orderItem = document.createElement('div');
+            orderItem.className = 'order-item';
+            orderItem.innerHTML = `
+                <div>${menu.name}</div>
+                <div>1</div>
+                <div>${menu.price}원</div>
+            `;
+            orderList.appendChild(orderItem);
+            updateTotal();
+        }
+
+        // 총액 업데이트 함수
+        function updateTotal() {
+            const orderItems = document.querySelectorAll('.order-item');
+            let total = 0;
+            orderItems.forEach(item => {
+                const price = parseInt(item.querySelector('div:last-child').textContent);
+                total += price;
+            });
+            document.querySelector('.total-item:nth-child(2) div:nth-child(2)').textContent = total + '원';
+        }
     </script>
 </body>
 </html>

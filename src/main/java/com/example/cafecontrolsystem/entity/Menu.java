@@ -16,22 +16,22 @@ public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "menu_id")
-    private Long id;
+    private Long id; // 메뉴 ID
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    private MenuCategory category;
+    private MenuCategory category; // 메뉴 카테고리
 
     @Column(nullable = false)
-    private String name;
+    private String name; // 메뉴 이름
 
-    private String description;
-
-    @Column(nullable = false)
-    private BigDecimal price;
+    private String description; // 메뉴 설명
 
     @Column(nullable = false)
-    private BigDecimal cost;
+    private BigDecimal price; // 메뉴 가격
+
+    @Column(nullable = false)
+    private BigDecimal cost; // 메뉴 원가
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
