@@ -15,10 +15,10 @@ public class MenuCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    private Long id;
+    private Long id; // 카테고리 ID
 
     @Column(nullable = false)
-    private String name;
+    private String name; // 카테고리 이름
 
     private String description;
 

@@ -17,20 +17,17 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sale_id")
-    private Long id;
+    private Long id; // 메출 ID
 
     @Column(nullable = false)
-    private LocalDate date;
-
-    @Column(nullable = false)
-    private LocalTime time;
+    private LocalDate date; //판매 날짜 및 시간
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_id", nullable = false)
     private PaymentMethod paymentMethod;
 
     @Column(name = "total_amount", nullable = false)
-    private BigDecimal totalAmount;
+    private BigDecimal totalAmount; // 총 판매 금액
 
     @Column(name = "discount_amount")
     private BigDecimal discountAmount = BigDecimal.ZERO;

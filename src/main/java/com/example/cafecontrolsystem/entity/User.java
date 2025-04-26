@@ -13,20 +13,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Long id; // 사용자 ID
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String username; // 사용자 이름
 
     @Column(nullable = false)
-    private String password;
+    private String password; // 사용자 비밀번호
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
     private String phone;
 
     @Enumerated(EnumType.STRING)
