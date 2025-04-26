@@ -1,21 +1,31 @@
 package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.entity.Menu;
+import com.example.cafecontrolsystem.entity.MenuCategory;
 import com.example.cafecontrolsystem.repository.MenuRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MenuService {
-
-    private final MenuRepository menuRepository;
-
-    public List<Menu> getMenusByCategory(String category) {
-        return menuRepository.findByCategoryNameAndStatus(category, Menu.MenuStatus.AVAILABLE);
+    
+    @Autowired
+    private MenuRepository menuRepository;
+    
+    public List<Menu> getMenusByCategory(MenuCategory category) {
+        return menuRepository.findByCategory(category);
+    }
+    
+    public List<Menu> getAllAvailableMenus() {
+        return menuRepository.findByAvailableTrue();
+    }
+    
+    public Menu saveMenu(Menu menu) {
+        return menuRepository.save(menu);
+    }
+    
+    public void deleteMenu(Long id) {
+        menuRepository.deleteById(id);
     }
 } 
