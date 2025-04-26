@@ -51,8 +51,8 @@ public class Menu {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "menu")
-    private List<MenuRecipe> recipes = new ArrayList<>();
+    //@OneToMany(mappedBy = "menu")
+    //private List<MenuRecipe> recipes = new ArrayList<>();
 
     public enum MenuStatus {
         AVAILABLE, UNAVAILABLE
