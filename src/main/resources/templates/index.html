@@ -1222,6 +1222,7 @@
             if (!response.ok) throw new Error('카테고리 추가 실패');
 
             loadCategories();
+            loadAndDisplayCategories(); // UI 업데이트
             event.target.reset();
         } catch (error) {
             console.error('카테고리 추가 중 오류 발생:', error);
@@ -1239,8 +1240,151 @@
             if (!response.ok) throw new Error('카테고리 삭제 실패');
 
             loadCategories();
+            loadAndDisplayCategories(); // UI 업데이트
         } catch (error) {
             console.error('카테고리 삭제 중 오류 발생:', error);
+        }
+    }
+
+    async function editCategory(id) {
+        try {
+            const response = await fetch(`/api/categories/${id}`);
+            const category = await response.json();
+            
+            // 수정 폼에 데이터 채우기
+            document.querySelector('select[name="type"]').value = category.type;
+            document.querySelector('input[name="name"]').value = category.name;
+            document.querySelector('textarea[name="description"]').value = category.description || '';
+            document.querySelector('input[name="status"]').checked = category.status === 'ACTIVE';
+            
+            // 폼의 동작을 수정 모드로 변경
+            const form = document.querySelector('.category-form');
+            form.onsubmit = (e) => updateCategory(e, id);
+            
+            // 버튼 텍스트 변경
+            form.querySelector('button[type="submit"]').textContent = '카테고리 수정';
+            
+            // 취소 버튼 추가
+            if (!form.querySelector('.cancel-btn')) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.className = 'cancel-btn';
+                cancelBtn.textContent = '취소';
+                cancelBtn.onclick = resetCategoryForm;
+                form.appendChild(cancelBtn);
+            }
+        } catch (error) {
+            console.error('카테고리 정보 로드 중 오류 발생:', error);
+        }
+    }
+
+    async function updateCategory(event, id) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const categoryData = {
+            type: formData.get('type'),
+            name: formData.get('name'),
+            description: formData.get('description'),
+            status: formData.get('status') === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE'
+        };
+
+        try {
+            const response = await fetch(`/api/categories/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(categoryData)
+            });
+
+            if (!response.ok) throw new Error('카테고리 수정 실패');
+
+            loadCategories();
+            loadAndDisplayCategories(); // UI 업데이트
+            resetCategoryForm();
+        } catch (error) {
+            console.error('카테고리 수정 중 오류 발생:', error);
+        }
+    }
+
+    function resetCategoryForm() {
+        const form = document.querySelector('.category-form');
+        form.reset();
+        form.onsubmit = addCategory;
+        form.querySelector('button[type="submit"]').textContent = '카테고리 추가';
+        const cancelBtn = form.querySelector('.cancel-btn');
+        if (cancelBtn) {
+            cancelBtn.remove();
+        }
+    }
+
+    // 페이지 로드 시 카테고리 로드
+    document.addEventListener('DOMContentLoaded', function() {
+        loadAndDisplayCategories();
+    });
+
+    // 카테고리 로드 및 표시 함수
+    async function loadAndDisplayCategories() {
+        try {
+            const response = await fetch('/api/categories');
+            const categories = await response.json();
+            
+            // 카테고리 버튼 컨테이너
+            const firstRow = document.querySelector('.category-row:first-child');
+            const secondRow = document.querySelector('.category-row:last-child');
+            
+            // 기존 카테고리 버튼 초기화 (관리 버튼 제외)
+            firstRow.innerHTML = '';
+            secondRow.innerHTML = '';
+            
+            // 첫 번째 줄에 6개, 두 번째 줄에 나머지 카테고리 배치
+            categories.forEach((category, index) => {
+                const button = document.createElement('div');
+                button.className = 'category-button';
+                button.dataset.category = category.type;
+                button.dataset.categoryId = category.id;
+                
+                // 카테고리 이름이 긴 경우 줄바꿈 처리
+                const displayName = category.name.length > 4 ? 
+                    category.name.replace('/', '<br>') : category.name;
+                button.innerHTML = displayName;
+                
+                button.addEventListener('click', handleCategoryClick);
+                
+                if (index < 6) {
+                    firstRow.appendChild(button);
+                } else if (index < 12) {
+                    secondRow.appendChild(button);
+                }
+            });
+            
+            // 첫 번째 줄에 카테고리 관리 버튼 추가
+            const categoryManageBtn = document.createElement('div');
+            categoryManageBtn.className = 'category-button';
+            categoryManageBtn.innerHTML = '카테고리<br>관리';
+            categoryManageBtn.onclick = openCategoryManageModal;
+            firstRow.appendChild(categoryManageBtn);
+            
+            // 두 번째 줄 남은 공간 채우기
+            const remainingSlots = 6 - (categories.length - 6);
+            for (let i = 0; i < remainingSlots; i++) {
+                const emptyButton = document.createElement('div');
+                emptyButton.className = 'category-button';
+                secondRow.appendChild(emptyButton);
+            }
+            
+            // 메뉴 관리 버튼 추가
+            const menuManageBtn = document.createElement('div');
+            menuManageBtn.className = 'category-button';
+            menuManageBtn.innerHTML = '메뉴<br>관리';
+            menuManageBtn.onclick = openMenuManageModal;
+            secondRow.appendChild(menuManageBtn);
+            
+            // 첫 번째 카테고리 자동 선택
+            const firstCategory = document.querySelector('.category-button[data-category]');
+            if (firstCategory) {
+                firstCategory.click();
+            }
+        } catch (error) {
+            console.error('카테고리 로드 중 오류 발생:', error);
         }
     }
 </script>
