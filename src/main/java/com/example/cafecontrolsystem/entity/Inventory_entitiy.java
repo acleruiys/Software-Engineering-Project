@@ -22,5 +22,5 @@ public class Inventory_entitiy {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-
+    private Inventory_category_entity category; // 재고 카테고리 ID
 }
