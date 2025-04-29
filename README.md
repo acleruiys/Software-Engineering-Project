@@ -49,7 +49,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 - `created_at`: 생성 날짜/시간
 - `updated_at`: 수정 날짜/시간
 
-#### Sale 테이블
+#### Sale 테이블(수정 축약 필요)
 - `sale_id`: 판매 아이디 (PK)
 - `date`: 판매 날짜
 - `payment_method_id`: 결제 방법 (FK)
