@@ -1,6 +1,6 @@
 package com.example.cafecontrolsystem.controller;
 
-import com.example.cafecontrolsystem.entity.MenuCategory;
+import com.example.cafecontrolsystem.entity.MenuCategory_entity;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<MenuCategory>> getAllCategories() {
+    public ResponseEntity<List<MenuCategory_entity>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
@@ -30,14 +30,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<MenuCategory> createCategory(@RequestBody MenuCategory category) {
+    public ResponseEntity<MenuCategory_entity> createCategory(@RequestBody MenuCategory_entity category) {
         return ResponseEntity.ok(categoryService.saveCategory(category));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuCategory> updateCategory(
+    public ResponseEntity<MenuCategory_entity> updateCategory(
             @PathVariable Long id,
-            @RequestBody MenuCategory category) {
+            @RequestBody MenuCategory_entity category) {
         category.setId(id);
         return ResponseEntity.ok(categoryService.saveCategory(category));
     }

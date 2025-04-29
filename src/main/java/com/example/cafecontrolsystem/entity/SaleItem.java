@@ -21,7 +21,7 @@ public class SaleItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
-    private Menu menu; // 메뉴 ID
+    private Menu_entity menuEntity; // 메뉴 ID
 
     @Column(nullable = false)
     private Integer quantity; // 판매 품목 수량

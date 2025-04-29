@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "menu_categories")
-public class MenuCategory {
+public class MenuCategory_entity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -29,7 +29,7 @@ public class MenuCategory {
     private CategoryStatus status = CategoryStatus.ACTIVE;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Menu> menus = new ArrayList<>();
+    private List<Menu_entity> menuEntities = new ArrayList<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

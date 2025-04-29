@@ -45,7 +45,7 @@
             overflow: hidden;
         }
 
-        .menu-tabs {
+        .menuEntity-tabs {
             background-color: #ffd7d7;
             display: flex;
             border-bottom: 1px solid #e0d0c1;
@@ -117,7 +117,7 @@
             cursor: pointer;
         }
 
-        .menu-item {
+        .menuEntity-item {
             background-color: #ffecd9;
             padding: 10px;
             text-align: center;
@@ -296,7 +296,7 @@
         }
 
         /* 메뉴 관리 모달 스타일 */
-        .menu-manage-overlay {
+        .menuEntity-manage-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -307,7 +307,7 @@
             z-index: 1000;
         }
 
-        .menu-manage-container {
+        .menuEntity-manage-container {
             display: none;
             position: fixed;
             top: 50%;
@@ -321,56 +321,56 @@
             padding: 20px;
         }
 
-        .menu-manage-header {
+        .menuEntity-manage-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .menu-manage-content {
+        .menuEntity-manage-content {
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 20px;
         }
 
-        .menu-form {
+        .menuEntity-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .menu-form input,
-        .menu-form textarea,
-        .menu-form select {
+        .menuEntity-form input,
+        .menuEntity-form textarea,
+        .menuEntity-form select {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
 
-        .menu-table-container {
+        .menuEntity-table-container {
             overflow-y: auto;
             max-height: 500px;
         }
 
-        .menu-table {
+        .menuEntity-table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .menu-table th,
-        .menu-table td {
+        .menuEntity-table th,
+        .menuEntity-table td {
             padding: 8px;
             border: 1px solid #ddd;
             text-align: left;
         }
 
-        .menu-table th {
+        .menuEntity-table th {
             background-color: #f5f5f5;
         }
 
         /* 메뉴 수정 모달 스타일 */
-        .menu-edit-modal {
+        .menuEntity-edit-modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -383,7 +383,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .menu-edit-modal form {
+        .menuEntity-edit-modal form {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -394,7 +394,7 @@
         }
 
         /* 공통 모달 스타일 */
-        .menu-manage-overlay,
+        .menuEntity-manage-overlay,
         .category-manage-overlay {
             display: none;
             position: fixed;
@@ -406,7 +406,7 @@
             z-index: 1000;
         }
 
-        .menu-manage-container,
+        .menuEntity-manage-container,
         .category-manage-container {
             display: none;
             position: fixed;
@@ -421,7 +421,7 @@
             padding: 20px;
         }
 
-        .menu-manage-header,
+        .menuEntity-manage-header,
         .category-manage-header {
             display: flex;
             justify-content: space-between;
@@ -429,23 +429,23 @@
             margin-bottom: 20px;
         }
 
-        .menu-manage-content,
+        .menuEntity-manage-content,
         .category-manage-content {
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 20px;
         }
 
-        .menu-form,
+        .menuEntity-form,
         .category-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .menu-form input,
-        .menu-form textarea,
-        .menu-form select,
+        .menuEntity-form input,
+        .menuEntity-form textarea,
+        .menuEntity-form select,
         .category-form input,
         .category-form textarea,
         .category-form select {
@@ -454,20 +454,20 @@
             border-radius: 4px;
         }
 
-        .menu-table-container,
+        .menuEntity-table-container,
         .category-table-container {
             overflow-y: auto;
             max-height: 500px;
         }
 
-        .menu-table,
+        .menuEntity-table,
         .category-table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .menu-table th,
-        .menu-table td,
+        .menuEntity-table th,
+        .menuEntity-table td,
         .category-table th,
         .category-table td {
             padding: 8px;
@@ -475,7 +475,7 @@
             text-align: left;
         }
 
-        .menu-table th,
+        .menuEntity-table th,
         .category-table th {
             background-color: #f5f5f5;
         }
@@ -540,7 +540,7 @@
 
 <div class="main-container">
     <div class="left-panel">
-        <div class="menu-tabs">
+        <div class="menuEntity-tabs">
             <div class="tab">번호</div>
             <div class="tab">메뉴</div>
             <div class="tab">수량</div>
@@ -609,62 +609,62 @@
             <div class="category-button" onclick="openMenuManageModal()">메뉴<br>관리</div>
         </div>
 
-        <!-- Menu items grid, 7x8 grid -->
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <!-- Menu_entity items grid, 7x8 grid -->
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
 
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
 
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
 
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
 
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
 
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
 
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
-        <div class="menu-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
+        <div class="menuEntity-item"></div>
     </div>
 </div>
 <div class="footer">
@@ -916,16 +916,16 @@
 <script>
     // 메뉴 관리 모달 열기
     function openMenuManageModal() {
-        document.querySelector('.menu-manage-overlay').style.display = 'block';
-        document.querySelector('.menu-manage-container').style.display = 'block';
+        document.querySelector('.menuEntity-manage-overlay').style.display = 'block';
+        document.querySelector('.menuEntity-manage-container').style.display = 'block';
         loadMenus();
         loadCategoriesForSelect();
     }
 
     // 메뉴 관리 모달 닫기
     function closeMenuManageModal() {
-        document.querySelector('.menu-manage-overlay').style.display = 'none';
-        document.querySelector('.menu-manage-container').style.display = 'none';
+        document.querySelector('.menuEntity-manage-overlay').style.display = 'none';
+        document.querySelector('.menuEntity-manage-container').style.display = 'none';
     }
 
     // 메뉴 로드 함수 - API 연동
@@ -934,20 +934,20 @@
             const response = await fetch('/api/menus');
             const menus = await response.json();
             
-            const menuTableBody = document.querySelector('.menu-table tbody');
+            const menuTableBody = document.querySelector('.menuEntity-table tbody');
             menuTableBody.innerHTML = '';
             
-            menus.forEach(menu => {
+            menus.forEach(menuEntity => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${menu.name}</td>
-                    <td>${menu.price}원</td>
-                    <td>${menu.category.name}</td>
-                    <td>${menu.description || ''}</td>
-                    <td>${menu.available ? '판매중' : '판매중지'}</td>
+                    <td>${menuEntity.name}</td>
+                    <td>${menuEntity.price}원</td>
+                    <td>${menuEntity.category.name}</td>
+                    <td>${menuEntity.description || ''}</td>
+                    <td>${menuEntity.available ? '판매중' : '판매중지'}</td>
                     <td>
-                        <button onclick="editMenu(${menu.id})">수정</button>
-                        <button onclick="deleteMenu(${menu.id})">삭제</button>
+                        <button onclick="editMenu(${menuEntity.id})">수정</button>
+                        <button onclick="deleteMenu(${menuEntity.id})">삭제</button>
                     </td>
                 `;
                 menuTableBody.appendChild(row);
@@ -989,17 +989,17 @@
     async function editMenu(menuId) {
         try {
             const response = await fetch(`/api/menus/${menuId}`);
-            const menu = await response.json();
+            const menuEntity = await response.json();
             
             // 수정 폼에 데이터 채우기
-            document.getElementById('editMenuId').value = menu.id;
-            document.getElementById('editMenuName').value = menu.name;
-            document.getElementById('editMenuPrice').value = menu.price;
-            document.getElementById('editMenuDescription').value = menu.description;
-            document.getElementById('editMenuAvailable').checked = menu.available;
+            document.getElementById('editMenuId').value = menuEntity.id;
+            document.getElementById('editMenuName').value = menuEntity.name;
+            document.getElementById('editMenuPrice').value = menuEntity.price;
+            document.getElementById('editMenuDescription').value = menuEntity.description;
+            document.getElementById('editMenuAvailable').checked = menuEntity.available;
             
             // 수정 모달 열기
-            document.querySelector('.menu-edit-modal').style.display = 'block';
+            document.querySelector('.menuEntity-edit-modal').style.display = 'block';
         } catch (error) {
             console.error('메뉴 정보 로드 중 오류 발생:', error);
         }
@@ -1052,7 +1052,7 @@
             }
 
             loadMenus();
-            document.querySelector('.menu-edit-modal').style.display = 'none';
+            document.querySelector('.menuEntity-edit-modal').style.display = 'none';
         } catch (error) {
             console.error('메뉴 수정 중 오류 발생:', error);
         }
@@ -1082,21 +1082,21 @@
             const menus = await response.json();
             
             // 모든 메뉴 아이템 초기화
-            const menuItems = document.querySelectorAll('.menu-item');
+            const menuItems = document.querySelectorAll('.menuEntity-item');
             menuItems.forEach(item => {
                 item.innerHTML = '';
                 item.style.cursor = 'default';
             });
             
             // 받아온 메뉴 데이터로 메뉴 아이템 업데이트
-            menus.forEach((menu, index) => {
+            menus.forEach((menuEntity, index) => {
                 if (index < menuItems.length) {
                     menuItems[index].innerHTML = `
-                        <div>${menu.name}</div>
-                        <div>${menu.price}원</div>
+                        <div>${menuEntity.name}</div>
+                        <div>${menuEntity.price}원</div>
                     `;
                     menuItems[index].style.cursor = 'pointer';
-                    menuItems[index].onclick = () => addToOrder(menu);
+                    menuItems[index].onclick = () => addToOrder(menuEntity);
                 }
             });
         } catch (error) {
@@ -1105,9 +1105,9 @@
     }
 
     // 주문에 메뉴 추가 함수
-    function addToOrder(menu) {
+    function addToOrder(menuEntity) {
         // TODO: 주문 목록에 메뉴 추가 구현
-        console.log('메뉴 추가:', menu);
+        console.log('메뉴 추가:', menuEntity);
     }
 
     // 카테고리 버튼에 클릭 이벤트 리스너 추가
@@ -1390,16 +1390,16 @@
 </script>
 
 <!-- 메뉴 관리 모달 -->
-<div class="menu-manage-overlay"></div>
-<div class="menu-manage-container">
-    <div class="menu-manage-header">
+<div class="menuEntity-manage-overlay"></div>
+<div class="menuEntity-manage-container">
+    <div class="menuEntity-manage-header">
         <h2>메뉴 관리</h2>
         <button onclick="closeMenuManageModal()" class="close-btn">✕</button>
     </div>
     
-    <div class="menu-manage-content">
+    <div class="menuEntity-manage-content">
         <!-- 메뉴 추가 폼 -->
-        <form onsubmit="addMenu(event)" class="menu-form">
+        <form onsubmit="addMenu(event)" class="menuEntity-form">
             <h3>새 메뉴 추가</h3>
             <input type="text" name="name" placeholder="메뉴명" required>
             <input type="number" name="price" placeholder="가격" required>
@@ -1415,9 +1415,9 @@
         </form>
 
         <!-- 메뉴 목록 테이블 -->
-        <div class="menu-table-container">
+        <div class="menuEntity-table-container">
             <h3>메뉴 목록</h3>
-            <table class="menu-table">
+            <table class="menuEntity-table">
                 <thead>
                     <tr>
                         <th>메뉴명</th>
@@ -1437,7 +1437,7 @@
 </div>
 
 <!-- 메뉴 수정 모달 -->
-<div class="menu-edit-modal">
+<div class="menuEntity-edit-modal">
     <div class="modal-content">
         <h2>메뉴 수정</h2>
         <form onsubmit="submitMenuEdit(event)">
@@ -1450,7 +1450,7 @@
                 판매 가능
             </label>
             <button type="submit">수정 완료</button>
-            <button type="button" onclick="document.querySelector('.menu-edit-modal').style.display='none'">취소</button>
+            <button type="button" onclick="document.querySelector('.menuEntity-edit-modal').style.display='none'">취소</button>
         </form>
     </div>
 </div>

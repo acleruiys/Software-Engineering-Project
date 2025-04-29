@@ -2,7 +2,7 @@
 /*
 package com.example.cafecontrolsystem.controller;
 
-import com.example.cafecontrolsystem.entity.Menu;
+import com.example.cafecontrolsystem.entity.Menu_entity;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class MainController {
     private MenuService menuService;
 
     @GetMapping("/menus")
-    public List<Menu> getMenusByCategory(@RequestParam(required = false) CategoryType category) {
+    public List<Menu_entity> getMenusByCategory(@RequestParam(required = false) CategoryType category) {
         if (category != null) {
             // 카테고리를 기준으로 필터된 메뉴 가져오기
             return menuService.getMenusByCategory(category);
@@ -28,7 +28,7 @@ public class MainController {
     }
     // 메뉴 추가 API
     @PostMapping("/menus")
-    public Menu addMenu(@RequestBody Menu menu) {
+    public Menu_entity addMenu(@RequestBody Menu_entity menu) {
         return menuService.saveMenu(menu);
     }
 

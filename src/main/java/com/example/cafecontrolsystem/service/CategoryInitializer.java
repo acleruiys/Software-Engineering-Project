@@ -1,6 +1,6 @@
 package com.example.cafecontrolsystem.service;
 
-import com.example.cafecontrolsystem.entity.MenuCategory;
+import com.example.cafecontrolsystem.entity.MenuCategory_entity;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ public class CategoryInitializer implements CommandLineRunner {
 
     private void initializeCategories() {
         for (CategoryType type : CategoryType.values()) {
-            MenuCategory category = new MenuCategory();
+            MenuCategory_entity category = new MenuCategory_entity();
             category.setType(type);
             category.setName(type.getDisplayName());
             category.setDescription(createDescription(type));
-            category.setStatus(MenuCategory.CategoryStatus.ACTIVE);
+            category.setStatus(MenuCategory_entity.CategoryStatus.ACTIVE);
             categoryRepository.save(category);
         }
     }
