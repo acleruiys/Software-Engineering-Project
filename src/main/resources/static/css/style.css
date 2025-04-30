@@ -1,0 +1,615 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff5ec;
+}
+
+.header {
+    height: 100%;
+    background-color: #f9e5cf;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
+    border-bottom: 1px solid #e0d0c1;
+}
+
+.header-left {
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-weight: bold;
+}
+
+.title {
+    height: 50px;
+    line-height: 50px;
+}
+
+.title-ect {
+    height: 50px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header-right {
+    display: flex;
+    gap: 30px;
+}
+
+.main-container {
+    display: flex;
+    height: calc(100vh - 190px);
+}
+
+
+.left-panel {
+    width: 40%;
+    background-color: #fff;
+    border-right: 1px solid #e0d0c1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.menuEntity-tabs {
+    background-color: #ffd7d7;
+    display: flex;
+    border-bottom: 1px solid #e0d0c1;
+}
+
+.tab {
+    padding: 10px 20px;
+    text-align: center;
+    flex: 1;
+    border-right: 1px solid #e0d0c1;
+}
+
+.order-list {
+    flex: 1;
+    overflow: hidden;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.button-row {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    background-color: white;
+}
+
+.button {
+    flex: 1;
+    padding: 10px;
+    background-color: #ffe5e5;
+    border: 1px solid #e0d0c1;
+    text-align: center;
+    cursor: pointer;
+}
+
+.right-panel {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.category-row {
+    grid-column: 1 / span 7;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+.menuEntity-item {
+    background-color: #ffecd9;
+    padding: 10px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.operation-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffe5e5;
+    cursor: pointer;
+}
+
+#clock {
+    font-size: 1em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Sales UI 스타일 추가 */
+.sales-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    max-width: 700px;
+    width: 90%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+}
+
+/* Sales UI 추가 스타일 */
+.sales-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+}
+
+.date-input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+}
+
+.calendar-icon {
+    width: 30px;
+    height: 30px;
+    background-color: #c25555;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.sales-tab-container {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+
+.sales-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fcf0f0;
+    border: 1px solid #ffd7d7;
+}
+
+.sales-tab.active {
+    background-color: #ffd7d7;
+}
+
+.sales-scrollable-container {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sales-table th {
+    background-color: #ffd7d7;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.sales-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.time-cell {
+    font-weight: bold;
+}
+
+.sales-footer {
+    display: flex;
+    padding: 10px;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.sales-footer-button {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background-color: #ffd7d7;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+/* 메뉴 관리 모달 스타일 */
+.menuEntity-manage-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.menuEntity-manage-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 1000px;
+    background: white;
+    border-radius: 8px;
+    z-index: 1001;
+    padding: 20px;
+}
+
+.menuEntity-manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.menuEntity-manage-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+}
+
+.menuEntity-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menuEntity-form input,
+.menuEntity-form textarea,
+.menuEntity-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.menuEntity-table-container {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.menuEntity-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.menuEntity-table th,
+.menuEntity-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.menuEntity-table th {
+    background-color: #f5f5f5;
+}
+
+/* 메뉴 수정 모달 스타일 */
+.menuEntity-edit-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1002;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.menuEntity-edit-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-button.active {
+    background-color: #ff9999;
+}
+
+/* 공통 모달 스타일 */
+.menuEntity-manage-overlay,
+.category-manage-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.menuEntity-manage-container,
+.category-manage-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 1000px;
+    background: white;
+    border-radius: 8px;
+    z-index: 1001;
+    padding: 20px;
+}
+
+.menuEntity-manage-header,
+.category-manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.menuEntity-manage-content,
+.category-manage-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+}
+
+.menuEntity-form,
+.category-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menuEntity-form input,
+.menuEntity-form textarea,
+.menuEntity-form select,
+.category-form input,
+.category-form textarea,
+.category-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.menuEntity-table-container,
+.category-table-container {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.menuEntity-table,
+.category-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.menuEntity-table th,
+.menuEntity-table td,
+.category-table th,
+.category-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.menuEntity-table th,
+.category-table th {
+    background-color: #f5f5f5;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #ff0000;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #ffd7d7;
+    border: 1px solid #ffb3b3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ffb3b3;
+}
+
+.totalItemBox {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#billing, #totalBilling {
+    width: 50%;
+    padding: 10px;
+}
+
+
+
+.billing-item{
+    display: flex;
+    flex-direction: column;
+}
+
+.billing-item div{
+    padding: 5px 0;
+}
+
+.menuEntity-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.menuEntity-item {
+    height: 40px;
+    background-color: #ffe4e1;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 8px;
+}
+
+.category-button {
+    height: 50px;
+    background-color: #ffbdbd;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+    word-break: keep-all;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+}
+
+.container {
+    height: 950px;
+    width: 1200px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: 1.5fr 6fr 2.5fr;
+    background-color: #d3d3d3;
+}
+
+.footer-center-buttons {
+    height: 75px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5열 */
+    grid-template-rows: repeat(2, 1fr);    /* 2행 */
+    gap: 5px;
+    margin: 5px;
+}
+
+.footer-center-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #ff9e4c;
+}
+
+.footer-button {
+    height: 75px;
+    flex: 1;
+    margin: 0 5px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    button:focus {
+        outline: none;
+    }
+    background-color: #ff9b9b;
+}
+
+.footer {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1.75fr 0.75fr 0.75fr 3.75fr 0.75fr 0.75fr 0.75fr 0.75fr;
+    width: 100%;
+    align-items: center;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-inf {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 8px;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+.user-label {
+    padding-right: 5px;
+}
+
+.user-value {
+    text-align: left;
+}
+
+.orange {
+    background-color: #ffc8b1;
+}
