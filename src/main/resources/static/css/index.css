@@ -1,0 +1,423 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff5ec;
+}
+
+.header {
+    background-color: #f9e5cf;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    align-items: center;
+    border-bottom: 1px solid #e0d0c1;
+}
+
+.header-left {
+    font-weight: bold;
+}
+
+.header-right {
+    display: flex;
+    gap: 30px;
+}
+
+.main-container {
+    display: flex;
+    height: calc(100vh - 190px);
+}
+
+
+.left-panel {
+    width: 450px;
+    background-color: #fff;
+    border-right: 1px solid #e0d0c1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.menuEntity-tabs {
+    background-color: #ffd7d7;
+    display: flex;
+    border-bottom: 1px solid #e0d0c1;
+}
+
+.tab {
+    padding: 10px 20px;
+    text-align: center;
+    flex: 1;
+    border-right: 1px solid #e0d0c1;
+}
+
+.order-list {
+    flex: 1;
+    overflow: hidden;
+}
+
+.total-section {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-top: 1px solid #e0d0c1;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.button-row {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    background-color: white;
+}
+
+.button {
+    flex: 1;
+    padding: 10px;
+    background-color: #ffe5e5;
+    border: 1px solid #e0d0c1;
+    text-align: center;
+    cursor: pointer;
+}
+
+.right-panel {
+    flex: 1;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    grid-auto-rows: minmax(60px, auto);
+    overflow: hidden;
+}
+
+.category-row {
+    grid-column: 1 / span 7;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.category-button {
+    flex: 1;
+    background-color: #ffbdbd;
+    padding: 10px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.menuEntity-item {
+    background-color: #ffecd9;
+    padding: 10px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.footer {
+    bottom: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+}
+
+.footer-button {
+    flex: 1;
+    text-align: center;
+    padding: 20px 0;
+    cursor: pointer;
+}
+
+.footer-button:focus {
+    outline: none;
+}
+
+.footer-button.pink {
+    background-color: #ffd7d7;
+}
+
+.footer-button.green {
+    background-color: #d7ffd7;
+}
+
+.footer-button.blue {
+    background-color: #d7e5ff;
+}
+
+.operation-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffe5e5;
+    cursor: pointer;
+}
+
+#clock {
+    font-size: 1em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Sales UI 스타일 */
+.sales-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    max-width: 700px;
+    width: 90%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+}
+
+.sales-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+}
+
+.date-input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+}
+
+.calendar-icon {
+    width: 30px;
+    height: 30px;
+    background-color: #c25555;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.sales-tab-container {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+
+.sales-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fcf0f0;
+    border: 1px solid #ffd7d7;
+}
+
+.sales-tab.active {
+    background-color: #ffd7d7;
+}
+
+.sales-scrollable-container {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sales-table th {
+    background-color: #ffd7d7;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.sales-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.time-cell {
+    font-weight: bold;
+}
+
+.sales-footer {
+    display: flex;
+    padding: 10px;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.sales-footer-button {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background-color: #ffd7d7;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+/* 메뉴 관리 모달 스타일 */
+.menuEntity-manage-overlay,
+.category-manage-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.menuEntity-manage-container,
+.category-manage-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 1000px;
+    background: white;
+    border-radius: 8px;
+    z-index: 1001;
+    padding: 20px;
+}
+
+.menuEntity-manage-header,
+.category-manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.menuEntity-manage-content,
+.category-manage-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+}
+
+.menuEntity-form,
+.category-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menuEntity-form input,
+.menuEntity-form textarea,
+.menuEntity-form select,
+.category-form input,
+.category-form textarea,
+.category-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.menuEntity-table-container,
+.category-table-container {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.menuEntity-table,
+.category-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.menuEntity-table th,
+.menuEntity-table td,
+.category-table th,
+.category-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.menuEntity-table th,
+.category-table th {
+    background-color: #f5f5f5;
+}
+
+/* 메뉴 수정 모달 스타일 */
+.menuEntity-edit-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1002;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.menuEntity-edit-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-button.active {
+    background-color: #ff9999;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #ff0000;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #ffd7d7;
+    border: 1px solid #ffb3b3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ffb3b3;
+} 
