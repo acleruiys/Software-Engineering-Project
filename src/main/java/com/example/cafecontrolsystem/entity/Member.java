@@ -1,5 +1,6 @@
 package com.example.cafecontrolsystem.entity;
 
+import com.example.cafecontrolsystem.dto.UpdateMemberDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,14 @@ public class Member {
     
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PointHistory> pointHistories = new ArrayList<>();
+
+    public void updateMember(UpdateMemberDto updateMemberDto){
+        this.phone = updateMemberDto.getAfterPhone();
+        this.name = updateMemberDto.getName();
+    }
+
+    public void updatePoint(Integer point){
+        this.points = this.points + point;
+    }
+
 } 
