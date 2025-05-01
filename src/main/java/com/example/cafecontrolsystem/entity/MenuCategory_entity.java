@@ -31,24 +31,7 @@ public class MenuCategory_entity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Menu_entity> menuEntities = new ArrayList<>();
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     public enum CategoryStatus {
         ACTIVE, INACTIVE
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
     }
 } 

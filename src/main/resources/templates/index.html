@@ -1077,30 +1077,111 @@
 
     // 카테고리별 메뉴 로드 함수
     async function loadMenuByCategory(category) {
+        // 모든 메뉴 아이템 초기화
+        const menuItems = document.querySelectorAll('.menuEntity-item');
+        menuItems.forEach(item => {
+            item.innerHTML = '';
+            item.style.cursor = 'default';
+        });
+        
+        // 정적 메뉴 데이터 (API 호출 실패 시 사용)
+        const staticMenus = {
+            'COFFEE': [
+                { id: 1, name: '아메리카노', price: 4500 },
+                { id: 2, name: '카페라떼', price: 5000 },
+                { id: 3, name: '바닐라라떼', price: 5500 },
+                { id: 4, name: '카라멜 마키아또', price: 5800 },
+                { id: 5, name: '에스프레소', price: 4000 },
+                { id: 6, name: '콜드브루', price: 5500 }
+            ],
+            'DECAF': [
+                { id: 7, name: '디카페인 아메리카노', price: 5000 },
+                { id: 8, name: '디카페인 라떼', price: 5500 }
+            ],
+            'NON_COFFEE': [
+                { id: 9, name: '초코라떼', price: 5500 },
+                { id: 10, name: '녹차라떼', price: 5500 },
+                { id: 11, name: '고구마라떼', price: 5800 }
+            ],
+            'TEA': [
+                { id: 12, name: '얼그레이', price: 4500 },
+                { id: 13, name: '캐모마일', price: 4500 },
+                { id: 14, name: '페퍼민트', price: 4500 }
+            ],
+            'SMOOTHIE': [
+                { id: 15, name: '딸기 스무디', price: 6500 },
+                { id: 16, name: '망고 스무디', price: 6500 },
+                { id: 17, name: '블루베리 스무디', price: 6500 }
+            ],
+            'ADE': [
+                { id: 18, name: '레몬에이드', price: 6000 },
+                { id: 19, name: '자몽에이드', price: 6000 },
+                { id: 20, name: '청포도에이드', price: 6000 }
+            ],
+            'SEASON': [
+                { id: 21, name: '시즌 스페셜', price: 6500 }
+            ],
+            'BREAD': [
+                { id: 22, name: '크로플', price: 4500 },
+                { id: 23, name: '치즈케이크', price: 5500 },
+                { id: 24, name: '티라미수', price: 5500 }
+            ]
+        };
+        
         try {
             const response = await fetch(`/api/menus?category=${category}`);
+            
+            if (!response.ok) {
+                throw new Error('메뉴를 로드하는 중 오류가 발생했습니다');
+            }
+            
             const menus = await response.json();
             
-            // 모든 메뉴 아이템 초기화
-            const menuItems = document.querySelectorAll('.menuEntity-item');
-            menuItems.forEach(item => {
-                item.innerHTML = '';
-                item.style.cursor = 'default';
-            });
-            
-            // 받아온 메뉴 데이터로 메뉴 아이템 업데이트
-            menus.forEach((menuEntity, index) => {
-                if (index < menuItems.length) {
-                    menuItems[index].innerHTML = `
-                        <div>${menuEntity.name}</div>
-                        <div>${menuEntity.price}원</div>
-                    `;
-                    menuItems[index].style.cursor = 'pointer';
-                    menuItems[index].onclick = () => addToOrder(menuEntity);
-                }
-            });
+            if (menus && menus.length > 0) {
+                // 받아온 메뉴 데이터로 메뉴 아이템 업데이트
+                menus.forEach((menuEntity, index) => {
+                    if (index < menuItems.length) {
+                        menuItems[index].innerHTML = `
+                            <div>${menuEntity.name}</div>
+                            <div>${menuEntity.price}원</div>
+                        `;
+                        menuItems[index].style.cursor = 'pointer';
+                        menuItems[index].onclick = () => addToOrder(menuEntity);
+                    }
+                });
+            } else {
+                throw new Error('메뉴 데이터가 없습니다');
+            }
         } catch (error) {
             console.error('메뉴 로드 중 오류 발생:', error);
+            console.log('정적 메뉴 데이터를 사용합니다.');
+            
+            // API 실패 시 정적 데이터 사용
+            if (staticMenus[category]) {
+                staticMenus[category].forEach((menuEntity, index) => {
+                    if (index < menuItems.length) {
+                        menuItems[index].innerHTML = `
+                            <div>${menuEntity.name}</div>
+                            <div>${menuEntity.price}원</div>
+                        `;
+                        menuItems[index].style.cursor = 'pointer';
+                        menuItems[index].onclick = () => addToOrder(menuEntity);
+                    }
+                });
+            } else {
+                // 해당 카테고리에 대한 정적 데이터가 없는 경우 첫 번째 카테고리 데이터 사용
+                const firstCategory = Object.keys(staticMenus)[0];
+                staticMenus[firstCategory].forEach((menuEntity, index) => {
+                    if (index < menuItems.length) {
+                        menuItems[index].innerHTML = `
+                            <div>${menuEntity.name}</div>
+                            <div>${menuEntity.price}원</div>
+                        `;
+                        menuItems[index].style.cursor = 'pointer';
+                        menuItems[index].onclick = () => addToOrder(menuEntity);
+                    }
+                });
+            }
         }
     }
 
@@ -1323,68 +1404,142 @@
 
     // 카테고리 로드 및 표시 함수
     async function loadAndDisplayCategories() {
+        const firstRow = document.querySelector('.category-row:first-child');
+        const secondRow = document.querySelector('.category-row:last-child');
+        
+        // 기본 카테고리와 관리 버튼을 유지 (페이지 초기 상태를 유지)
+        const defaultCategories = [
+            { type: 'COFFEE', name: '커피' },
+            { type: 'DECAF', name: '디카페인' },
+            { type: 'NON_COFFEE', name: '논커피/<br>과일라떼' },
+            { type: 'TEA', name: '티' },
+            { type: 'SMOOTHIE', name: '스무디<br>프라페' },
+            { type: 'ADE', name: '에이드<br>주스' },
+            { type: 'SEASON', name: '시즌메뉴' },
+            { type: 'BREAD', name: '빵' }
+        ];
+        
         try {
             const response = await fetch('/api/categories');
-            const categories = await response.json();
             
-            // 카테고리 버튼 컨테이너
-            const firstRow = document.querySelector('.category-row:first-child');
-            const secondRow = document.querySelector('.category-row:last-child');
-            
-            // 기존 카테고리 버튼 초기화 (관리 버튼 제외)
-            firstRow.innerHTML = '';
-            secondRow.innerHTML = '';
-            
-            // 첫 번째 줄에 6개, 두 번째 줄에 나머지 카테고리 배치
-            categories.forEach((category, index) => {
-                const button = document.createElement('div');
-                button.className = 'category-button';
-                button.dataset.category = category.type;
-                button.dataset.categoryId = category.id;
-                
-                // 카테고리 이름이 긴 경우 줄바꿈 처리
-                const displayName = category.name.length > 4 ? 
-                    category.name.replace('/', '<br>') : category.name;
-                button.innerHTML = displayName;
-                
-                button.addEventListener('click', handleCategoryClick);
-                
-                if (index < 6) {
-                    firstRow.appendChild(button);
-                } else if (index < 12) {
-                    secondRow.appendChild(button);
-                }
-            });
-            
-            // 첫 번째 줄에 카테고리 관리 버튼 추가
-            const categoryManageBtn = document.createElement('div');
-            categoryManageBtn.className = 'category-button';
-            categoryManageBtn.innerHTML = '카테고리<br>관리';
-            categoryManageBtn.onclick = openCategoryManageModal;
-            firstRow.appendChild(categoryManageBtn);
-            
-            // 두 번째 줄 남은 공간 채우기
-            const remainingSlots = 6 - (categories.length - 6);
-            for (let i = 0; i < remainingSlots; i++) {
-                const emptyButton = document.createElement('div');
-                emptyButton.className = 'category-button';
-                secondRow.appendChild(emptyButton);
+            if (!response.ok) {
+                throw new Error('카테고리를 불러오는데 실패했습니다');
             }
             
-            // 메뉴 관리 버튼 추가
-            const menuManageBtn = document.createElement('div');
-            menuManageBtn.className = 'category-button';
-            menuManageBtn.innerHTML = '메뉴<br>관리';
-            menuManageBtn.onclick = openMenuManageModal;
-            secondRow.appendChild(menuManageBtn);
+            const categories = await response.json();
             
-            // 첫 번째 카테고리 자동 선택
-            const firstCategory = document.querySelector('.category-button[data-category]');
-            if (firstCategory) {
-                firstCategory.click();
+            // API에서 카테고리를 성공적으로 가져왔을 때만 기존 카테고리 버튼 초기화
+            if (categories && categories.length > 0) {
+                // 기존 카테고리 버튼 초기화 (관리 버튼 제외)
+                firstRow.innerHTML = '';
+                secondRow.innerHTML = '';
+                
+                // 첫 번째 줄에 6개, 두 번째 줄에 나머지 카테고리 배치
+                categories.forEach((category, index) => {
+                    const button = document.createElement('div');
+                    button.className = 'category-button';
+                    button.dataset.category = category.type;
+                    button.dataset.categoryId = category.id;
+                    
+                    // 카테고리 이름이 긴 경우 줄바꿈 처리
+                    const displayName = category.name.length > 4 ? 
+                        category.name.replace('/', '<br>') : category.name;
+                    button.innerHTML = displayName;
+                    
+                    button.addEventListener('click', handleCategoryClick);
+                    
+                    if (index < 6) {
+                        firstRow.appendChild(button);
+                    } else if (index < 12) {
+                        secondRow.appendChild(button);
+                    }
+                });
+                
+                // 첫 번째 줄에 카테고리 관리 버튼 추가
+                const categoryManageBtn = document.createElement('div');
+                categoryManageBtn.className = 'category-button';
+                categoryManageBtn.innerHTML = '카테고리<br>관리';
+                categoryManageBtn.onclick = openCategoryManageModal;
+                firstRow.appendChild(categoryManageBtn);
+                
+                // 두 번째 줄 남은 공간 채우기
+                const remainingSlots = 6 - Math.max(0, categories.length - 6);
+                for (let i = 0; i < remainingSlots; i++) {
+                    const emptyButton = document.createElement('div');
+                    emptyButton.className = 'category-button';
+                    secondRow.appendChild(emptyButton);
+                }
+                
+                // 메뉴 관리 버튼 추가
+                const menuManageBtn = document.createElement('div');
+                menuManageBtn.className = 'category-button';
+                menuManageBtn.innerHTML = '메뉴<br>관리';
+                menuManageBtn.onclick = openMenuManageModal;
+                secondRow.appendChild(menuManageBtn);
+            } else {
+                throw new Error('카테고리 데이터가 없습니다');
             }
         } catch (error) {
             console.error('카테고리 로드 중 오류 발생:', error);
+            console.log('기본 카테고리를 표시합니다.');
+            
+            // API 호출 실패 시 정적 카테고리 버튼 사용
+            // 첫 번째 줄과 두 번째 줄의 카테고리 버튼 요소들을 유지하거나 재생성
+            if (!firstRow.querySelectorAll('.category-button').length) {
+                firstRow.innerHTML = '';
+                
+                // 첫 번째 줄 카테고리 (6개)
+                defaultCategories.slice(0, 6).forEach(category => {
+                    const button = document.createElement('div');
+                    button.className = 'category-button';
+                    button.dataset.category = category.type;
+                    button.innerHTML = category.name;
+                    button.addEventListener('click', handleCategoryClick);
+                    firstRow.appendChild(button);
+                });
+                
+                // 카테고리 관리 버튼 추가
+                const categoryManageBtn = document.createElement('div');
+                categoryManageBtn.className = 'category-button';
+                categoryManageBtn.innerHTML = '카테고리<br>관리';
+                categoryManageBtn.onclick = openCategoryManageModal;
+                firstRow.appendChild(categoryManageBtn);
+            }
+            
+            if (!secondRow.querySelectorAll('.category-button').length) {
+                secondRow.innerHTML = '';
+                
+                // 두 번째 줄 카테고리 (나머지)
+                defaultCategories.slice(6).forEach(category => {
+                    const button = document.createElement('div');
+                    button.className = 'category-button';
+                    button.dataset.category = category.type;
+                    button.innerHTML = category.name;
+                    button.addEventListener('click', handleCategoryClick);
+                    secondRow.appendChild(button);
+                });
+                
+                // 빈 버튼 채우기
+                const remainingSlots = 6 - defaultCategories.slice(6).length;
+                for (let i = 0; i < remainingSlots; i++) {
+                    const emptyButton = document.createElement('div');
+                    emptyButton.className = 'category-button';
+                    secondRow.appendChild(emptyButton);
+                }
+                
+                // 메뉴 관리 버튼 추가
+                const menuManageBtn = document.createElement('div');
+                menuManageBtn.className = 'category-button';
+                menuManageBtn.innerHTML = '메뉴<br>관리';
+                menuManageBtn.onclick = openMenuManageModal;
+                secondRow.appendChild(menuManageBtn);
+            }
+        }
+        
+        // 첫 번째 카테고리 자동 선택
+        const firstCategory = document.querySelector('.category-button[data-category]');
+        if (firstCategory) {
+            firstCategory.click();
         }
     }
 </script>
