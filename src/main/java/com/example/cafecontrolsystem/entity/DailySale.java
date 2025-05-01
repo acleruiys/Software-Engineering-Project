@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class DailySale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     
     private LocalDate date;
     

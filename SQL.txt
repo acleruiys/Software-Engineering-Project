@@ -2,7 +2,7 @@
 
 -- 메뉴 카테고리 테이블
 CREATE TABLE menu_categories (
-    category_id INT PRIMARY KEY AUTO_INCREMENT,
+    category_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     type VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     description TEXT,
@@ -11,10 +11,10 @@ CREATE TABLE menu_categories (
 
 -- 메뉴 테이블
 CREATE TABLE menus (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     price INT NOT NULL,
-    category_id INT NOT NULL,
+    category_id BIGINT NOT NULL,
     description TEXT,
     available BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (category_id) REFERENCES menu_categories(category_id)
@@ -22,7 +22,7 @@ CREATE TABLE menus (
 
 -- 옵션 테이블
 CREATE TABLE option_table (
-    option_code INT PRIMARY KEY,
+    option_code BIGINT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     available VARCHAR(1) DEFAULT 'Y',
     price VARCHAR(10)
@@ -30,13 +30,13 @@ CREATE TABLE option_table (
 
 -- 재고 카테고리 테이블
 CREATE TABLE inventory_category (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL
 );
 
 -- 공급업체 테이블
 CREATE TABLE supply (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     manager VARCHAR(50),
     phone VARCHAR(20)
@@ -44,10 +44,10 @@ CREATE TABLE supply (
 
 -- 재고 테이블
 CREATE TABLE inventory (
-    inventory_id INT PRIMARY KEY AUTO_INCREMENT,
+    inventory_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    category_id INT,
-    supply_id INT,
+    category_id BIGINT,
+    supply_id BIGINT,
     price INT NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
     FOREIGN KEY (category_id) REFERENCES inventory_category(id),
@@ -56,7 +56,7 @@ CREATE TABLE inventory (
 
 -- 직원 테이블
 CREATE TABLE employee (
-    employee_id INT PRIMARY KEY,
+    employee_id BIGINT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     position VARCHAR(50),
     salary INT
@@ -64,8 +64,8 @@ CREATE TABLE employee (
 
 -- 직원 출퇴근 기록 테이블
 CREATE TABLE employee_attendance (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    employee_id INT NOT NULL,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    employee_id BIGINT NOT NULL,
     clock_in TIME,
     clock_out TIME,
     work_hour DECIMAL(4,2),
@@ -75,7 +75,7 @@ CREATE TABLE employee_attendance (
 
 -- 회원 테이블
 CREATE TABLE member (
-    member_id INT PRIMARY KEY,
+    member_id BIGINT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     phone VARCHAR(20),
     points INT DEFAULT 0
@@ -83,7 +83,7 @@ CREATE TABLE member (
 
 -- 사용자 테이블
 CREATE TABLE users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE users (
 
 -- 결제 방법 테이블
 CREATE TABLE payment_methods (
-    payment_method_id INT PRIMARY KEY AUTO_INCREMENT,
+    payment_method_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     description TEXT,
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
@@ -103,7 +103,7 @@ CREATE TABLE payment_methods (
 
 -- 판매 테이블
 CREATE TABLE sale (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     created_at DATETIME NOT NULL,
     state VARCHAR(20) DEFAULT 'COMPLETED',
     total_price INT NOT NULL
@@ -111,11 +111,11 @@ CREATE TABLE sale (
 
 -- 판매 상세 테이블
 CREATE TABLE sale_detail (
-    detail_id INT PRIMARY KEY AUTO_INCREMENT,
-    sale_id INT NOT NULL,
-    menu_id INT NOT NULL,
+    detail_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    sale_id BIGINT NOT NULL,
+    menu_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    option_id INT,
+    option_id BIGINT,
     FOREIGN KEY (sale_id) REFERENCES sale(id),
     FOREIGN KEY (menu_id) REFERENCES menus(id),
     FOREIGN KEY (option_id) REFERENCES option_table(option_code)
@@ -123,9 +123,9 @@ CREATE TABLE sale_detail (
 
 -- 결제 테이블
 CREATE TABLE payment (
-    payment_id INT PRIMARY KEY AUTO_INCREMENT,
-    sale_id INT NOT NULL,
-    method_id INT NOT NULL,
+    payment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    sale_id BIGINT NOT NULL,
+    method_id BIGINT NOT NULL,
     price INT NOT NULL,
     FOREIGN KEY (sale_id) REFERENCES sale(id),
     FOREIGN KEY (method_id) REFERENCES payment_methods(payment_method_id)
@@ -133,9 +133,9 @@ CREATE TABLE payment (
 
 -- 포인트 내역 테이블
 CREATE TABLE point_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    member_id INT NOT NULL,
-    sale_id INT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    sale_id BIGINT,
     type VARCHAR(20) NOT NULL,
     amount INT NOT NULL,
     created_at DATETIME NOT NULL,
@@ -145,9 +145,9 @@ CREATE TABLE point_history (
 
 -- 재고 변동 내역 테이블
 CREATE TABLE inventory_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    employee_id INT,
-    inventory_id INT NOT NULL,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    employee_id BIGINT,
+    inventory_id BIGINT NOT NULL,
     type VARCHAR(20) NOT NULL,
     change INT NOT NULL,
     date DATE NOT NULL,
@@ -157,7 +157,7 @@ CREATE TABLE inventory_history (
 
 -- 일별 매출 테이블
 CREATE TABLE daily_sale (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     date DATE NOT NULL UNIQUE,
     cash INT DEFAULT 0,
     card INT DEFAULT 0,
@@ -166,7 +166,7 @@ CREATE TABLE daily_sale (
 
 -- 월별 지출 테이블
 CREATE TABLE monthly_expense (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     date DATE NOT NULL UNIQUE,
     monthly_fee INT DEFAULT 0,
     additional_fee INT DEFAULT 0,

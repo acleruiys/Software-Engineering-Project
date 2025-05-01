@@ -12,7 +12,7 @@ import java.util.List;
 public class Member {
     @Id
     @Column(name = "member_id")
-    private Integer memberId;
+    private Long memberId;
     
     private String name;
     

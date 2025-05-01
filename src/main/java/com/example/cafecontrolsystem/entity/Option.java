@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Option {
     @Id
     @Column(name = "option_code")
-    private Integer optionCode;
+    private Long optionCode;
     
     private String name;
     
