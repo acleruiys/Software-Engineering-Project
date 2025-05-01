@@ -22,6 +22,8 @@ public class SaleDetail {
     private Menu_entity menu;
     
     private Integer quantity;
+
+    private Integer price;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
