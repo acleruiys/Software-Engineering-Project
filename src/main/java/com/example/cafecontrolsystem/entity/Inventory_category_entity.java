@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name = "inventory_category")
 public class Inventory_category_entity {
     @Id
-    @GeneratedValue(generator = "inventory_category_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 재고 카테고리 ID
 
     @Column(nullable = false)

@@ -20,7 +20,7 @@
         <div>재고</div>
         <div>직원</div>
         <div>설정</div>
-        <div onclick="location.href='/kiosk'">키오스크</div>
+        <div onclick="showManageUI()">관리</div>
         <div>-</div>
         <div>X</div>
     </div>
@@ -85,7 +85,7 @@
             <div class="category-button" data-category="TEA">티</div>
             <div class="category-button" data-category="SMOOTHIE">스무디<br>프라페</div>
             <div class="category-button" data-category="ADE">에이드<br>주스</div>
-            <div class="category-button" onclick="openCategoryManageModal()">카테고리<br>관리</div>
+            <div class="category-button"><br><</div>
         </div>
 
         <div class="category-row">
@@ -96,7 +96,7 @@
             <div class="category-button"></div>
             <div class="category-button"></div>
             <div class="category-button"></div>
-            <div class="category-button" onclick="openMenuManageModal()">메뉴<br>관리</div>
+            <div class="category-button"><br>></div>
         </div>
 
         <!-- Menu_entity items grid, 7x8 grid -->
@@ -166,6 +166,24 @@
     <div class="footer-button green">복합</div>
     <div class="footer-button blue">현금</div>
     <div class="footer-button blue">카드</div>
+</div>
+
+<!-- 관리 UI 오버레이 -->
+<div class="manage-overlay"></div>
+
+<!-- 관리 UI 컨테이너 -->
+<div class="manage-container">
+    <div class="manage-header">
+        <h2>관리 메뉴</h2>
+        <button onclick="closeManageUI()" class="close-btn">✕</button>
+    </div>
+    
+    <div class="manage-content">
+        <div class="manage-buttons">
+            <button onclick="openCategoryManageModal()" class="manage-button">카테고리 관리</button>
+            <button onclick="openMenuManageModal()" class="manage-button">메뉴 관리</button>
+        </div>
+    </div>
 </div>
 
 <!-- Sales UI 오버레이 -->
@@ -476,6 +494,62 @@
                     <!-- 카테고리 항목들은 JavaScript로 동적 추가 -->
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- 메뉴 옵션 선택 모달 -->
+<div class="menu-option-overlay"></div>
+<div class="menu-option-container">
+    <div class="menu-option-header">
+        <h2>옵션 선택</h2>
+        <button onclick="closeMenuOptionModal()" class="close-btn">✕</button>
+    </div>
+    
+    <div class="menu-option-content">
+        <div class="selected-menu-info">
+            <div id="selectedMenuName" class="selected-menu-name"></div>
+            <div id="selectedMenuPrice" class="selected-menu-price"></div>
+        </div>
+        
+        <div class="option-section">
+            <h3>온도</h3>
+            <div class="option-buttons">
+                <button class="option-button" data-option-type="temperature" data-option-value="HOT">뜨거운</button>
+                <button class="option-button" data-option-type="temperature" data-option-value="ICED">차가운</button>
+            </div>
+        </div>
+        
+        <div class="option-section">
+            <h3>크기</h3>
+            <div class="option-buttons">
+                <button class="option-button" data-option-type="size" data-option-value="SMALL">스몰 (+0원)</button>
+                <button class="option-button" data-option-type="size" data-option-value="MEDIUM">미디움 (+500원)</button>
+                <button class="option-button" data-option-type="size" data-option-value="LARGE">라지 (+1000원)</button>
+            </div>
+        </div>
+        
+        <div class="option-section">
+            <h3>시럽 추가</h3>
+            <div class="option-buttons">
+                <button class="option-button" data-option-type="syrup" data-option-value="NONE">없음</button>
+                <button class="option-button" data-option-type="syrup" data-option-value="VANILLA">바닐라 (+500원)</button>
+                <button class="option-button" data-option-type="syrup" data-option-value="HAZELNUT">헤이즐넛 (+500원)</button>
+                <button class="option-button" data-option-type="syrup" data-option-value="CARAMEL">카라멜 (+500원)</button>
+            </div>
+        </div>
+        
+        <div class="option-footer">
+            <div class="quantity-control">
+                <button onclick="decreaseOptionQuantity()">-</button>
+                <span id="optionQuantity">1</span>
+                <button onclick="increaseOptionQuantity()">+</button>
+            </div>
+            <div class="total-price">
+                <span>총 금액: </span>
+                <span id="optionTotalPrice">0원</span>
+            </div>
+            <button class="option-submit" onclick="addToOrderWithOptions()">주문에 추가</button>
         </div>
     </div>
 </div>

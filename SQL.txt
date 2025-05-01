@@ -1,0 +1,199 @@
+-- 카페 관리 시스템 데이터베이스 테이블 생성 SQL
+
+-- 메뉴 카테고리 테이블
+CREATE TABLE menu_categories (
+    category_id INT PRIMARY KEY AUTO_INCREMENT,
+    type VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    description TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'
+);
+
+-- 메뉴 테이블
+CREATE TABLE menus (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    price INT NOT NULL,
+    category_id INT NOT NULL,
+    description TEXT,
+    available BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (category_id) REFERENCES menu_categories(category_id)
+);
+
+-- 옵션 테이블
+CREATE TABLE option_table (
+    option_code INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    available VARCHAR(1) DEFAULT 'Y',
+    price VARCHAR(10)
+);
+
+-- 재고 카테고리 테이블
+CREATE TABLE inventory_category (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL
+);
+
+-- 공급업체 테이블
+CREATE TABLE supply (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    manager VARCHAR(50),
+    phone VARCHAR(20)
+);
+
+-- 재고 테이블
+CREATE TABLE inventory (
+    inventory_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    category_id INT,
+    supply_id INT,
+    price INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (category_id) REFERENCES inventory_category(id),
+    FOREIGN KEY (supply_id) REFERENCES supply(id)
+);
+
+-- 직원 테이블
+CREATE TABLE employee (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    position VARCHAR(50),
+    salary INT
+);
+
+-- 직원 출퇴근 기록 테이블
+CREATE TABLE employee_attendance (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT NOT NULL,
+    clock_in TIME,
+    clock_out TIME,
+    work_hour DECIMAL(4,2),
+    date DATE NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+);
+
+-- 회원 테이블
+CREATE TABLE member (
+    member_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    phone VARCHAR(20),
+    points INT DEFAULT 0
+);
+
+-- 사용자 테이블
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'STAFF',
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'
+);
+
+-- 결제 방법 테이블
+CREATE TABLE payment_methods (
+    payment_method_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    description TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    created_at DATETIME,
+    updated_at DATETIME
+);
+
+-- 판매 테이블
+CREATE TABLE sale (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    created_at DATETIME NOT NULL,
+    state VARCHAR(20) DEFAULT 'COMPLETED',
+    total_price INT NOT NULL
+);
+
+-- 판매 상세 테이블
+CREATE TABLE sale_detail (
+    detail_id INT PRIMARY KEY AUTO_INCREMENT,
+    sale_id INT NOT NULL,
+    menu_id INT NOT NULL,
+    quantity INT NOT NULL,
+    option_id INT,
+    FOREIGN KEY (sale_id) REFERENCES sale(id),
+    FOREIGN KEY (menu_id) REFERENCES menus(id),
+    FOREIGN KEY (option_id) REFERENCES option_table(option_code)
+);
+
+-- 결제 테이블
+CREATE TABLE payment (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    sale_id INT NOT NULL,
+    method_id INT NOT NULL,
+    price INT NOT NULL,
+    FOREIGN KEY (sale_id) REFERENCES sale(id),
+    FOREIGN KEY (method_id) REFERENCES payment_methods(payment_method_id)
+);
+
+-- 포인트 내역 테이블
+CREATE TABLE point_history (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    member_id INT NOT NULL,
+    sale_id INT,
+    type VARCHAR(20) NOT NULL,
+    amount INT NOT NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(member_id),
+    FOREIGN KEY (sale_id) REFERENCES sale(id)
+);
+
+-- 재고 변동 내역 테이블
+CREATE TABLE inventory_history (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT,
+    inventory_id INT NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    change INT NOT NULL,
+    date DATE NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id)
+);
+
+-- 일별 매출 테이블
+CREATE TABLE daily_sale (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL UNIQUE,
+    cash INT DEFAULT 0,
+    card INT DEFAULT 0,
+    point INT DEFAULT 0
+);
+
+-- 월별 지출 테이블
+CREATE TABLE monthly_expense (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL UNIQUE,
+    monthly_fee INT DEFAULT 0,
+    additional_fee INT DEFAULT 0,
+    maintenance_fee INT DEFAULT 0,
+    wage_expense INT DEFAULT 0,
+    supply_fee INT DEFAULT 0,
+    monthly_expensecol VARCHAR(45)
+);
+
+-- 기본 데이터 삽입
+-- 메뉴 카테고리 기본 데이터
+INSERT INTO menu_categories (type, name, description, status) VALUES
+('COFFEE', '커피', '다양한 커피 메뉴', 'ACTIVE'),
+('DECAF', '디카페인', '카페인이 없는 메뉴', 'ACTIVE'),
+('NON_COFFEE', '논커피/과일라떼', '커피가 아닌 음료', 'ACTIVE'),
+('TEA', '차', '각종 차 종류', 'ACTIVE'),
+('SMOOTHIE', '스무디/프라페', '시원한 스무디와 프라페', 'ACTIVE'),
+('ADE', '에이드/주스', '상큼한 에이드와 주스', 'ACTIVE'),
+('SEASON', '시즌메뉴', '시즌 한정 메뉴', 'ACTIVE'),
+('BREAD', '빵류', '갓 구운 빵과 디저트', 'ACTIVE');
+
+-- 결제 방식 기본 데이터
+INSERT INTO payment_methods (name, description, status, created_at, updated_at) VALUES
+('현금', '현금 결제', 'ACTIVE', NOW(), NOW()),
+('카드', '신용카드/체크카드 결제', 'ACTIVE', NOW(), NOW()),
+('포인트', '포인트 결제', 'ACTIVE', NOW(), NOW());
+
+-- 관리자 계정 생성
+INSERT INTO users (username, password, phone, role, status) VALUES
+('admin', '$2a$10$eDRUJ0Xn9F5NW1jbkMGZyOtQfj7OQP5TcRGK1N5wYX0W5iyPx7rui', '010-0000-0000', 'ADMIN', 'ACTIVE'); 
