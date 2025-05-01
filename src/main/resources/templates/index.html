@@ -14,27 +14,13 @@
             <li>날짜 및 시간 : <a id="clock" ></a></li>
             <li>관리자</li>
         </ul>
-        <script>
-            function updateClock() {
-                const now = new Date();
-                const day = now.getDate();
-                const month = now.getMonth() + 1;
-                const year = now.getFullYear();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                const timeString = `${year}-${month}-${day}/${hours}:${minutes}:${seconds}`;
-                document.getElementById('clock').textContent = timeString;
-            }
-            updateClock();
-            setInterval(updateClock, 500);
-        </script>
     </div>
     <div class="header-right">
         <div onclick="showSalesUI()">매출</div>
         <div>재고</div>
         <div>직원</div>
         <div>설정</div>
+        <div onclick="location.href='/kiosk'">키오스크</div>
         <div>-</div>
         <div>X</div>
     </div>
@@ -93,10 +79,24 @@
     <div class="right-panel">
         <div class="category-row">
             <!-- 카테고리 버튼이 동적으로 생성됩니다 -->
+            <div class="category-button" data-category="COFFEE">커피</div>
+            <div class="category-button" data-category="DECAF">디카페인</div>
+            <div class="category-button" data-category="NON_COFFEE">논커피/<br>과일라떼</div>
+            <div class="category-button" data-category="TEA">티</div>
+            <div class="category-button" data-category="SMOOTHIE">스무디<br>프라페</div>
+            <div class="category-button" data-category="ADE">에이드<br>주스</div>
+            <div class="category-button" onclick="openCategoryManageModal()">카테고리<br>관리</div>
         </div>
 
         <div class="category-row">
             <!-- 두 번째 줄 카테고리 버튼이 동적으로 생성됩니다 -->
+            <div class="category-button" data-category="SEASON">시즌메뉴</div>
+            <div class="category-button" data-category="BREAD">빵</div>
+            <div class="category-button"></div>
+            <div class="category-button"></div>
+            <div class="category-button"></div>
+            <div class="category-button"></div>
+            <div class="category-button" onclick="openMenuManageModal()">메뉴<br>관리</div>
         </div>
 
         <!-- Menu_entity items grid, 7x8 grid -->

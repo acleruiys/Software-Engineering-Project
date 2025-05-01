@@ -492,6 +492,28 @@ async function loadAndDisplayCategories() {
     const firstRow = document.querySelector('.category-row:first-child');
     const secondRow = document.querySelector('.category-row:last-child');
     
+    // 이미 카테고리 버튼이 존재하는지 확인
+    const existingButtons = firstRow.querySelectorAll('.category-button[data-category]');
+    
+    // 카테고리 버튼이 이미 존재하면 API 호출하지 않고 기존 버튼에 이벤트 리스너만 추가
+    if (existingButtons.length > 0) {
+        console.log('카테고리 버튼이 이미 존재합니다. 이벤트 리스너만 추가합니다.');
+        
+        // 모든 카테고리 버튼에 클릭 이벤트 리스너 추가
+        document.querySelectorAll('.category-button[data-category]').forEach(button => {
+            // 이벤트 리스너 중복 방지를 위해 기존 리스너 제거 후 추가
+            button.removeEventListener('click', handleCategoryClick);
+            button.addEventListener('click', handleCategoryClick);
+        });
+        
+        // 첫 번째 카테고리 자동 선택
+        const firstCategory = document.querySelector('.category-button[data-category]');
+        if (firstCategory) {
+            firstCategory.click();
+        }
+        return;
+    }
+    
     // 기본 카테고리와 관리 버튼을 유지 (페이지 초기 상태를 유지)
     const defaultCategories = [
         { type: 'COFFEE', name: '커피' },
@@ -568,9 +590,9 @@ async function loadAndDisplayCategories() {
         console.error('카테고리 로드 중 오류 발생:', error);
         console.log('기본 카테고리를 표시합니다.');
         
-        // API 호출 실패 시 정적 카테고리 버튼 사용
-        // 첫 번째 줄과 두 번째 줄의 카테고리 버튼 요소들을 유지하거나 재생성
-        if (!firstRow.querySelectorAll('.category-button').length) {
+        // 이미 정적 카테고리 버튼이 있는지 확인하고, 없을 경우만 생성
+        if (!firstRow.querySelectorAll('.category-button[data-category]').length) {
+            console.log('정적 카테고리 버튼을 생성합니다.');
             firstRow.innerHTML = '';
             
             // 첫 번째 줄 카테고리 (6개)
@@ -591,7 +613,7 @@ async function loadAndDisplayCategories() {
             firstRow.appendChild(categoryManageBtn);
         }
         
-        if (!secondRow.querySelectorAll('.category-button').length) {
+        if (!secondRow.querySelectorAll('.category-button[data-category]').length) {
             secondRow.innerHTML = '';
             
             // 두 번째 줄 카테고리 (나머지)
@@ -618,6 +640,12 @@ async function loadAndDisplayCategories() {
             menuManageBtn.innerHTML = '메뉴<br>관리';
             menuManageBtn.onclick = openMenuManageModal;
             secondRow.appendChild(menuManageBtn);
+        } else {
+            // 기존 버튼에 이벤트 리스너 추가
+            document.querySelectorAll('.category-button[data-category]').forEach(button => {
+                button.removeEventListener('click', handleCategoryClick);
+                button.addEventListener('click', handleCategoryClick);
+            });
         }
     }
     
