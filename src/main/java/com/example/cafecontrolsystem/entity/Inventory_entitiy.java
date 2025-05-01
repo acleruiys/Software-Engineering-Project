@@ -20,7 +20,4 @@ public class Inventory_entitiy {
     @Column(nullable = false)
     private int quantity; // 재고 품목 수량
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-
 }
