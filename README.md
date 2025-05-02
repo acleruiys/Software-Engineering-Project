@@ -2,10 +2,48 @@
 
 ## 개발 환경
 - Java 21
-- Spring Boot
+- Spring Boot 3.2.1
 - MySQL 8.0 (5.6 이상 호환)
+- Gradle 8.5
+- JPA/Hibernate
+- Lombok
+- Spring Security
+- Thymeleaf
+- JUnit 5
 
-## 프로젝트 설정
+### GitHub 연동 및 사용 방법 (IntelliJ)
+
+1. GitHub 저장소 클론
+   - IntelliJ 실행 -> `File` -> `New` -> `Project from Version Control`
+   - URL에 `https://github.com/[사용자명]/[저장소명].git` 입력
+   - 원하는 디렉토리 선택 후 `Clone` 클릭
+
+2. 브랜치 생성 및 전환
+   - 하단 `Git` -> `New Branch` 클릭
+   - 브랜치 이름 입력 (예: feature/login)
+   - `Create` 클릭
+
+3. 변경사항 커밋
+   - 좌측 `Project` 탭에서 변경된 파일 확인
+   - 변경 파일 우클릭 -> `Git` -> `Add` 선택
+   - 상단 메뉴 `Git` -> `Commit` 클릭
+   - 커밋 메시지 작성 후 `Commit` 클릭
+
+4. 원격 저장소에 푸시
+   - 상단 메뉴 `Git` -> `Push` 클릭
+   - 변경사항 확인 후 `Push` 클릭
+
+5. Pull Request 생성
+   - GitHub 웹사이트 접속
+   - `Pull requests` 탭 클릭
+   - `New pull request` 클릭
+   - base와 compare 브랜치 선택
+   - 내용 작성 후 `Create pull request` 클릭
+
+주의사항:
+- 커밋 전 항상 최신 코드를 pull 받기
+- 의미 있는 커밋 메시지 작성하기
+- 코드 리뷰 후 merge 진행하기
 
 ### 데이터베이스 설정 (application.properties)
 ```
