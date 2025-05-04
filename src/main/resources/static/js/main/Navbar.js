@@ -1,4 +1,5 @@
 import Component from "./Component.js";
+import SalesTime from '../sales/SalesTime.js';
 
 export default class Navbar extends Component {
   setup() {
@@ -22,13 +23,17 @@ export default class Navbar extends Component {
         </div>
         <div class="header-right">
           <div id="sales-btn">매출</div>
-          <div>재고</div>
-          <div>직원</div>
-          <div>설정</div>
-          <div>-</div>
-          <div>X</div>
+          <div id="inventory-btn">재고</div>
+          <div id="employee-btn">직원</div>
+          <div id="menu-btn">메뉴</div>
+          <div id="setting-btn">설정</div>
+          <div>
+            <div>-</div>
+            <div>X</div>
+          </div>
         </div>
       </div>
+      <div id="submenu-container"></div>
     `;
   }
 
@@ -38,15 +43,91 @@ export default class Navbar extends Component {
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day}/${hours}:${minutes}:${seconds}`;
+    return `${year}-${month}-${day}/${hours}:${minutes}`;
   }
 
   setEvent() {
     const salesBtn = this.$target.querySelector('#sales-btn');
-    if (salesBtn) {
-      salesBtn.addEventListener('click', () => this.showSalesUI());
-    }
+    const submenuContainer = this.$target.querySelector('#submenu-container');
+
+    salesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = submenuContainer.style.display === 'block';
+
+      if (isVisible) {
+        submenuContainer.style.display = 'none';
+      } else {
+        submenuContainer.innerHTML = `
+          <div class="sales-submenu">
+            <button id="sales-summary-btn">매출 집계 조회</button>
+            <button id="sales-period-btn">기간별 매출 현황</button>
+          </div>
+        `;
+        submenuContainer.style.display = 'block';
+
+        setTimeout(() => {
+          const periodBtn = this.$target.querySelector('#sales-period-btn');
+          periodBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            const modalRoot = document.querySelector('#salesTime');
+            const overlay = document.querySelector('.overlay');
+
+            if (!modalRoot || !overlay) {
+              console.error('salesTime 또는 overlay가 존재하지 않습니다.');
+              return;
+            }
+
+            modalRoot.innerHTML = '';
+            modalRoot.style.display = 'block';
+            overlay.style.display = 'block';
+
+            new SalesTime({ target: modalRoot });
+
+            const handleOutsideClick = (e) => {
+              if (!modalRoot.contains(e.target)) {
+                modalRoot.style.display = 'none';
+                overlay.style.display = 'none';
+                document.removeEventListener('click', handleOutsideClick);
+              }
+            };
+
+            setTimeout(() => {
+              document.addEventListener('click', handleOutsideClick);
+            }, 0);
+
+            submenuContainer.style.display = 'none';
+          });
+        }, 0);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const isClickInside = this.$target.contains(e.target);
+      const isSubmenuVisible = submenuContainer.style.display === 'block';
+
+      if (!isClickInside && isSubmenuVisible) {
+        submenuContainer.style.display = 'none';
+      }
+    });
+  }
+
+  showModal(title, content) {
+    const modalContainer = this.$target.querySelector('#modal-container');
+    modalContainer.innerHTML = `
+      <div class="modal-overlay">
+        <div class="modal">
+          <h2>${title}</h2>
+          <p>${content}</p>
+          <button id="close-modal">닫기</button>
+        </div>
+      </div>
+    `;
+
+    const closeBtn = modalContainer.querySelector('#close-modal');
+    closeBtn?.addEventListener('click', () => {
+      modalContainer.innerHTML = '';
+    });
   }
 
   mounted() {

@@ -29,6 +29,8 @@
     </div>
     <div id="footerPanel"></div>
 </div>
+<div class="overlay" style="display: none;"></div>
+<div id="salesTime" style="display: none;"></div>
 </body>
 <script type="module" th:inline="none">
     import Navbar from '/js/main/Navbar.js';
@@ -40,15 +42,17 @@
     import CategoryPanel from "/js/main/CategoryPanel.js";
     import MenuGrid from "/js/main/MenuGrid.js";
     import FooterPanel from "/js/main/FooterPanel.js";
+    import SalesTime from "/js/sales/SalesTime.js";
 
-    new Navbar(document.querySelector('#navbar'));
-    new MenuEntityTabs(document.querySelector('#tab'));
-    new TotalSection(document.querySelector('#totalSection'));
-    new TotalItem(document.querySelector('#billing'));
-    new Billing(document.querySelector('#totalBilling'));
-    new RowButton(document.querySelector('#rowButton'));
-    new CategoryPanel(document.querySelector('#categoryPanel'));
-    new MenuGrid(document.querySelector('#menuGrid'));
-    new FooterPanel(document.querySelector('#footerPanel'));
+    new Navbar({ target: document.querySelector('#navbar') });
+    new MenuEntityTabs({ target: document.querySelector('#tab') });
+    new TotalSection({ target: document.querySelector('#totalSection') });
+    new TotalItem({ target: document.querySelector('#billing') });
+    new Billing({ target: document.querySelector('#totalBilling') });
+    new RowButton({ target: document.querySelector('#rowButton') });
+    new CategoryPanel({ target: document.querySelector('#categoryPanel') });
+    new MenuGrid({ target: document.querySelector('#menuGrid') });
+    new FooterPanel({ target: document.querySelector('#footerPanel') });
+    const salesTimeComponent = new SalesTime({ target: document.querySelector('#salesTime') });
 </script>
 </html>

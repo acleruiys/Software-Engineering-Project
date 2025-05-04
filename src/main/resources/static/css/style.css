@@ -140,7 +140,6 @@ body {
 
 /* Sales UI 스타일 추가 */
 .sales-container {
-    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -151,6 +150,8 @@ body {
     background: white;
     border: 1px solid #ddd;
     border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .overlay {
@@ -243,13 +244,6 @@ body {
 
 .time-cell {
     font-weight: bold;
-}
-
-.sales-footer {
-    display: flex;
-    padding: 10px;
-    gap: 5px;
-    justify-content: space-between;
 }
 
 .sales-footer-button {
@@ -534,12 +528,12 @@ button:hover {
 }
 
 .container {
+    position: relative;
     height: 950px;
     width: 1200px;
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: 1.5fr 6fr 2.5fr;
-    background-color: #d3d3d3;
+    grid-template-rows: 2fr 5.5fr 3fr;
 }
 
 .footer-center-buttons {
@@ -612,4 +606,42 @@ button:hover {
 
 .orange {
     background-color: #ffc8b1;
+}
+
+.yearly-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.year-cell {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+.sales-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.sales-footer div {
+    padding: 10px;
+    border: 2px solid #ccc;
+}
+
+#submenu-container {
+    position: absolute;
+    top: 45px;
+    left: 760px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 10px;
+    background-color: white;
+    display: none;
+    border-radius: 8px;
 }
