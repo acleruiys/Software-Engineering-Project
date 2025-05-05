@@ -24,15 +24,18 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PointHistory> pointHistories = new ArrayList<>();
 
+    // 더티 체킹 시 사용
     public void updateMember(UpdateMemberDto updateMemberDto){
         this.phone = updateMemberDto.getAfterPhone();
         this.name = updateMemberDto.getName();
     }
 
+    // 포인트 적립
     public void accumulatePoint(Integer point){
         this.points = this.points + point;
     }
 
+    // 포인트 사용
     public void usePoint(Integer point){
         this.points = this.points - point;
     }
