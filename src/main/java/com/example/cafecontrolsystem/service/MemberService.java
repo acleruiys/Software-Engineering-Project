@@ -23,20 +23,20 @@ public class MemberService {
 
     // Null일 때 예외처리
     public Member getMember(String phone){
-        return memberRepository.findByPhone(phone).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원"));
+        return memberRepository.findByPhone(phone).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + phone));
     }
 
     // 회원 가입
     public Member saveMember(Member member){
         if (memberRepository.findByPhone(member.getPhone()).isPresent()) {
-            throw new IllegalStateException("Error: 이미 등록된 회원입니다.");
+            throw new IllegalStateException("Error: 이미 등록된 회원 " + member.getPhone());
         }
         return memberRepository.save(member);
     }
 
     // 회원 삭제
     public boolean deleteMember(String phone){
-        memberRepository.delete(findByPhone(phone).orElseThrow(() -> new IllegalArgumentException("Error: 회원 탈퇴 중 오류")));
+        memberRepository.delete(findByPhone(phone).orElseThrow(() -> new IllegalArgumentException("Error: 회원 탈퇴 중 오류 " + phone)));
 
         return memberRepository.findByPhone(phone).isEmpty();
     }
@@ -46,10 +46,10 @@ public class MemberService {
     @Transactional
     public Member updateMember(UpdateMemberDto updateMemberDto){
         memberRepository.findByPhone(updateMemberDto.getBeforePhone())
-                .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원"))
+                .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + updateMemberDto.getBeforePhone()))
                 .updateMember(updateMemberDto);
 
-        return memberRepository.findByPhone(updateMemberDto.getAfterPhone()).orElseThrow(()-> new IllegalArgumentException("Error: 회원 수정 중 오류"));
+        return memberRepository.findByPhone(updateMemberDto.getAfterPhone()).orElseThrow(()-> new IllegalArgumentException("Error: 회원 수정 중 오류 " + updateMemberDto.getAfterPhone()));
     }
 
 
