@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "option_table")
+@Table(name = "menu_option")
 @Getter @Setter
-public class Option {
+public class MenuOption {
     @Id
     @Column(name = "option_code")
     private Long optionCode;
