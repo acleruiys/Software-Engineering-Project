@@ -22,8 +22,10 @@ public class InventoryHistory {
     private Inventory_entitiy inventory;
     
     private String type;
-    
+
+    @Column(name = "change_amount")
     private Integer change;
-    
+
+    @Column(name = "record_date")
     private LocalDate date;
 } 
