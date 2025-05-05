@@ -1,5 +1,3 @@
-import SalesFooter from "./SalesFooter.js";
-
 export default class DailyView {
     constructor({ target, data }) {
         this.$target = target;
@@ -26,19 +24,6 @@ export default class DailyView {
         return rows;
     }
 
-    calculateTotalSummary() {
-        const summary = { cash: 0, card: 0, point: 0, etc: 0 };
-
-        Object.values(this.data).forEach(({ cash = 0, card = 0, point = 0, etc = 0 }) => {
-            summary.cash += cash;
-            summary.card += card;
-            summary.point += point;
-            summary.etc += etc;
-        });
-
-        return summary;
-    }
-
     render() {
         this.$target.innerHTML = `
             <div class="sales-scrollable-container">
@@ -57,15 +42,19 @@ export default class DailyView {
                     </tbody>
                 </table>
             </div>
-            <div class="sales-footer-container"></div>
         `;
+    }
 
-        const footerContainer = this.$target.querySelector(".sales-footer-container");
-        const totalSummary = this.calculateTotalSummary();
+    getSummary() {
+        const summary = { cash: 0, card: 0, point: 0, etc: 0 };
 
-        new SalesFooter({
-            target: footerContainer,
-            data: totalSummary
+        Object.values(this.data).forEach(({ cash = 0, card = 0, point = 0, etc = 0 }) => {
+            summary.cash += cash;
+            summary.card += card;
+            summary.point += point;
+            summary.etc += etc;
         });
+
+        return summary;
     }
 }
