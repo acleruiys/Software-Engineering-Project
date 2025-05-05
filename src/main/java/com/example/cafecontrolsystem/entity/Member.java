@@ -29,8 +29,14 @@ public class Member {
         this.name = updateMemberDto.getName();
     }
 
-    public void updatePoint(Integer point){
+    public void accumulatePoint(Integer point){
         this.points = this.points + point;
     }
+
+    public void usePoint(Integer point){
+        this.points = this.points - point;
+    }
+
+
 
 } 
