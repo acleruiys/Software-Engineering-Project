@@ -6,15 +6,18 @@ export default class CategoryPanel extends Component {
             categories: [
                 { label: "커피", value: "COFFEE" },
                 { label: "디카페인", value: "DECAF" },
-                { label: "논커피/<br>과일라떼", value: "NON_COFFEE" },
+                { label: "논커피<br>과일라떼", value: "NON_COFFEE" },
                 { label: "티", value: "TEA" },
                 { label: "스무디<br>프라페", value: "SMOOTHIE" },
                 { label: "에이드<br>주스", value: "ADE" },
-                { label: "&lt;" },
                 { label: "시즌메뉴", value: "SEASON" },
                 { label: "빵", value: "BREAD" },
-                {}, {}, {}, {},
-                { label: "&gt;" }
+                { label: "" },
+                { label: "" },
+                { label: "" },
+                { label: "" },
+                { label: "" },
+                { label: "" }
             ]
         };
     }
@@ -35,8 +38,9 @@ export default class CategoryPanel extends Component {
         this.$target.querySelectorAll(".category-button[data-category]")
             .forEach(btn => {
                 btn.addEventListener("click", e => {
+                    console.log(e.target.dataset.category);
                     const category = e.target.dataset.category;
-                    alert(`카테고리 선택됨: ${category}`);
+                    this.props.onCategorySelect?.(category);  // 콜백 호출
                 });
             });
     }

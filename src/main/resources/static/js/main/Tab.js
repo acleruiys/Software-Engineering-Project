@@ -1,4 +1,3 @@
-// MenuEntityTabs.js
 import Component from "./Component.js";
 
 export default class MenuEntityTabs extends Component {
@@ -18,9 +17,5 @@ export default class MenuEntityTabs extends Component {
 
     createTabTemplate(label) {
         return `<div class="tab">${label}</div>`;
-    }
-
-    setEvent() {
-
     }
 }

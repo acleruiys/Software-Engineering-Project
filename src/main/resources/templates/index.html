@@ -43,6 +43,7 @@
     import MenuGrid from "/js/main/MenuGrid.js";
     import FooterPanel from "/js/main/FooterPanel.js";
     import SalesTime from "/js/sales/SalesTime.js";
+    import App from '/js/main/App.js';
 
     new Navbar({ target: document.querySelector('#navbar') });
     new MenuEntityTabs({ target: document.querySelector('#tab') });
@@ -54,5 +55,6 @@
     new MenuGrid({ target: document.querySelector('#menuGrid') });
     new FooterPanel({ target: document.querySelector('#footerPanel') });
     const salesTimeComponent = new SalesTime({ target: document.querySelector('#salesTime') });
+    new App({ target: document.body });
 </script>
 </html>
