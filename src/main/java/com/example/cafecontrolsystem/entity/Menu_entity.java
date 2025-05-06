@@ -2,12 +2,18 @@ package com.example.cafecontrolsystem.entity;
 
 import com.example.cafecontrolsystem.dto.UpdateMenuDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "menus")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Menu_entity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

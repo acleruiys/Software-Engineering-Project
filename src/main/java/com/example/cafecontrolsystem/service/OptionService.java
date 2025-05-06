@@ -15,8 +15,8 @@ public class OptionService {
     private final OptionRepository optionRepository;
 
     // 옵션 추가 -> default available = true
-    public MenuOption saveOption(MenuOption menuOption){
-        return optionRepository.save(MenuOption.builder()
+    public void saveOption(MenuOption menuOption){
+        optionRepository.save(MenuOption.builder()
                 .name(menuOption.getName())
                 .price(menuOption.getPrice())
                 .available(true)

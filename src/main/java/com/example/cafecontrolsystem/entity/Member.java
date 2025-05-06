@@ -21,7 +21,8 @@ public class Member {
     private Long memberId;
     
     private String name;
-    
+
+    @Column(unique = true)
     private String phone;
     
     private Integer points;

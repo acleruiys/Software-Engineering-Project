@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 public class MenuOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "option_id")
+    @Column(name = "option_code")
     private Long optionId;
     
     private String name;
