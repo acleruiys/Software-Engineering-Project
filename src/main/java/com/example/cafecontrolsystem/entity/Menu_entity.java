@@ -1,5 +1,6 @@
 package com.example.cafecontrolsystem.entity;
 
+import com.example.cafecontrolsystem.dto.UpdateMenuDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,6 +26,18 @@ public class Menu_entity {
     
     @Column(length = 500)
     private String description;
-    
+
+    @Column
     private boolean available = true;
+
+    // 더티체킹
+    public void changeMenu(UpdateMenuDto updateMenuDto){
+        this.price = updateMenuDto.getPrice();
+        this.description = updateMenuDto.getDescription();
+    }
+
+    // 더티체킹
+    public void changeAvailable(){
+        this.available = !this.available;
+    }
 } 

@@ -1,20 +1,32 @@
 package com.example.cafecontrolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Entity
 @Table(name = "menu_option")
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MenuOption {
     @Id
-    @Column(name = "option_code")
-    private Long optionCode;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "option_id")
+    private Long optionId;
     
     private String name;
     
-    private String available;
+    private Boolean available;
     
-    private String price;
+    private Integer price;
+
+    public void changeAvailable(){
+        this.available = !this.available;
+    }
+
+    public void changeOptionPrice(Integer price){
+        this.price = price;
+    }
 } 
