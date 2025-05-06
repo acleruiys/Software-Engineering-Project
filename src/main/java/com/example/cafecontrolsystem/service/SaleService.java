@@ -62,8 +62,11 @@ public class SaleService {
                         .amount(salePaymentDto.getPrice())
                         .type("reward")
                         .build());
-            }
 
+                memberRepository.findById(saveSaleDto.getMemberId())
+                        .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId()))
+                        .usePoint(salePaymentDto.getPrice());
+            }
         }
     }
 
