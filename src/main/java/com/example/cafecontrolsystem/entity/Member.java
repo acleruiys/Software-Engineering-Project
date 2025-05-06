@@ -2,8 +2,7 @@ package com.example.cafecontrolsystem.entity;
 
 import com.example.cafecontrolsystem.dto.UpdateMemberDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.ArrayList;
@@ -12,6 +11,9 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

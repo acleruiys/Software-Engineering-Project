@@ -27,11 +27,15 @@ public class MemberService {
     }
 
     // 회원 가입
-    public Member saveMember(Member member){
+    public void saveMember(Member member){
         if (memberRepository.findByPhone(member.getPhone()).isPresent()) {
             throw new IllegalStateException("Error: 이미 등록된 회원 " + member.getPhone());
         }
-        return memberRepository.save(member);
+        memberRepository.save(Member.builder()
+                .name(member.getName())
+                .phone(member.getPhone())
+                .points(0)
+                .build());
     }
 
     // 회원 삭제

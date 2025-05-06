@@ -10,7 +10,6 @@ import com.example.cafecontrolsystem.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -58,8 +57,7 @@ public class EmployeeService {
     // 전체 조회
     // pageSize = 10
     public List<EmployeeAttendance> showAttendance(int page){
-        return attendance.findAll((Pageable) PageRequest.of(page, 10, Sort.by("date").descending().and(Sort.by("id").descending())))
-                .orElseThrow(() -> new IllegalArgumentException("Error: 근태 기록 없음"))
+        return attendance.findAll(PageRequest.of(page, 10, Sort.by("date").descending().and(Sort.by("id").descending())))
                 .getContent();
     }
 
@@ -68,7 +66,7 @@ public class EmployeeService {
     public List<EmployeeAttendance> showAttendanceByEmployee(Long employeeId, int page){
         return attendance.findByEmployee(employeeRepository.findById(employeeId)
                         .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + employeeId)),
-                (Pageable) PageRequest.of(page, 10, Sort.by("date").descending().and(Sort.by("id").descending())))
+                PageRequest.of(page, 10, Sort.by("date").descending().and(Sort.by("id").descending())))
                 .orElseThrow(() -> new IllegalArgumentException("Error: 근태 기록 없음")).getContent();
     }
 
@@ -103,7 +101,5 @@ public class EmployeeService {
     public List<Employee> showEmployee(){
         return employeeRepository.findAll();
     }
-
-
 
 }
