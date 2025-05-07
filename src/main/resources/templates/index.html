@@ -44,6 +44,7 @@
     import FooterPanel from "/js/main/FooterPanel.js";
     import SalesTime from "/js/sales/SalesTime.js";
     import App from '/js/main/App.js';
+    import OrderList from "/js/main/OrderList.js";
 
     new Navbar({ target: document.querySelector('#navbar') });
     new MenuEntityTabs({ target: document.querySelector('#tab') });
@@ -56,5 +57,8 @@
     new FooterPanel({ target: document.querySelector('#footerPanel') });
     const salesTimeComponent = new SalesTime({ target: document.querySelector('#salesTime') });
     new App({ target: document.body });
+    new OrderList({
+        target: document.querySelector('.order-list')
+    });
 </script>
 </html>

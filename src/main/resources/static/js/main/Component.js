@@ -22,7 +22,7 @@ export default class Component {
       ...this.state,
       ...newState
     };
-    this.render(); // 상태 변경 후 다시 렌더링
+    this.render();
   }
 
   setEvent() {}

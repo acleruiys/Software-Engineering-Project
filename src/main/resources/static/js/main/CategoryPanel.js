@@ -38,9 +38,8 @@ export default class CategoryPanel extends Component {
         this.$target.querySelectorAll(".category-button[data-category]")
             .forEach(btn => {
                 btn.addEventListener("click", e => {
-                    console.log(e.target.dataset.category);
                     const category = e.target.dataset.category;
-                    this.props.onCategorySelect?.(category);  // 콜백 호출
+                    this.props.onCategorySelect?.(category);
                 });
             });
     }
