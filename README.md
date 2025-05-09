@@ -1,5 +1,5 @@
 # 카페 관리 시스템 (Cafe Control System)
-
+servise 패키지 부분 수정중 입니다. 통합 업데이트 시 오류부분을 찾기 위함입니다.
 ## 개발 환경
 - Java 21
 - Spring Boot 3.2.1
