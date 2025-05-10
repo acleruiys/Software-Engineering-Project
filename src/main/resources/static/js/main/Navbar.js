@@ -43,7 +43,8 @@ export default class Navbar extends Component {
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}/${hours}:${minutes}`;
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}/${hours}:${minutes}:${seconds}`;
   }
 
   setEvent() {
