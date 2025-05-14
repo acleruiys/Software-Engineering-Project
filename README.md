@@ -15,6 +15,28 @@
 - Thymeleaf
 - JUnit 5
 
+## 사용자 인증 및 보안
+
+### 인증 시스템
+- 사용자 로그인/회원가입 기능 구현
+- 관리자(ADMIN), 매니저(MANAGER), 직원(STAFF) 권한 구분
+- 세션 기반 인증 처리
+
+### 비밀번호 암호화
+- 단방향 SHA-256 해시 알고리즘 사용
+- Base64 인코딩 적용
+- 암호화 과정:
+  1. MessageDigest를 사용하여 SHA-256 해시 알고리즘 인스턴스 생성
+  2. 비밀번호 문자열을 UTF-8 바이트 배열로 변환
+  3. 해시 알고리즘을 통해 바이트 배열 해시화
+  4. 해시된 바이트 배열을 Base64로 인코딩하여 저장
+
+### 보안 컴포넌트
+- UserService: 사용자 등록 및 인증 처리
+- UserRepository: 사용자 정보 데이터베이스 접근
+- UserController: 사용자 API 엔드포인트 제공
+- 로그인/회원가입 페이지: 사용자 인증 인터페이스
+
 ### GitHub 연동 및 사용 방법 (IntelliJ)
 
 1. GitHub 저장소 클론
@@ -117,7 +139,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 #### 5. users (사용자 테이블)
 - `user_id`: 사용자 아이디 (PK, 자동 증가)
 - `username`: 사용자명 (NOT NULL, UNIQUE)
-- `password`: 비밀번호 (NOT NULL)
+- `password`: 비밀번호 (NOT NULL, SHA-256 해시 + Base64 인코딩)
 - `phone`: 전화번호 (NOT NULL)
 - `role`: 사용자 역할 (ENUM: ADMIN, MANAGER, STAFF)
 - `status`: 사용자 상태 (ENUM: ACTIVE, INACTIVE)

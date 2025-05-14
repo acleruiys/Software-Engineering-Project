@@ -132,7 +132,7 @@ export default class Navbar extends Component {
   }
 
   mounted() {
-    this.startClock();
+    this.startClock();  // 시계 업데이트 함수
   }
 
   startClock() {

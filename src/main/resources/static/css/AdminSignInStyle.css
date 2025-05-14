@@ -1,0 +1,94 @@
+/* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+}
+
+.container {
+    text-align: center;
+}
+
+.title {
+    color: #ff6f6f;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ffb3b3;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.input-group i {
+    color: #444;
+}
+
+.signup-btn {
+    background-color: #ff8f8f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    width: 280px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.login a {
+    color: #ff6f6f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 로그인 페이지를 위한 스타일 */
+.login-btn {
+    background-color: #ff8f8f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    width: 280px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.signup {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.signup a {
+    color: #ff6f6f;
+    text-decoration: none;
+    font-weight: bold;
+}

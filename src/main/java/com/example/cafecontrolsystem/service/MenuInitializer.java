@@ -30,8 +30,8 @@ public class MenuInitializer implements CommandLineRunner {
             menuRepository.save(Menu_entity.builder()
                     .name(type.name())
                     .price(type.getPrice())
-                    .category(categoryRepository.findById(type.getCategory_id())
-                            .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 카테고리 " + type.getCategory_id())))
+                    .category(categoryRepository.findByType(type.getCategoryType())
+                            .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 카테고리 " + type.getCategoryType())))
                     .available(true)
                     .build());
         }
