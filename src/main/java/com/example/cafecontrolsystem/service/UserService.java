@@ -38,13 +38,28 @@ public class UserService {
         if (userDto.getUsername() == null || userDto.getUsername().length() < 2 || userDto.getUsername().length() > 20) {
             throw new IllegalArgumentException("이름은 2자 이상 20자 이하로 입력해주세요.");
         }
-        // 전화번호 길이 제한 (숫자만 입력한다고 가정)
-        if (userDto.getPhone() == null || userDto.getPhone().length() < 13 || userDto.getPhone().length() > 14) {
-            throw new IllegalArgumentException("전화번호는 '010-xxxx-xxxx'이와 같은 형식으로 입력해주세요.");
+        // 전화번호 형식 검증
+        if (userDto.getPhone() == null) {
+            throw new IllegalArgumentException("전화번호를 입력해주세요.");
         }
+        
+        // 010-0000-0000 형식 검증
+        if (!userDto.getPhone().matches("^010-\\d{4}-\\d{4}$")) {
+            throw new IllegalArgumentException("전화번호는 '010-xxxx-xxxx'와 같은 형식으로 입력해주세요.");
+        }
+        
         // 비밀번호 길이 제한
         if (userDto.getPassword() == null || userDto.getPassword().length() < 4 || userDto.getPassword().length() > 20) {
             throw new IllegalArgumentException("비밀번호는 4자 이상 20자 이하로 입력해주세요.");
+        }
+        // 역할 유효성 검사
+        if (userDto.getRole() == null || userDto.getRole().isEmpty()) {
+            throw new IllegalArgumentException("역할을 선택해주세요.");
+        }
+        try {
+            User.UserRole.valueOf(userDto.getRole());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("유효하지 않은 역할입니다.");
         }
         // 중복 사용자 확인
         if (userRepository.existsByUsername(userDto.getUsername())) {

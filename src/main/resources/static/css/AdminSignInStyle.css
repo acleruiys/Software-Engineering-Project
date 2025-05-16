@@ -34,12 +34,13 @@ body {
     margin-right: auto;
 }
 
-.input-group input {
+.input-group input, .input-group select {
     border: none;
     outline: none;
     width: 100%;
     padding-left: 10px;
     font-size: 14px;
+    background-color: transparent;
 }
 
 .input-group i {
