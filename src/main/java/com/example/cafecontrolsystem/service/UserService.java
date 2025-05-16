@@ -34,6 +34,18 @@ public class UserService {
      * @throws IllegalArgumentException 사용자명이 이미 존재할 경우 발생
      */
     public User registerUser(UserDto userDto) {
+        // 이름 길이 제한
+        if (userDto.getUsername() == null || userDto.getUsername().length() < 2 || userDto.getUsername().length() > 20) {
+            throw new IllegalArgumentException("이름은 2자 이상 20자 이하로 입력해주세요.");
+        }
+        // 전화번호 길이 제한 (숫자만 입력한다고 가정)
+        if (userDto.getPhone() == null || userDto.getPhone().length() < 10 || userDto.getPhone().length() > 11) {
+            throw new IllegalArgumentException("전화번호는 010xxxxxxxx 입력해주세요.");
+        }
+        // 비밀번호 길이 제한
+        if (userDto.getPassword() == null || userDto.getPassword().length() < 4 || userDto.getPassword().length() > 20) {
+            throw new IllegalArgumentException("비밀번호는 4자 이상 20자 이하로 입력해주세요.");
+        }
         // 중복 사용자 확인
         if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new IllegalArgumentException("이미 존재하는 사용자명입니다.");
