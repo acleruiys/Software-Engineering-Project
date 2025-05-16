@@ -38,7 +38,9 @@ public class UserService {
         if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new IllegalArgumentException("이미 존재하는 사용자명입니다.");
         }
-
+        else if(userRepository.existsByPhone(userDto.getPhone())){
+            throw new IllegalArgumentException("이미 존재하는 전화번호입니다.");
+        }
         // 사용자 객체 생성
         User user = new User();
         user.setUsername(userDto.getUsername());
