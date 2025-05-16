@@ -39,8 +39,8 @@ public class UserService {
             throw new IllegalArgumentException("이름은 2자 이상 20자 이하로 입력해주세요.");
         }
         // 전화번호 길이 제한 (숫자만 입력한다고 가정)
-        if (userDto.getPhone() == null || userDto.getPhone().length() < 10 || userDto.getPhone().length() > 11) {
-            throw new IllegalArgumentException("전화번호는 010xxxxxxxx 입력해주세요.");
+        if (userDto.getPhone() == null || userDto.getPhone().length() < 13 || userDto.getPhone().length() > 14) {
+            throw new IllegalArgumentException("전화번호는 '010-xxxx-xxxx'이와 같은 형식으로 입력해주세요.");
         }
         // 비밀번호 길이 제한
         if (userDto.getPassword() == null || userDto.getPassword().length() < 4 || userDto.getPassword().length() > 20) {
