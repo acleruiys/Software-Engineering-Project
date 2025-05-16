@@ -50,6 +50,7 @@ public class UserService {
         if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new IllegalArgumentException("이미 존재하는 사용자명입니다.");
         }
+        // 중복 전화번호 확인
         else if(userRepository.existsByPhone(userDto.getPhone())){
             throw new IllegalArgumentException("이미 존재하는 전화번호입니다.");
         }
