@@ -138,7 +138,7 @@ body {
     color: #333;
 }
 
-.sales-container {
+.modal-container {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -165,14 +165,12 @@ body {
     z-index: 1999;
 }
 
-/* Sales UI 추가 스타일 */
-.sales-header {
+.modal-header {
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    padding: 10px 10px 0 10px;
 }
 
 .date-selector {
@@ -195,11 +193,6 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-}
-
-.close-btn {
-    cursor: pointer;
-    font-size: 20px;
 }
 
 .sales-tab-container {
@@ -438,17 +431,6 @@ body {
 .menuEntity-table th,
 .category-table th {
     background-color: #f5f5f5;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    color: #ff0000;
 }
 
 button {
@@ -710,4 +692,62 @@ button:hover {
 .order-item span {
     flex: 1;
     text-align: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #ff0000;
+}
+
+.table-wrapper {
+    max-height: 680px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
+
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* ← 고정 너비 */
+}
+
+.modal-table th,
+.modal-table td {
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 0;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.modal-table input[type="text"],
+.modal-table input[type="number"],
+.modal-table select {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.input-row td {
+    padding: 0;
+    height: 32px;
+}
+
+.modal-actions button {
+    margin-bottom: 10px;
+}
+
+.selected {
+    background-color: #f0f8ff;
 }
