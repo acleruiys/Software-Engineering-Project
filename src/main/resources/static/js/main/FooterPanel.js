@@ -13,7 +13,7 @@ export default class FooterPanel extends Component {
                 "주방메모", "포장", "배달", "서비스", "할인",
                 "수표조회", "영수증", "주문보류", "요청사항", "기타"
             ],
-            rightButtons: ["분할", "복합", "현금", "카드"]
+            rightButtons: ["분할/복합", "포인트", "현금", "카드"]
         };
     }
 
