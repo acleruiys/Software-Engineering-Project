@@ -348,3 +348,129 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 - 역할 기반 예외처리 추가
   - 유효하지 않은 역할 선택 시 오류 메시지 표시
   - 각 필드별 상세한 오류 메시지 제공
+
+## 파일 구조 및 역할
+
+### 프론트엔드 구조 (src/main/resources/static)
+
+#### JavaScript 파일 (/js)
+
+##### 메인 모듈 (/js/main)
+- `App.js`: 애플리케이션의 진입점, 전체 앱 상태 관리
+- `Component.js`: 모든 UI 컴포넌트의 기본 클래스, 상태 관리 및 렌더링 로직 포함
+- `Navbar.js`: 상단 네비게이션 바 컴포넌트, 메뉴 이동 및 시간 표시
+- `Tab.js`: 주문 화면의 탭 컴포넌트
+- `OrderList.js`: 주문 목록 표시 및 관리
+- `CategoryPanel.js`: 카테고리 선택 패널
+- `MenuGrid.js`: 메뉴 목록 그리드 표시
+- `Billing.js`: 주문 항목별 금액 계산
+- `TotalBilling.js`: 총 결제 금액 계산 및 표시
+- `TotalSection.js`: 주문 총합 정보 표시
+- `RowButton.js`: 하단 버튼 행 컴포넌트
+- `FooterPanel.js`: 푸터 영역 컴포넌트, 결제 버튼 등 포함
+
+##### 데이터 관리 (/js/data)
+- `MenuData.js`: 메뉴 데이터 정의 (카테고리, 메뉴 아이템)
+
+##### 매출 관리 (/js/sales)
+- `SalesTime.js`: 기간별 매출 조회 메인 컴포넌트
+- `DailyView.js`: 일별 매출 조회 뷰
+- `MonthlyView.js`: 월별 매출 조회 뷰
+- `YearlyView.js`: 연도별 매출 조회 뷰
+- `SalesFooter.js`: 매출 조회 화면 하단 요약 정보
+
+##### 메뉴 관리 (/js/menu)
+- `MenuSystem.js`: 메뉴 관리 시스템 컴포넌트
+
+##### 재고 관리 (/js/inventory)
+- `InventorySystem.js`: 재고 관리 시스템 컴포넌트
+
+##### 직원 관리 (/js/employee)
+- `EmployeeSystem.js`: 직원 관리 시스템 컴포넌트
+
+##### 공급 관리 (/js/supply)
+- `SupplySystem.js`: 공급업체 관리 시스템 컴포넌트
+
+##### 유틸리티 (/js/utils)
+- 다양한 유틸리티 함수 및 헬퍼 클래스
+
+##### 인증 관련
+- `login.js`: 로그인 처리
+- `adminSignIn.js`: 관리자 로그인 처리
+
+#### CSS 파일 (/css)
+- `style.css`: 메인 스타일시트, 전체 애플리케이션 스타일 정의
+- `AdminSignInStyle.css`: 관리자 로그인 페이지 스타일
+- `AdminSignUpStyle.css`: 관리자 회원가입 페이지 스타일
+
+#### HTML 템플릿 (/templates)
+- `index.html`: 메인 애플리케이션 페이지
+- 기타 템플릿 파일들
+
+### 백엔드 구조 (src/main/java)
+
+#### 컨트롤러 (controller/)
+- 클라이언트 요청 처리 및 API 엔드포인트 제공
+- REST API 및 뷰 컨트롤러 포함
+
+#### 서비스 (service/)
+- 비즈니스 로직 처리
+- 데이터 검증 및 트랜잭션 관리
+
+#### 저장소 (repository/)
+- 데이터베이스 접근 인터페이스
+- JPA Repository 구현체
+
+#### 엔티티 (entity/)
+- 데이터베이스 테이블과 매핑되는 Java 클래스
+- 관계 및 제약조건 정의
+
+#### DTO (dto/)
+- 데이터 전송 객체
+- 컨트롤러와 서비스 계층 간 데이터 교환에 사용
+
+#### 예외 처리 (exception/)
+- 사용자 정의 예외 클래스
+- 글로벌 예외 핸들러
+
+#### 설정 (config/)
+- 애플리케이션 설정 클래스
+- 보안 설정, 웹 설정 등
+
+### 데이터베이스 마이그레이션 및 초기화
+- `MenuInitializer.java`: 메뉴 초기 데이터 로드
+- 기타 데이터 초기화 클래스
+
+### 주요 기능별 파일 구조
+
+#### 사용자 인증
+- `UserController.java`: 사용자 인증 관련 API
+- `UserService.java`: 사용자 서비스 로직
+- `User.java`: 사용자 엔티티
+
+#### 판매 관리
+- `SaleController.java`: 판매 관련 API
+- `SaleService.java`: 판매 서비스 로직
+- `Sale.java`: 판매 엔티티
+- `SaleDetail.java`: 판매 상세 엔티티
+
+#### 메뉴 관리
+- `MenuController.java`: 메뉴 관련 API
+- `MenuService.java`: 메뉴 서비스 로직
+- `Menu_entity.java`: 메뉴 엔티티
+- `MenuCategory_entity.java`: 메뉴 카테고리 엔티티
+
+#### 재고 관리
+- `InventoryController.java`: 재고 관련 API
+- `InventoryService.java`: 재고 서비스 로직
+- `Inventory.java`: 재고 엔티티
+
+#### 직원 관리
+- `EmployeeController.java`: 직원 관련 API
+- `EmployeeService.java`: 직원 서비스 로직
+- `Employee.java`: 직원 엔티티
+
+#### 공급업체 관리
+- `SupplyController.java`: 공급업체 관련 API
+- `SupplyService.java`: 공급업체 서비스 로직
+- `Supply.java`: 공급업체 엔티티
