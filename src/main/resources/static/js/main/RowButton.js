@@ -17,7 +17,6 @@ export default class RowButton extends Component {
     `;
     }
 
-    // 이벤트 핸들러
     setEvent() {
     }
 }

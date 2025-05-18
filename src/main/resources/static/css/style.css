@@ -138,7 +138,7 @@ body {
     color: #333;
 }
 
-.sales-container {
+.modal-container {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -165,14 +165,12 @@ body {
     z-index: 1999;
 }
 
-/* Sales UI 추가 스타일 */
-.sales-header {
+.modal-header {
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    padding: 10px 10px 0 10px;
 }
 
 .date-selector {
@@ -195,11 +193,6 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-}
-
-.close-btn {
-    cursor: pointer;
-    font-size: 20px;
 }
 
 .sales-tab-container {
@@ -438,17 +431,6 @@ body {
 .menuEntity-table th,
 .category-table th {
     background-color: #f5f5f5;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    color: #ff0000;
 }
 
 button {
@@ -712,402 +694,60 @@ button:hover {
     text-align: center;
 }
 
-/* 회원 관리 모달 */
-.member-search-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2000;
-    max-width: 800px;
-    width: 90%;
-    height: 700px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-}
-
-.modal-header h2 {
-    margin: 0;
-    color: #333;
-}
-
-.modal-tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-}
-
-.tab-btn {
-    padding: 10px 20px;
-    border: none;
+.close-btn {
     background: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: #666;
-    border-bottom: 2px solid transparent;
-}
-
-.tab-btn.active {
-    color: #ff9966;
-    border-bottom: 2px solid #ff9966;
-}
-
-.tab-content {
-    display: none;
-    flex: 1;
-    overflow: auto;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.search-container, .register-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.search-input-group {
-    display: flex;
-    margin-bottom: 20px;
-}
-
-.search-input-group input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-}
-
-.search-input-group button {
-    padding: 10px 20px;
-    background-color: #ff9966;
-    color: white;
     border: none;
-    border-radius: 0 4px 4px 0;
+    font-size: 20px;
     cursor: pointer;
 }
 
-.error-message {
-    color: #e33;
-    margin-bottom: 10px;
+.close-btn:hover {
+    color: #ff0000;
 }
 
-.member-list {
-    flex: 1;
-    overflow: auto;
+.table-wrapper {
+    max-height: 680px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
 }
 
-.member-list.loading {
-    position: relative;
-}
-
-.loading-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-}
-
-.member-table {
+.modal-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* ← 고정 너비 */
 }
 
-.member-table th, .member-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+.modal-table th,
+.modal-table td {
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 0;
+    height: 32px;
+    box-sizing: border-box;
 }
 
-.member-table th {
-    background-color: #f5f5f5;
-    font-weight: bold;
-}
-
-.member-table tr:hover {
-    background-color: #f9f9f9;
-}
-
-.member-table tr.selected {
-    background-color: #fff0e0;
-}
-
-.select-member-btn {
-    padding: 5px 10px;
-    background-color: #ff9966;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.modal-footer {
-    margin-top: 20px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-#registerMemberBtn, #confirmMemberBtn {
-    padding: 10px 20px;
-    background-color: #ff9966;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#registerMemberBtn:hover, #confirmMemberBtn:hover {
-    background-color: #ff8844;
-}
-
-#confirmMemberBtn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.member-modal-container {
-    position: fixed;
-    top: 0;
-    left: 0;
+.modal-table input[type="text"],
+.modal-table input[type="number"],
+.modal-table select {
     width: 100%;
     height: 100%;
-    z-index: 2000;
-    pointer-events: none;
-}
-
-.member-modal-container > * {
-    pointer-events: auto;
-}
-
-/* 회원 검색 팝업 */
-.member-search-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2000;
-    max-width: 800px;
-    width: 90%;
-    height: 600px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-}
-
-.popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 15px;
-}
-
-.popup-header h2 {
-    margin: 0;
-    color: #333;
-    font-size: 24px;
-}
-
-.popup-header .close-btn {
-    background: none;
     border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: #999;
     padding: 0;
-    line-height: 1;
-}
-
-.popup-header .close-btn:hover {
-    color: #ff6633;
-}
-
-.search-container {
-    display: flex;
-    margin-bottom: 20px;
-}
-
-.search-container input {
-    flex: 1;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    font-size: 16px;
-}
-
-.search-container button {
-    padding: 12px 20px;
-    background-color: #ff9966;
-    color: white;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.search-container button:hover {
-    background-color: #ff8844;
-}
-
-.error-message {
-    color: #e33;
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #ffeeee;
-    border-radius: 4px;
+    margin: 0;
+    text-align: center;
+    box-sizing: border-box;
     font-size: 14px;
 }
 
-.member-list {
-    flex: 1;
-    overflow: auto;
-    position: relative;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    background-color: #fafafa;
+.input-row td {
+    padding: 0;
+    height: 32px;
 }
 
-.member-list.loading {
-    position: relative;
+.modal-actions button {
+    margin-bottom: 10px;
 }
 
-.loading-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-    font-size: 16px;
-}
-
-.member-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-}
-
-.member-table th, .member-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.member-table th {
-    background-color: #f5f5f5;
-    font-weight: bold;
-    position: sticky;
-    top: 0;
-}
-
-.member-table tr:hover {
-    background-color: #f9f9f9;
-}
-
-.member-table tr.selected {
-    background-color: #fff0e0;
-}
-
-.select-member-btn {
-    padding: 6px 12px;
-    background-color: #ff9966;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.select-member-btn:hover {
-    background-color: #ff8844;
-}
-
-.no-results {
-    text-align: center;
-    padding: 30px;
-    color: #666;
-    font-style: italic;
-}
-
-.popup-footer {
-    margin-top: 20px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-#confirmMemberBtn {
-    padding: 12px 24px;
-    background-color: #ff9966;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-#confirmMemberBtn:hover {
-    background-color: #ff8844;
-}
-
-#confirmMemberBtn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.member-popup-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2000;
-    pointer-events: none;
-}
-
-.member-popup-container > * {
-    pointer-events: auto;
+.selected {
+    background-color: #f0f8ff;
 }

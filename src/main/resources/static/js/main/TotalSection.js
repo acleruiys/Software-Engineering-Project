@@ -4,7 +4,7 @@ import Component from "./Component.js";
 export default class TotalSection extends Component {
     setup() {
         this.state = {
-            buttons: ['바코드', '상품검색', '주문상세', '위', '위']
+            buttons: ['바코드', '상품검색', '주문상세', '위', '아래']
         };
     }
 

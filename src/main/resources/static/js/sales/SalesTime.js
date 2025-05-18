@@ -14,8 +14,8 @@ export default class SalesTime extends Component {
 
     template() {
         return `
-      <div class="sales-container">
-        <div class="sales-header">
+      <div class="modal-container">
+        <div class="modal-header">
           <div class="date-selector-container">
             ${this.renderDateSelector()}
           </div>
@@ -33,7 +33,6 @@ export default class SalesTime extends Component {
 
     mounted() {
         this.renderTabContent();
-        this.setEvent();
     }
 
     setEvent() {
@@ -109,7 +108,6 @@ export default class SalesTime extends Component {
             });
 
         } else if (this.selectedTab === 'yearly') {
-            // 오류 수정: mockYearlyData 호출을 제대로 처리
             const yearlyData = this.mockYearlyData(this.selectedYear);
             viewInstance = new YearlyView({
                 target: viewWrapper,

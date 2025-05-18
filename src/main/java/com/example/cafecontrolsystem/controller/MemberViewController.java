@@ -10,6 +10,6 @@ public class MemberViewController {
 
     @GetMapping
     public String memberManagementPage() {
-        return "member/member";
+        return "/member";
     }
 }
