@@ -7,6 +7,8 @@
     <link th:href="@{/css/style.css}" rel="stylesheet" />
 </head>
 <body>
+<div class="overlay" style="display: none;"></div>
+<div id="salesTime" style="display: none;"></div>
 <div class="container">
     <div id="navbar"></div>
     <div class="main-container">
@@ -29,8 +31,6 @@
     </div>
     <div id="footerPanel"></div>
 </div>
-<div class="overlay" style="display: none;"></div>
-<div id="salesTime" style="display: none;"></div>
 </body>
 <script type="module" th:inline="none">
     import Navbar from '/js/main/Navbar.js';

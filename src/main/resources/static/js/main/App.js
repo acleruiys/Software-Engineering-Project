@@ -1,33 +1,26 @@
 import Component from './Component.js';
 import CategoryPanel from './CategoryPanel.js';
 import MenuGrid from './MenuGrid.js';
+import OrderList from './OrderList.js';
+import { menuItems } from '../data/MenuData.js';
 
 export default class App extends Component {
     setup() {
-        this.menuItemsByCategory = {
-            COFFEE: [
-                { name: "아메리카노", price: 3000 },
-                { name: "카페라떼", price: 5500 },
-                { name: "카푸치노", price: 5500 }
-            ],
-            DECAF: [{ name: "디카페인 아메리카노", price: 3000 }],
-            NON_COFFEE: [{ name: "딸기라떼", price: 6000 }, { name: "바나나라떼", price: 6000 }],
-            TEA: [{ name: "녹차", price: 5000 }, { name: "홍차", price: 5000 }],
-            SMOOTHIE: [{ name: "망고스무디", price: 6500 }],
-            ADE: [{ name: "레몬에이드", price: 6000 }],
-            SEASON: [{ name: "겨울한정 핫초코", price: 5000 }],
-            BREAD: [{ name: "크루아상", price: 4000 }, { name: "식빵", price: 3000 }]
-        };
+        this.menuItemsByCategory = menuItems;
 
         this.state = {
-            menuItems: this.menuItemsByCategory.COFFEE
+            menuItems: this.menuItemsByCategory.COFFEE,
+            selectedOrderItemId: null,
+            orderList: []
         };
 
-        this.orderList = [];
         this.menuGrid = null;
         this.categoryPanel = null;
+        this.orderListComponent = null;
 
         this.handleMenuItemSelected = this.handleMenuItemSelected.bind(this);
+        this.handleOrderItemSelected = this.handleOrderItemSelected.bind(this);
+        this.handleOrderAction = this.handleOrderAction.bind(this);
     }
 
     template() {
@@ -38,7 +31,10 @@ export default class App extends Component {
         if (this.menuGrid) {
             this.menuGrid.setMenuItems(this.state.menuItems);
         }
-        this.renderOrderList();
+        
+        if (this.orderListComponent) {
+            this.orderListComponent.setState({ orders: this.state.orderList });
+        }
     }
 
     mounted() {
@@ -62,65 +58,117 @@ export default class App extends Component {
                 }
             });
         }
+        
+        if (!this.orderListComponent) {
+            this.orderListComponent = new OrderList({
+                target: document.querySelector('.order-list'),
+                props: {
+                    onOrderItemSelect: this.handleOrderItemSelected
+                }
+            });
+        }
 
         document.removeEventListener('menuItemSelected', this.handleMenuItemSelected);
         document.addEventListener('menuItemSelected', this.handleMenuItemSelected);
-
-        this.renderOrderList();
+        
+        document.removeEventListener('orderItemSelected', this.handleOrderItemSelected);
+        document.addEventListener('orderItemSelected', this.handleOrderItemSelected);
+        
+        document.removeEventListener('orderAction', this.handleOrderAction);
+        document.addEventListener('orderAction', this.handleOrderAction);
     }
 
     handleMenuItemSelected(e) {
         const selected = e.detail;
-        const existing = this.orderList.find(item => item.name === selected.name);
+        const existing = this.state.orderList.find(item => item.id === selected.id);
 
+        let newOrderList;
         if (existing) {
-            existing.quantity += 1;
-            existing.totalPrice = existing.quantity * existing.price;
+            newOrderList = this.state.orderList.map(item => 
+                item.id === selected.id 
+                    ? { ...item, quantity: item.quantity + 1, totalPrice: (item.quantity + 1) * item.price }
+                    : item
+            );
         } else {
-            this.orderList.push({
-                id: this.orderList.length + 1,
-                name: selected.name,
-                quantity: 1,
-                price: selected.price,
-                totalPrice: selected.price
-            });
+            newOrderList = [
+                ...this.state.orderList,
+                {
+                    id: selected.id,
+                    name: selected.name,
+                    quantity: 1,
+                    price: selected.price,
+                    totalPrice: selected.price
+                }
+            ];
         }
 
-        this.renderOrderList();
+        this.setState({ orderList: newOrderList });
     }
-
-    renderOrderList() {
-        const container = document.querySelector('.order-list');
-        if (!container) return;
-
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
+    
+    handleOrderItemSelected(e) {
+        const { itemId } = e.detail;
+        this.setState({ selectedOrderItemId: itemId });
+    }
+    
+    handleOrderAction(e) {
+        const { action, quantity, operation } = e.detail;
+        let newOrderList = [...this.state.orderList];
+        
+        switch(action) {
+            case 'removeSelected':
+                if (this.state.selectedOrderItemId) {
+                    newOrderList = newOrderList.filter(item => item.id !== this.state.selectedOrderItemId);
+                    this.setState({ 
+                        orderList: newOrderList,
+                        selectedOrderItemId: null 
+                    });
+                }
+                break;
+                
+            case 'removeAll':
+                this.setState({ 
+                    orderList: [],
+                    selectedOrderItemId: null 
+                });
+                break;
+                
+            case 'setQuantity':
+                if (this.state.selectedOrderItemId) {
+                    newOrderList = newOrderList.map(item => {
+                        if (item.id === this.state.selectedOrderItemId) {
+                            return {
+                                ...item,
+                                quantity: quantity,
+                                totalPrice: quantity * item.price
+                            };
+                        }
+                        return item;
+                    });
+                    this.setState({ orderList: newOrderList });
+                }
+                break;
+                
+            case 'changeQuantity':
+                if (this.state.selectedOrderItemId) {
+                    newOrderList = newOrderList.map(item => {
+                        if (item.id === this.state.selectedOrderItemId) {
+                            let newQuantity = item.quantity;
+                            if (operation === '+') {
+                                newQuantity += 1;
+                            } else if (operation === '-' && item.quantity > 1) {
+                                newQuantity -= 1;
+                            }
+                            return {
+                                ...item,
+                                quantity: newQuantity,
+                                totalPrice: newQuantity * item.price
+                            };
+                        }
+                        return item;
+                    });
+                    this.setState({ orderList: newOrderList });
+                }
+                break;
         }
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'order-list-items';
-
-        this.orderList.forEach((item, index) => {
-            const orderItem = document.createElement('div');
-            orderItem.className = 'order-item';
-
-            const indexSpan = document.createElement('span');
-            indexSpan.textContent = `${index + 1}`;
-
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = item.name;
-
-            const quantitySpan = document.createElement('span');
-            quantitySpan.textContent = item.quantity;
-
-            const totalPriceSpan = document.createElement('span');
-            totalPriceSpan.textContent = (item.price * item.quantity).toLocaleString();
-
-            orderItem.append(indexSpan, nameSpan, quantitySpan, totalPriceSpan);
-            wrapper.appendChild(orderItem);
-        });
-
-        container.appendChild(wrapper);
     }
-
 }
