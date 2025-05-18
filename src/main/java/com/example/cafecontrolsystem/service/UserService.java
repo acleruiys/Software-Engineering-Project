@@ -1,6 +1,7 @@
 package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.dto.UserDto;
+import com.example.cafecontrolsystem.dto.SaveEmployeeDto;
 import com.example.cafecontrolsystem.entity.User;
 import com.example.cafecontrolsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, EmployeeService employeeService) {
         this.userRepository = userRepository;
+        this.employeeService = employeeService;
     }
 
     /**
@@ -77,7 +80,15 @@ public class UserService {
         user.setRole(User.UserRole.valueOf(userDto.getRole()));
 
         // 데이터베이스에 저장
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        
+        // 직원(STAFF) 역할인 경우 Employee 데이터베이스에도 저장
+        if (user.getRole() == User.UserRole.STAFF) {
+            SaveEmployeeDto saveEmployeeDto = new SaveEmployeeDto(user.getUsername());
+            employeeService.saveEmployee(saveEmployeeDto);
+        }
+        
+        return savedUser;
     }
     
     /**
