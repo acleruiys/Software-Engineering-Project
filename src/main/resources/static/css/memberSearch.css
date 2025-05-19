@@ -1,0 +1,218 @@
+/* 회원 검색 UI 스타일 */
+
+.member-search-container {
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 20px;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-header h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 0;
+}
+
+.search-header p {
+    color: #666;
+    margin: 0;
+}
+
+/* 검색 폼 */
+.search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-form select {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    flex: 0 0 120px;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.search-form button:hover {
+    background-color: #45a049;
+}
+
+/* 검색 결과 테이블 */
+.search-results {
+    margin-top: 20px;
+}
+
+.member-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.member-table th, 
+.member-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.member-table th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 500;
+}
+
+.member-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.member-table td:last-child {
+    text-align: center;
+}
+
+/* 버튼 스타일 */
+.btn-edit, 
+.btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 0 3px;
+    transition: background-color 0.2s;
+}
+
+.btn-edit {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #0b7dda;
+}
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #da190b;
+}
+
+/* 페이지네이션 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.pagination-btn {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.pagination-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.pagination-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.prev-btn, 
+.next-btn {
+    font-weight: 500;
+}
+
+/* 결과 없음 메시지 */
+.no-results, 
+.error-message {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-top: 20px;
+    border: 1px solid #eee;
+}
+
+.error-message {
+    color: #f44336;
+    border-color: #ffebee;
+    background-color: #fff8f8;
+}
+
+/* 숨김 클래스 */
+.hidden {
+    display: none;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .search-form select {
+        flex: initial;
+        width: 100%;
+    }
+    
+    .search-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .search-header p {
+        margin-top: 5px;
+    }
+    
+    .member-table th:nth-child(1),
+    .member-table td:nth-child(1) {
+        display: none;
+    }
+    
+    .btn-edit, 
+    .btn-delete {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+} 

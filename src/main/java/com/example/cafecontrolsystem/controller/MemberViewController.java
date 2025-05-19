@@ -12,4 +12,9 @@ public class MemberViewController {
     public String memberManagementPage() {
         return "/member";
     }
+    
+    @GetMapping("/search")
+    public String memberSearchPage() {
+        return "/member/memberSearch";
+    }
 }

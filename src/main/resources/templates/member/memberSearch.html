@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 검색 - 카페 관리 시스템</title>
+    <link rel="stylesheet" href="/css/memberSearch.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="member-search-container">
+        <div class="search-header">
+            <h2>회원 검색</h2>
+            <p>회원 정보를 검색하고 관리할 수 있습니다.</p>
+        </div>
+        
+        <!-- 검색 폼 -->
+        <form id="memberSearchForm" class="search-form">
+            <select id="searchType">
+                <option value="name">이름</option>
+                <option value="phone">전화번호</option>
+            </select>
+            <input type="text" id="memberSearchInput" placeholder="검색어를 입력하세요">
+            <button type="submit">검색</button>
+        </form>
+        
+        <!-- 검색 결과 -->
+        <div id="searchResults" class="search-results hidden">
+            <div id="memberTable"></div>
+            <div id="pagination"></div>
+        </div>
+    </div>
+    
+    <script src="/js/member/MemberSearch.js"></script>
+</body>
+</html> 
