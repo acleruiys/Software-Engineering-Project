@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/kiosk?serverTimezone=Asia/Seoul
+    username: root
+    password: your_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+  thymeleaf:
+    cache: false
+
+server:
+  port: 8080

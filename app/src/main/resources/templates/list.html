@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Inventory</title></head>
+<body>
+<h1>재고 목록</h1>
+<a th:href="@{/inventory/add}">+ 추가</a>
+<table>
+    <tr>
+        <th>ID</th><th>이름</th><th>수량</th><th>가격</th><th>삭제</th>
+    </tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.inventoryId}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.price}"></td>
+        <td><a th:href="@{'/inventory/delete/' + ${item.inventoryId}}">삭제</a></td>
+    </tr>
+</table>
+</body>
+</html>

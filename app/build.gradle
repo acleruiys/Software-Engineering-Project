@@ -8,6 +8,9 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
 }
 
 repositories {
@@ -16,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
     // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
 
@@ -23,6 +27,24 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
+    // JPA
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final' // JPA 구현체
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // Spring Boot (예시)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // (선택) H2 또는 MySQL
+    runtimeOnly 'com.h2database:h2'
+    // runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
