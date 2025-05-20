@@ -19,4 +19,13 @@ public enum CategoryType {
     public String getDisplayName() {
         return displayName;
     }
+
+    public static CategoryType fromDisplayName(String displayName) {
+        for (CategoryType type : CategoryType.values()) {
+            if (type.getDisplayName().equals(displayName)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid category display name: " + displayName);
+    }
 } 

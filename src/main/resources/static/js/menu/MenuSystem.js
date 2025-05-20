@@ -3,16 +3,82 @@ import Component from "../main/Component.js";
 export default class MenuSystem extends Component {
     setup() {
         this.state = {
-            menuList: [
-                { id: 1, name: '아메리카노', category: '커피', price: 3000, status: '판매중' },
-                { id: 2, name: '라떼', category: '커피', price: 3500, status: '판매중' }
-            ],
+            menuList: [],
             isAdding: false,
             categoryOptions: ['커피', '디카페인', '논커피/과일라떼', '티', '스무디/프라페', '에이드/주스', '시즌메뉴', '빵'],
             selectedMenuId: null,
             isEditing: false,
             editingMenuId: null,
         };
+        this.fetchMenus();
+    }
+
+    async fetchMenus() {
+        try {
+            const response = await fetch('/api/menus');
+            if (!response.ok) {
+                throw new Error('메뉴를 불러오는데 실패했습니다.');
+            }
+            const data = await response.json();
+            this.state.menuList = data;
+            this.renderMenuTable();
+        } catch (error) {
+            console.error('메뉴 데이터 불러오기 오류:', error);
+            alert('메뉴 데이터를 불러오는데 실패했습니다.');
+        }
+    }
+
+    async addMenu(menuData) {
+        try {
+            const response = await fetch('/api/menus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(menuData)
+            });
+            if (!response.ok) {
+                throw new Error('메뉴 추가에 실패했습니다.');
+            }
+            await this.fetchMenus();
+        } catch (error) {
+            console.error('메뉴 추가 오류:', error);
+            alert('메뉴 추가에 실패했습니다.');
+        }
+    }
+
+    async updateMenu(id, menuData) {
+        try {
+            const response = await fetch(`/api/menus/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(menuData)
+            });
+            if (!response.ok) {
+                throw new Error('메뉴 수정에 실패했습니다.');
+            }
+            await this.fetchMenus();
+        } catch (error) {
+            console.error('메뉴 수정 오류:', error);
+            alert('메뉴 수정에 실패했습니다.');
+        }
+    }
+
+    async deleteMenu(id) {
+        try {
+            const response = await fetch(`/api/menus/${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                throw new Error('메뉴 삭제에 실패했습니다.');
+            }
+            await this.fetchMenus();
+        } catch (error) {
+            console.error('메뉴 삭제 오류:', error);
+            alert('메뉴 삭제에 실패했습니다.');
+        }
     }
 
     template() {
@@ -109,12 +175,9 @@ export default class MenuSystem extends Component {
                     }
 
                     const newMenu = { name, category, price, status };
-                    this.state.menuList.push(newMenu);
+                    this.addMenu(newMenu);
                     this.state.isAdding = false;
-
                     addBtn.textContent = "메뉴 등록";
-
-                    this.renderMenuTable();
                 }
             });
         }
@@ -128,17 +191,15 @@ export default class MenuSystem extends Component {
         const deleteBtn = this.$target.querySelector('.delete-btn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
-                const { selectedMenuId, menuList } = this.state;
+                const { selectedMenuId } = this.state;
 
                 if (selectedMenuId === null) {
                     alert("삭제할 메뉴를 먼저 선택하세요.");
                     return;
                 }
 
-                this.state.menuList = menuList.filter(menu => menu.id !== selectedMenuId);
+                this.deleteMenu(selectedMenuId);
                 this.state.selectedMenuId = null;
-
-                this.renderMenuTable();
             });
         }
 
@@ -170,14 +231,12 @@ export default class MenuSystem extends Component {
                         return;
                     }
 
-                    this.state.menuList = menuList.map(menu =>
-                        menu.id === id ? { id, name, category, price, status } : menu
-                    );
+                    const updatedMenu = { name, category, price, status };
+                    this.updateMenu(id, updatedMenu);
 
                     this.state.isEditing = false;
                     this.state.editingMenuId = null;
                     editBtn.textContent = "메뉴 수정";
-                    this.renderMenuTable();
                 }
             });
         }

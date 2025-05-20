@@ -37,6 +37,7 @@ class MemberSearch {
                         </select>
                         <input type="text" id="memberSearchInput" placeholder="검색어를 입력하세요">
                         <button type="submit">검색</button>
+                        <button type="button" id="addMemberBtn">추가</button>
                     </form>
                     
                     <!-- 검색 결과 -->
@@ -128,6 +129,14 @@ class MemberSearch {
                 this.getAllMembers();
             }
         });
+
+        // 회원 추가 버튼 이벤트 리스너
+        const addMemberBtn = document.getElementById('addMemberBtn');
+        if (addMemberBtn) {
+            addMemberBtn.addEventListener('click', () => {
+                this.openAddMemberModal();
+            });
+        }
     }
     
     // 디바운싱 처리
@@ -415,6 +424,221 @@ class MemberSearch {
         } catch (error) {
             console.error('회원 삭제 중 오류 발생:', error);
             alert('회원 삭제 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 회원 추가 모달 열기
+    openAddMemberModal() {
+        // 기존 모달 내용 저장
+        const originalContent = this.target.querySelector('.member-search-modal-content');
+        if (originalContent) {
+            originalContent.style.display = 'none';
+        }
+
+        // 회원 추가 모달 생성
+        const addMemberModal = document.createElement('div');
+        addMemberModal.className = 'member-search-modal-content';
+        addMemberModal.innerHTML = `
+            <div class="modal-header">
+                <h2>회원 추가</h2>
+                <button class="close-add-modal">&times;</button>
+            </div>
+            
+            <form id="addMemberForm" class="add-member-form">
+                <div class="form-group">
+                    <label for="memberName">이름</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberPhone">전화번호</label>
+                    <input type="tel" id="memberPhone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" 
+                           placeholder="010-1234-5678" required>
+                    <small>형식: 010-XXXX-XXXX</small>
+                </div>
+                <div class="form-group">
+                    <label for="memberPoints">초기 포인트</label>
+                    <input type="number" id="memberPoints" value="0" min="0">
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-save">저장</button>
+                    <button type="button" class="btn-cancel">취소</button>
+                </div>
+            </form>
+        `;
+
+        // 회원 추가 모달 스타일
+        const style = document.createElement('style');
+        style.textContent = `
+            .add-member-form {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .form-group label {
+                font-weight: bold;
+            }
+            
+            .form-group input {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            
+            .form-group small {
+                color: #666;
+                font-size: 0.8em;
+            }
+            
+            .button-group {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .btn-save, .btn-cancel {
+                padding: 8px 16px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            
+            .btn-save {
+                background-color: #4CAF50;
+                color: white;
+            }
+            
+            .btn-cancel {
+                background-color: #f44336;
+                color: white;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 회원 추가 모달을 기존 모달 컨테이너에 추가
+        const modalContainer = this.target.querySelector('.member-search-modal');
+        if (modalContainer) {
+            modalContainer.appendChild(addMemberModal);
+        }
+
+        // 닫기 버튼 이벤트 리스너
+        const closeButton = addMemberModal.querySelector('.close-add-modal');
+        closeButton.addEventListener('click', () => {
+            this.closeAddMemberModal(originalContent, addMemberModal);
+        });
+
+        // 취소 버튼 이벤트 리스너
+        const cancelButton = addMemberModal.querySelector('.btn-cancel');
+        cancelButton.addEventListener('click', () => {
+            this.closeAddMemberModal(originalContent, addMemberModal);
+        });
+
+        // 폼 제출 이벤트 리스너
+        const addMemberForm = addMemberModal.querySelector('#addMemberForm');
+        addMemberForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.addMember();
+        });
+    }
+
+    // 회원 추가 모달 닫기
+    closeAddMemberModal(originalContent, addMemberModal) {
+        if (addMemberModal) {
+            addMemberModal.remove();
+        }
+        if (originalContent) {
+            originalContent.style.display = 'block';
+        }
+    }
+
+    // 회원 추가 API 호출
+    async addMember() {
+        const nameInput = document.getElementById('memberName');
+        const phoneInput = document.getElementById('memberPhone');
+        const pointsInput = document.getElementById('memberPoints');
+
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const points = parseInt(pointsInput.value) || 0;
+
+        // 프론트엔드 유효성 검증
+        // 1. 필수 입력 검증
+        if (!name || !phone) {
+            alert('이름과 전화번호는 필수 입력 항목입니다.');
+            return;
+        }
+
+        // 2. 이름 길이 검증
+        if (name.length < 2 || name.length > 20) {
+            alert('이름은 2자 이상 20자 이하로 입력해주세요.');
+            return;
+        }
+
+        // 3. 전화번호 형식 검증
+        const phoneRegex = /^010-\d{4}-\d{4}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('전화번호 형식이 올바르지 않습니다. 010-XXXX-XXXX 형식으로 입력해주세요.');
+            return;
+        }
+
+        // 4. 포인트 값 검증
+        if (points < 0) {
+            alert('포인트는 0 이상의 값을 입력해주세요.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/members', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    phone,
+                    points
+                })
+            });
+
+            // 응답 본문 파싱 시도
+            let responseData;
+            try {
+                if (response.status !== 204) { // 204 No Content인 경우 json 파싱하지 않음
+                    responseData = await response.json();
+                }
+            } catch (e) {
+                console.log('응답 본문이 없거나 JSON 형식이 아닙니다.');
+            }
+
+            if (response.status === 201 || response.status === 200) {
+                alert('회원이 성공적으로 추가되었습니다.');
+                
+                // 모달 닫기
+                const originalContent = this.target.querySelector('.member-search-modal-content');
+                const addMemberModal = this.target.querySelectorAll('.member-search-modal-content')[1];
+                this.closeAddMemberModal(originalContent, addMemberModal);
+                
+                // 회원 목록 새로고침
+                this.getAllMembers();
+            } else if (response.status === 409) {
+                // 중복된 회원(Conflict)
+                alert(`회원 추가 실패: ${responseData?.message || '이미 등록된 회원입니다.'}`);
+            } else if (response.status === 400) {
+                // 잘못된 요청
+                alert(`회원 추가 실패: ${responseData?.message || '입력 정보가 올바르지 않습니다.'}`);
+            } else {
+                // 기타 오류
+                alert(`회원 추가 실패: ${responseData?.message || '알 수 없는 오류가 발생했습니다.'}`);
+            }
+        } catch (error) {
+            console.error('회원 추가 중 오류 발생:', error);
+            alert('회원 추가 중 오류가 발생했습니다.');
         }
     }
 }
