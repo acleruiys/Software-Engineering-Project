@@ -15,10 +15,10 @@ class MemberSearch {
         this.currentPage = 1;
         this.membersPerPage = 10;
         this.totalMembers = 0;
-        
+
         this.initEventListeners();
     }
-    
+
     render() {
         // 모달 형태의 회원 검색 UI 렌더링
         this.target.innerHTML = `
@@ -48,7 +48,7 @@ class MemberSearch {
                 </div>
             </div>
         `;
-        
+
         // 모달 스타일 동적 추가
         if (!document.getElementById('memberSearchModalStyle')) {
             const style = document.createElement('style');
@@ -93,13 +93,13 @@ class MemberSearch {
             `;
             document.head.appendChild(style);
         }
-        
+
         // 모달 닫기 버튼에 이벤트 리스너 추가
         const closeButton = this.target.querySelector('.close-button');
         closeButton.addEventListener('click', () => {
             this.closeModal();
         });
-        
+
         // 모달 외부 클릭 시 닫기
         this.target.addEventListener('click', (e) => {
             if (e.target === this.target.querySelector('.member-search-modal')) {
@@ -107,12 +107,12 @@ class MemberSearch {
             }
         });
     }
-    
+
     closeModal() {
         // 모달 제거
         this.target.innerHTML = '';
     }
-    
+
     initEventListeners() {
         // 검색 폼 제출 이벤트 리스너
         this.searchForm.addEventListener('submit', (e) => {
@@ -120,7 +120,7 @@ class MemberSearch {
             this.currentPage = 1;
             this.searchMembers();
         });
-        
+
         // 검색어 입력 시 실시간 검색
         this.searchInput.addEventListener('input', () => {
             if (this.searchInput.value.trim().length >= 2) {
@@ -138,7 +138,7 @@ class MemberSearch {
             });
         }
     }
-    
+
     // 디바운싱 처리
     debounceSearch() {
         clearTimeout(this.debounceTimer);
@@ -147,17 +147,17 @@ class MemberSearch {
             this.searchMembers();
         }, 300);
     }
-    
+
     // 회원 검색 API 호출
     async searchMembers() {
         const searchValue = this.searchInput.value.trim();
         const searchType = this.searchType.value;
-        
+
         if (!searchValue) {
             this.getAllMembers();
             return;
         }
-        
+
         try {
             let url;
             if (searchType === 'phone') {
@@ -177,15 +177,15 @@ class MemberSearch {
                 const response = await fetch(url);
                 if (response.ok) {
                     const allMembers = await response.json();
-                    const filteredMembers = allMembers.filter(member => 
+                    const filteredMembers = allMembers.filter(member =>
                         member.name.includes(searchValue)
                     );
                     this.totalMembers = filteredMembers.length;
-                    
+
                     const startIndex = (this.currentPage - 1) * this.membersPerPage;
                     const endIndex = startIndex + this.membersPerPage;
                     const paginatedMembers = filteredMembers.slice(startIndex, endIndex);
-                    
+
                     this.displaySearchResults(paginatedMembers);
                     this.renderPagination();
                 } else {
@@ -197,7 +197,7 @@ class MemberSearch {
             this.displayError('회원 검색 중 오류가 발생했습니다.');
         }
     }
-    
+
     // 모든 회원 조회
     async getAllMembers() {
         try {
@@ -205,11 +205,11 @@ class MemberSearch {
             if (response.ok) {
                 const members = await response.json();
                 this.totalMembers = members.length;
-                
+
                 const startIndex = (this.currentPage - 1) * this.membersPerPage;
                 const endIndex = startIndex + this.membersPerPage;
                 const paginatedMembers = members.slice(startIndex, endIndex);
-                
+
                 this.displaySearchResults(paginatedMembers);
                 this.renderPagination();
             } else {
@@ -220,14 +220,14 @@ class MemberSearch {
             this.displayError('회원 목록을 불러오는데 실패했습니다.');
         }
     }
-    
+
     // 검색 결과 표시
     displaySearchResults(members) {
         if (!members || members.length === 0) {
             this.displayNoResults();
             return;
         }
-        
+
         // 테이블 헤더 생성
         let tableHTML = `
             <table class="member-table">
@@ -238,11 +238,12 @@ class MemberSearch {
                         <th>전화번호</th>
                         <th>포인트</th>
                         <th>액션</th>
+                        <th>선택</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
-        
+
         // 테이블 데이터 생성
         members.forEach((member, index) => {
             const rowNum = (this.currentPage - 1) * this.membersPerPage + index + 1;
@@ -255,58 +256,58 @@ class MemberSearch {
                     <td>
                         <button class="btn-edit" data-id="${member.memberId}">수정</button>
                         <button class="btn-delete" data-id="${member.memberId}" data-phone="${member.phone}">삭제</button>
-                        <button class="btn-select" data-id="${member.memberId}" data-name="${member.name}" data-phone="${member.phone}" data-points="${member.points}">선택</button>
                     </td>
+                    <td><input type="checkbox" data-id="${member.memberId}" data-name="${member.name}" data-phone="${member.phone}" data-points="${member.points}"></input></td>
                 </tr>
             `;
         });
-        
+
         tableHTML += `
                 </tbody>
             </table>
         `;
-        
+
         this.memberTable.innerHTML = tableHTML;
         this.searchResults.classList.remove('hidden');
-        
+
         // 수정 및 삭제 버튼 이벤트 리스너 추가
         this.addActionButtonListeners();
     }
-    
+
     // 결과 없음 표시
     displayNoResults() {
         this.memberTable.innerHTML = '<div class="no-results">검색 결과가 없습니다.</div>';
         this.searchResults.classList.remove('hidden');
         this.pagination.innerHTML = '';
     }
-    
+
     // 오류 표시
     displayError(message) {
         this.memberTable.innerHTML = `<div class="error-message">${message}</div>`;
         this.searchResults.classList.remove('hidden');
         this.pagination.innerHTML = '';
     }
-    
+
     // 페이지네이션 렌더링
     renderPagination() {
         const totalPages = Math.ceil(this.totalMembers / this.membersPerPage);
-        
+
         if (totalPages <= 1) {
             this.pagination.innerHTML = '';
             return;
         }
-        
+
         let paginationHTML = '<div class="pagination-container">';
-        
+
         // 이전 페이지 버튼
         if (this.currentPage > 1) {
             paginationHTML += `<button class="pagination-btn prev-btn" data-page="${this.currentPage - 1}">이전</button>`;
         }
-        
+
         // 페이지 번호
         const startPage = Math.max(1, this.currentPage - 2);
         const endPage = Math.min(totalPages, startPage + 4);
-        
+
         for (let i = startPage; i <= endPage; i++) {
             paginationHTML += `
                 <button class="pagination-btn page-num ${i === this.currentPage ? 'active' : ''}" data-page="${i}">
@@ -314,26 +315,26 @@ class MemberSearch {
                 </button>
             `;
         }
-        
+
         // 다음 페이지 버튼
         if (this.currentPage < totalPages) {
             paginationHTML += `<button class="pagination-btn next-btn" data-page="${this.currentPage + 1}">다음</button>`;
         }
-        
+
         paginationHTML += '</div>';
         this.pagination.innerHTML = paginationHTML;
-        
+
         // 페이지네이션 버튼 이벤트 리스너 추가
         this.addPaginationListeners();
     }
-    
+
     // 페이지네이션 버튼 이벤트 리스너 추가
     addPaginationListeners() {
         const pageButtons = this.pagination.querySelectorAll('.pagination-btn');
         pageButtons.forEach(button => {
             button.addEventListener('click', () => {
                 this.currentPage = parseInt(button.getAttribute('data-page'));
-                
+
                 if (this.searchInput.value.trim()) {
                     this.searchMembers();
                 } else {
@@ -342,7 +343,7 @@ class MemberSearch {
             });
         });
     }
-    
+
     // 수정 및 삭제 버튼 이벤트 리스너 추가
     addActionButtonListeners() {
         // 수정 버튼
@@ -353,7 +354,7 @@ class MemberSearch {
                 this.openEditModal(memberId);
             });
         });
-        
+
         // 삭제 버튼
         const deleteButtons = this.memberTable.querySelectorAll('.btn-delete');
         deleteButtons.forEach(button => {
@@ -362,16 +363,16 @@ class MemberSearch {
                 this.confirmDelete(phone);
             });
         });
-        
+
         // 선택 버튼
-        const selectButtons = this.memberTable.querySelectorAll('.btn-select');
-        selectButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const memberId = button.getAttribute('data-id');
-                const name = button.getAttribute('data-name');
-                const phone = button.getAttribute('data-phone');
-                const points = button.getAttribute('data-points');
-                
+        const selectButtons = this.memberTable.querySelectorAll('input[type="checkbox"]');
+        selectButtons.forEach(checkbox => {
+            checkbox.addEventListener('click', () => {
+                const memberId = checkbox.getAttribute('data-id');
+                const name = checkbox.getAttribute('data-name');
+                const phone = checkbox.getAttribute('data-phone');
+                const points = checkbox.getAttribute('data-points');
+
                 // 선택된 회원 정보를 이벤트로 발송
                 const memberSelectedEvent = new CustomEvent('memberSelected', {
                     detail: {
@@ -382,33 +383,33 @@ class MemberSearch {
                     }
                 });
                 document.dispatchEvent(memberSelectedEvent);
-                
+
                 // 모달 닫기
                 this.closeModal();
             });
         });
     }
-    
+
     // 회원 수정 모달 열기
     openEditModal(memberId) {
         // 추후 구현 예정
         console.log(`회원 ID ${memberId} 수정`);
     }
-    
+
     // 회원 삭제 확인
     confirmDelete(phone) {
         if (confirm('정말로 이 회원을 삭제하시겠습니까?')) {
             this.deleteMember(phone);
         }
     }
-    
+
     // 회원 삭제 API 호출
     async deleteMember(phone) {
         try {
             const response = await fetch(`/api/members/phone/${phone}`, {
                 method: 'DELETE'
             });
-            
+
             if (response.status === 204) {
                 alert('회원이 성공적으로 삭제되었습니다.');
                 // 현재 목록 다시 로드
@@ -456,8 +457,8 @@ class MemberSearch {
                     <small>형식: 010-XXXX-XXXX</small>
                 </div>
                 <div class="form-group">
-                    <label for="memberPoints">초기 포인트</label>
-                    <input type="number" id="memberPoints" value="0" min="0">
+                    <label for="memberPw">비밀번호</label>
+                    <input type="password" id="memberPw" value="">
                 </div>
                 <div class="button-group">
                     <button type="submit" class="btn-save">저장</button>
@@ -561,11 +562,11 @@ class MemberSearch {
     async addMember() {
         const nameInput = document.getElementById('memberName');
         const phoneInput = document.getElementById('memberPhone');
-        const pointsInput = document.getElementById('memberPoints');
+        const pwInput = document.getElementById('memberPw');
 
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
-        const points = parseInt(pointsInput.value) || 0;
+        const pw = parseInt(pwInput.value) || 0;
 
         // 프론트엔드 유효성 검증
         // 1. 필수 입력 검증
@@ -587,9 +588,14 @@ class MemberSearch {
             return;
         }
 
-        // 4. 포인트 값 검증
-        if (points < 0) {
-            alert('포인트는 0 이상의 값을 입력해주세요.');
+        // 4. 비밀번호 검사 검증
+        if (pw.toString().length !== 4) {
+            alert('비밀번호 4자리를 입력해주세요.');
+
+            if (pw <= 0 || pw >= 9999){
+                alert('숫자를 입력해주세요');
+                return;
+            }
             return;
         }
 
@@ -602,7 +608,7 @@ class MemberSearch {
                 body: JSON.stringify({
                     name,
                     phone,
-                    points
+                    pw
                 })
             });
 
@@ -618,12 +624,12 @@ class MemberSearch {
 
             if (response.status === 201 || response.status === 200) {
                 alert('회원이 성공적으로 추가되었습니다.');
-                
+
                 // 모달 닫기
                 const originalContent = this.target.querySelector('.member-search-modal-content');
                 const addMemberModal = this.target.querySelectorAll('.member-search-modal-content')[1];
                 this.closeAddMemberModal(originalContent, addMemberModal);
-                
+
                 // 회원 목록 새로고침
                 this.getAllMembers();
             } else if (response.status === 409) {

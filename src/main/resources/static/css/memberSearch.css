@@ -52,7 +52,7 @@
 }
 
 .search-form button {
-    background-color: #4CAF50;
+    background-color: rgba(236, 121, 165, 0.96);
     color: white;
     border: none;
     padding: 8px 15px;
@@ -63,7 +63,7 @@
 }
 
 .search-form button:hover {
-    background-color: #45a049;
+    background-color: rgba(236, 121, 165, 0.75);
 }
 
 /* 검색 결과 테이블 */
@@ -78,10 +78,10 @@
     background-color: #fff;
 }
 
-.member-table th, 
+.member-table th,
 .member-table td {
     padding: 12px 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #eee;
 }
 
@@ -100,7 +100,7 @@
 }
 
 /* 버튼 스타일 */
-.btn-edit, 
+.btn-edit,
 .btn-delete {
     padding: 6px 12px;
     border: none;
@@ -128,6 +128,7 @@
 .btn-delete:hover {
     background-color: #da190b;
 }
+
 
 /* 페이지네이션 */
 .pagination-container {
@@ -157,13 +158,13 @@
     border-color: #4CAF50;
 }
 
-.prev-btn, 
+.prev-btn,
 .next-btn {
     font-weight: 500;
 }
 
 /* 결과 없음 메시지 */
-.no-results, 
+.no-results,
 .error-message {
     padding: 20px;
     text-align: center;
@@ -190,27 +191,27 @@
     .search-form {
         flex-direction: column;
     }
-    
+
     .search-form select {
         flex: initial;
         width: 100%;
     }
-    
+
     .search-header {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .search-header p {
         margin-top: 5px;
     }
-    
+
     .member-table th:nth-child(1),
     .member-table td:nth-child(1) {
         display: none;
     }
-    
-    .btn-edit, 
+
+    .btn-edit,
     .btn-delete {
         padding: 4px 8px;
         font-size: 12px;
