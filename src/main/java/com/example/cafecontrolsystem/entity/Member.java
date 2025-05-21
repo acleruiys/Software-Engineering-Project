@@ -45,5 +45,4 @@ public class Member {
     public void usePoint(Integer point){
         this.points = this.points - point;
     }
-
-} 
+}

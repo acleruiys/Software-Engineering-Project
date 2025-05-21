@@ -52,7 +52,7 @@
 }
 
 .search-form button {
-    background-color: #4CAF50;
+    background-color: rgba(236, 121, 165, 0.96);
     color: white;
     border: none;
     padding: 8px 15px;
@@ -63,7 +63,7 @@
 }
 
 .search-form button:hover {
-    background-color: #45a049;
+    background-color: rgba(236, 121, 165, 0.75);
 }
 
 /* 검색 결과 테이블 */
@@ -81,7 +81,7 @@
 .member-table th, 
 .member-table td {
     padding: 12px 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #eee;
 }
 
@@ -128,6 +128,7 @@
 .btn-delete:hover {
     background-color: #da190b;
 }
+
 
 /* 페이지네이션 */
 .pagination-container {

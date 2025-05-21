@@ -10,6 +10,7 @@ public class MainController {
     public String main() {
         return "AdminSignUp"; // AdminSignUp.html 파일을 메인 페이지로 반환
     }
+
     @GetMapping("/SignIn")
     public String adminSignIn() {
         return "AdminSignIn"; // AdminSignIn.html 파일을 반환 (관리자 가입)

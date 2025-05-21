@@ -238,6 +238,7 @@ class MemberSearch {
                         <th>전화번호</th>
                         <th>포인트</th>
                         <th>액션</th>
+                        <th>선택</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -255,8 +256,8 @@ class MemberSearch {
                     <td>
                         <button class="btn-edit" data-id="${member.memberId}">수정</button>
                         <button class="btn-delete" data-id="${member.memberId}" data-phone="${member.phone}">삭제</button>
-                        <button class="btn-select" data-id="${member.memberId}" data-name="${member.name}" data-phone="${member.phone}" data-points="${member.points}">선택</button>
                     </td>
+                    <td><input type="checkbox" data-id="${member.memberId}" data-name="${member.name}" data-phone="${member.phone}" data-points="${member.points}"></input></td>
                 </tr>
             `;
         });
@@ -362,15 +363,16 @@ class MemberSearch {
                 this.confirmDelete(phone);
             });
         });
-        
+
+        // 수정 필요
         // 선택 버튼
         const selectButtons = this.memberTable.querySelectorAll('.btn-select');
-        selectButtons.forEach(button => {
+        selectButtons.forEach(checkbox => {
             button.addEventListener('click', () => {
-                const memberId = button.getAttribute('data-id');
-                const name = button.getAttribute('data-name');
-                const phone = button.getAttribute('data-phone');
-                const points = button.getAttribute('data-points');
+                const memberId = checkbox.getAttribute('data-id');
+                const name = checkbox.getAttribute('data-name');
+                const phone = checkbox.getAttribute('data-phone');
+                const points = checkbox.getAttribute('data-points');
                 
                 // 선택된 회원 정보를 이벤트로 발송
                 const memberSelectedEvent = new CustomEvent('memberSelected', {
@@ -456,8 +458,8 @@ class MemberSearch {
                     <small>형식: 010-XXXX-XXXX</small>
                 </div>
                 <div class="form-group">
-                    <label for="memberPoints">초기 포인트</label>
-                    <input type="number" id="memberPoints" value="0" min="0">
+                    <label for="memberPw">비밀번호</label>
+                    <input type="password" id="memberPw" value="">
                 </div>
                 <div class="button-group">
                     <button type="submit" class="btn-save">저장</button>
@@ -561,11 +563,11 @@ class MemberSearch {
     async addMember() {
         const nameInput = document.getElementById('memberName');
         const phoneInput = document.getElementById('memberPhone');
-        const pointsInput = document.getElementById('memberPoints');
+        const pwInput = document.getElementById('memberPw');
 
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
-        const points = parseInt(pointsInput.value) || 0;
+        const pw = parseInt(pwInput.value) || 0;
 
         // 프론트엔드 유효성 검증
         // 1. 필수 입력 검증
@@ -587,9 +589,14 @@ class MemberSearch {
             return;
         }
 
-        // 4. 포인트 값 검증
-        if (points < 0) {
-            alert('포인트는 0 이상의 값을 입력해주세요.');
+        // 4. 비밀번호 검사 검증
+        if (pw.toString.length !== 4) {
+            alert('비밀번호 4자리를 입력해주세요.');
+
+            if (pw <= 0 && pw >= 9999){
+                alert('숫자를 입력해주세요');
+                return;
+            }
             return;
         }
 
@@ -602,7 +609,7 @@ class MemberSearch {
                 body: JSON.stringify({
                     name,
                     phone,
-                    points
+                    pw
                 })
             });
 

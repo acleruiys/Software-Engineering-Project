@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('모든 필드를 입력해주세요.');
             return;
         }
-
+        // 검사 필요
         if (password !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
