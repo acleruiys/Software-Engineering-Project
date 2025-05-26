@@ -84,7 +84,7 @@ public class UserService {
         
         // 직원(STAFF) 역할인 경우 Employee 데이터베이스에도 저장
         if (user.getRole() == User.UserRole.STAFF) {
-            SaveEmployeeDto saveEmployeeDto = new SaveEmployeeDto(user.getUsername());
+            SaveEmployeeDto saveEmployeeDto = new SaveEmployeeDto(user.getUsername(), "part_time");
             employeeService.saveEmployee(saveEmployeeDto);
         }
         
