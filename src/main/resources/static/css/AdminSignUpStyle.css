@@ -1,0 +1,91 @@
+/* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+}
+
+.container {
+    text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    width: 320px;
+}
+
+.form-container {
+    transition: all 0.3s ease;
+}
+
+.title {
+    color: #ff6f6f;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 2px solid #ffb3b3;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.input-group i {
+    color: #444;
+}
+
+.login-btn, .signup-btn {
+    background-color: #ff8f8f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    width: 280px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover, .signup-btn:hover {
+    background-color: #ff6f6f;
+}
+
+.toggle-form {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.toggle-form a {
+    color: #ff6f6f;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.toggle-form a:hover {
+    color: #ff4f4f;
+    text-decoration: underline;
+}

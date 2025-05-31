@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>카페 운영 어시스턴트</title>
+    <link rel="stylesheet" th:href="@{/css/AdminSignInStyle.css}">
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <form id="signupForm">
+        <div class="title">
+            카페 운영<br>어시스턴트
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" placeholder="아이디" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="비밀번호" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="phone" placeholder="연락처" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-users"></i>
+            <select id="role" required>
+                <option value="" disabled selected>직책 선택</option>
+                <option value="ADMIN">관리자</option>
+                <option value="MANAGER">매니저</option>
+                <option value="STAFF">직원</option>
+            </select>
+        </div>
+
+        <button type="submit" class="signup-btn">가입하기</button>
+
+        <div class="login">
+            이미 회원이신가요? <a href="/">로그인</a>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/Sign_In/Up/adminSignIn.js}"></script>
+</body>
+</html>
