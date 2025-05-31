@@ -25,13 +25,8 @@ public class Menu_entity {
     @Column(nullable = false)
     private int price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties("menus")
-    private MenuCategory_entity category;
-
-    @Column(length = 500)
-    private String description;
+    @Column(nullable = false)
+    private String category;
 
     @Column
     private boolean available = true;
@@ -39,7 +34,7 @@ public class Menu_entity {
     // 더티체킹
     public void changeMenu(UpdateMenuDto updateMenuDto){
         this.price = updateMenuDto.getPrice();
-        this.description = updateMenuDto.getDescription();
+
     }
 
     // 더티체킹

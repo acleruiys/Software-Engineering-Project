@@ -1,5 +1,7 @@
 HELP.md
 .gradle
+**/application.properties
+**/SaleController.java
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

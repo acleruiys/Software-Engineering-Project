@@ -21,7 +21,7 @@ export default class EmployeeSystem extends Component {
                 throw new Error('직원 목록을 가져오는 데 실패했습니다.');
             }
             const data = await response.json();
-            
+
             // 백엔드 데이터 형식을 프론트엔드에 맞게 변환
             this.state.employeeList = data.map(employee => ({
                 id: employee.employeeId,
@@ -29,7 +29,7 @@ export default class EmployeeSystem extends Component {
                 position: this.translatePosition(employee.position),
                 hourlyPay: this.formatSalary(employee.salary)
             }));
-            
+
             this.renderEmployeeTable();
         } catch (error) {
             console.error('직원 목록 조회 오류:', error);
@@ -51,11 +51,11 @@ export default class EmployeeSystem extends Component {
                     position: this.getPositionCode(employeeData.position)
                 })
             });
-            
+
             if (!response.ok) {
                 throw new Error('직원 추가에 실패했습니다.');
             }
-            
+
             await this.fetchEmployees();
             return true;
         } catch (error) {
@@ -80,11 +80,11 @@ export default class EmployeeSystem extends Component {
                     salary: this.parseSalary(employeeData.hourlyPay)
                 })
             });
-            
+
             if (!response.ok) {
                 throw new Error('직원 수정에 실패했습니다.');
             }
-            
+
             await this.fetchEmployees();
             return true;
         } catch (error) {
@@ -100,11 +100,11 @@ export default class EmployeeSystem extends Component {
             const response = await fetch(`/api/employee/delete/${employeeId}`, {
                 method: 'DELETE'
             });
-            
+
             if (!response.ok) {
                 throw new Error('직원 삭제에 실패했습니다.');
             }
-            
+
             const data = await response.json();
             if (data.success) {
                 await this.fetchEmployees();
@@ -234,7 +234,7 @@ export default class EmployeeSystem extends Component {
 
                     const newEmployee = {name, position, hourlyPay: "10030"};
                     const success = await this.addEmployee(newEmployee);
-                    
+
                     if (success) {
                         this.state.isAdding = false;
                         addBtn.textContent = "직원 등록";
@@ -295,7 +295,7 @@ export default class EmployeeSystem extends Component {
 
                     const updatedEmployee = {id, name, position, hourlyPay};
                     const success = await this.updateEmployee(updatedEmployee);
-                    
+
                     if (success) {
                         this.state.isEditing = false;
                         this.state.editingEmployeeId = null;
@@ -380,7 +380,7 @@ export default class EmployeeSystem extends Component {
 
         const { employeeList, editingEmployeeId } = this.state;
         const editEmployee = employeeList.find(emp => emp.id === editingEmployeeId);
-        
+
         if (!editEmployee) return;
 
         const positionOptions = this.state.positionOptions;
@@ -390,7 +390,7 @@ export default class EmployeeSystem extends Component {
 
         const rows = Array.from(tbody.querySelectorAll('tr'));
         const editRow = rows.find(row => Number(row.dataset.id) === editingEmployeeId);
-        
+
         if (editRow) {
             editRow.innerHTML = `
                 <td><input type="text" placeholder="이름" class="input-name" value="${editEmployee.name}" /></td>

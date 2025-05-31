@@ -1,12 +1,14 @@
 package com.example.cafecontrolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "payment")
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +18,8 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id")
     private Sale sale;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "method_id")
-    private PaymentMethod method;
+
+    private String method;
     
     private Integer price;
 } 

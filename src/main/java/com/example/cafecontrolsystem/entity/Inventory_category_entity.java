@@ -1,5 +1,6 @@
 package com.example.cafecontrolsystem.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 
