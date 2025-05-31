@@ -169,16 +169,15 @@ class MemberSearch {
                 const response = await fetch(url);
                 if (response.ok) {
                     const allMembers = await response.json();
-                    // 회원의 전화번호 검색 - 두 가지 형식(하이픈 포함/미포함) 모두 확인
+                    
                     const filteredMembers = allMembers.filter(member => {
                         // 1. 원본 전화번호에 검색어가 포함되는지 확인 (하이픈 포함된 형식)
                         if (member.phone.includes(searchValue)) {
                             return true;
                         }
                         
-                        // 2. 하이픈이 제거된 전화번호에 검색어가 포함되는지 확인
                         const memberPhoneDigits = member.phone.replace(/-/g, '');
-                        // 사용자 입력에서 하이픈 제거한 값과 회원 전화번호에서 하이픈 제거한 값 비교
+                        
                         return memberPhoneDigits.includes(cleanedPhoneNumber);
                     });
                     
@@ -194,14 +193,14 @@ class MemberSearch {
                     this.displayNoResults();
                 }
             } else {
-                // 이름 검색은 아직 API에서 지원하지 않는 것으로 보이므로
-                // 모든 회원을 가져와서 프론트엔드에서 필터링
+                
                 url = '/api/members';
                 const response = await fetch(url);
                 if (response.ok) {
                     const allMembers = await response.json();
+                    const searchValueLower = searchValue.toLowerCase();
                     const filteredMembers = allMembers.filter(member =>
-                        member.name.includes(searchValue)
+                        member.name.toLowerCase().includes(searchValueLower)
                     );
                     this.totalMembers = filteredMembers.length;
 
