@@ -21,8 +21,8 @@ public class MenuService {
     @Autowired
     private MenuCategoryRepository menuCategoryRepository;
 
-    public List<Menu_entity> getMenusByCategory(CategoryType categoryType) {
-        return menuRepository.findByCategoryType(categoryType);
+    public List<Menu_entity> getMenusByCategory(String category) {
+        return menuRepository.findByCategory(category);
     }
 
     public List<Menu_entity> getAllAvailableMenus() {
@@ -66,17 +66,7 @@ public class MenuService {
         menu.setName(dto.getName());
         menu.setPrice(dto.getPrice());
         menu.setAvailable(dto.getStatus().equals("판매중"));
-        
-        // CategoryType을 MenuCategory_entity로 변환
-        CategoryType categoryType = CategoryType.fromDisplayName(dto.getCategory());
-        MenuCategory_entity category = menuCategoryRepository.findByType(categoryType)
-            .orElseGet(() -> {
-                MenuCategory_entity newCategory = new MenuCategory_entity();
-                newCategory.setType(categoryType);
-                newCategory.setName(categoryType.getDisplayName());
-                return menuCategoryRepository.save(newCategory);
-            });
-        menu.setCategory(category);
+        menu.setCategory(dto.getCategory());
         
         return menu;
     }

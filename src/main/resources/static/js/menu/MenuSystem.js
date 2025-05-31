@@ -3,22 +3,13 @@ import Component from "../main/Component.js";
 export default class MenuSystem extends Component {
     setup() {
         this.state = {
-<<<<<<< HEAD
-            menuList: [
-                { id: 1, name: '아메리카노', category: '커피', price: 3000, status: '판매중' },
-                { id: 2, name: '라떼', category: '커피', price: 3500, status: '판매중' }
-            ],
-=======
             menuList: [],
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
             isAdding: false,
             categoryOptions: ['커피', '디카페인', '논커피/과일라떼', '티', '스무디/프라페', '에이드/주스', '시즌메뉴', '빵'],
             selectedMenuId: null,
             isEditing: false,
             editingMenuId: null,
         };
-<<<<<<< HEAD
-=======
         this.fetchMenus();
     }
 
@@ -88,7 +79,6 @@ export default class MenuSystem extends Component {
             console.error('메뉴 삭제 오류:', error);
             alert('메뉴 삭제에 실패했습니다.');
         }
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
     }
 
     template() {
@@ -185,18 +175,9 @@ export default class MenuSystem extends Component {
                     }
 
                     const newMenu = { name, category, price, status };
-<<<<<<< HEAD
-                    this.state.menuList.push(newMenu);
-                    this.state.isAdding = false;
-
-                    addBtn.textContent = "메뉴 등록";
-
-                    this.renderMenuTable();
-=======
                     this.addMenu(newMenu);
                     this.state.isAdding = false;
                     addBtn.textContent = "메뉴 등록";
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                 }
             });
         }
@@ -210,26 +191,15 @@ export default class MenuSystem extends Component {
         const deleteBtn = this.$target.querySelector('.delete-btn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
-<<<<<<< HEAD
-                const { selectedMenuId, menuList } = this.state;
-=======
                 const { selectedMenuId } = this.state;
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
 
                 if (selectedMenuId === null) {
                     alert("삭제할 메뉴를 먼저 선택하세요.");
                     return;
                 }
 
-<<<<<<< HEAD
-                this.state.menuList = menuList.filter(menu => menu.id !== selectedMenuId);
-                this.state.selectedMenuId = null;
-
-                this.renderMenuTable();
-=======
                 this.deleteMenu(selectedMenuId);
                 this.state.selectedMenuId = null;
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
             });
         }
 
@@ -261,22 +231,12 @@ export default class MenuSystem extends Component {
                         return;
                     }
 
-<<<<<<< HEAD
-                    this.state.menuList = menuList.map(menu =>
-                        menu.id === id ? { id, name, category, price, status } : menu
-                    );
-=======
                     const updatedMenu = { name, category, price, status };
                     this.updateMenu(id, updatedMenu);
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
 
                     this.state.isEditing = false;
                     this.state.editingMenuId = null;
                     editBtn.textContent = "메뉴 수정";
-<<<<<<< HEAD
-                    this.renderMenuTable();
-=======
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                 }
             });
         }
@@ -401,8 +361,4 @@ export default class MenuSystem extends Component {
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b

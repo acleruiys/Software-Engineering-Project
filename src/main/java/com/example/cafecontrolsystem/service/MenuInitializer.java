@@ -25,13 +25,13 @@ public class MenuInitializer implements CommandLineRunner {
         }
     }
 
+    // 초기 카테고리 값 설정 필요
     private void initializeMenus() {
         for (MenuType type : MenuType.values()) {
             menuRepository.save(Menu_entity.builder()
                     .name(type.name())
                     .price(type.getPrice())
-                    .category(categoryRepository.findByType(type.getCategoryType())
-                            .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 카테고리 " + type.getCategoryType())))
+                    .category("defalut")
                     .available(true)
                     .build());
         }

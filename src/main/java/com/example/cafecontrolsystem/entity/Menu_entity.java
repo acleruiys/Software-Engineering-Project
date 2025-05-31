@@ -25,10 +25,8 @@ public class Menu_entity {
     @Column(nullable = false)
     private int price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties("menus")
-    private MenuCategory_entity category;
+    @Column(nullable = false)
+    private String category;
 
     @Column(length = 500)
     private String description;
