@@ -7,7 +7,13 @@ import com.example.cafecontrolsystem.entity.*;
 import com.example.cafecontrolsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,45 +35,44 @@ public class SaleService {
                 .totalPrice(saveSaleDto.getTotalPrice())
                 .build());
 
+        saveSaleDto.getMenus()
+                .forEach(saleItemDto ->
+                    detailRepository.save(SaleDetail.builder()
+                            .sale(sale)
+                            .menu(menuRepository.findById(saleItemDto.getMenuId())
+                                    .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + saleItemDto.getMenuId())))
+                            .price(saleItemDto.getPrice())
+                            .quantity(saleItemDto.getQuantity())
+                            .option(saleItemDto.getOptionId().stream()
+                                    .map(id -> optionRepository.findNameById(id).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 옵션 " + id)))
+                                    .collect(Collectors.joining(" ")))
+                            .build()));
 
-        for(SaleItemDto saleItemDto : saveSaleDto.getMenus()){
-            detailRepository.save(SaleDetail.builder()
-                    .sale(sale)
-                    .menu(menuRepository.findById(saleItemDto.getMenuId())
-                            .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + saleItemDto.getMenuId())))
-                    .price(saleItemDto.getPrice())
-                    .quantity(saleItemDto.getQuantity())
-                    .option(
-                            saleItemDto.getOptionId() == null ? null :
-                            optionRepository.findById(saleItemDto.getOptionId())
-                            .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 옵션 " + saleItemDto.getOptionId()))
-                    )
-                    .build());
-        }
-
-        for(SalePaymentDto salePaymentDto : saveSaleDto.getPayments()){
-            PaymentMethod method = methodRepository.findById(salePaymentDto.getPaymentId())
-                    .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 결제방법 " + salePaymentDto.getPaymentId()));
-            paymentRepository.save(Payment.builder()
-                    .sale(sale)
-                    .method(method)
-                    .price(salePaymentDto.getPrice())
-                    .build());
-
-            if(method.getName().equals("POINT")){
-                pointRepository.save(PointHistory.builder()
-                        .member(memberRepository.findById(saveSaleDto.getMemberId())
-                                .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId())))
+        saveSaleDto.getPayments()
+                .forEach(salePaymentDto -> {
+                    paymentRepository.save(Payment.builder()
                         .sale(sale)
-                        .amount(salePaymentDto.getPrice())
-                        .type("reward")
+                        .method(salePaymentDto.getPayment())
+                        .price(salePaymentDto.getPrice())
                         .build());
 
-                memberRepository.findById(saveSaleDto.getMemberId())
-                        .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId()))
-                        .usePoint(salePaymentDto.getPrice());
-            }
-        }
-    }
 
+                    if(salePaymentDto.getPayment().equals("POINT")){
+                        Optional.ofNullable(saveSaleDto.getMemberId())
+                                .orElseThrow(() -> new IllegalArgumentException("MemberId must not be null"));
+
+                        pointRepository.save(PointHistory.builder()
+                                .member(memberRepository.findById(saveSaleDto.getMemberId())
+                                        .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId())))
+                                .sale(sale)
+                                .amount(salePaymentDto.getPrice())
+                                .type("reward")
+                                .build());
+
+                        memberRepository.findById(saveSaleDto.getMemberId())
+                                .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId()))
+                                .accumulatePoint(salePaymentDto.getPrice());
+                    }
+                });
+    }
 }

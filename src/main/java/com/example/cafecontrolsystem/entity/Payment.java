@@ -18,10 +18,8 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id")
     private Sale sale;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "method_id")
-    private PaymentMethod method;
+
+    private String method;
     
     private Integer price;
 } 
