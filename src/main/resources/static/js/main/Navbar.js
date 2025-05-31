@@ -4,6 +4,7 @@ import MenuSystem from "../menu/MenuSystem.js";
 import EmployeeSystem from "../employee/employeeSystem.js";
 import InventorySystem from "../inventory/InventorySystem.js";
 import SupplySystem from "../supply/SupplySystem.js";
+import SalesSummary from "../sales/SalesSummary.js";
 
 export default class Navbar extends Component {
   setup() {
@@ -106,11 +107,19 @@ export default class Navbar extends Component {
 
         setTimeout(() => {
           const periodBtn = this.$target.querySelector('#sales-period-btn');
+          const summaryBtn = this.$target.querySelector('#sales-summary-btn');
+
           periodBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
             openModalComponent(SalesTime);
             submenuContainer.style.display = 'none';
           });
+
+          summaryBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModalComponent(SalesSummary);
+            submenuContainer.style.display = 'none';
+          })
         }, 0);
       }
     });
