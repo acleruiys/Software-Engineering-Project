@@ -21,7 +21,12 @@ export default class MenuGrid extends Component {
             <div class="menuEntity-grid">
                 ${items.map((item, index) => `
                     <div class="menuEntity-item" data-index="${index}">
-                        ${item ? item.name : ""}
+                        ${item ? `
+                            <div class="menuEntity-item-inner">
+                                <div class="menuEntity-item-name">${item.name}</div>
+                                <div class="menuEntity-item-price">${item.price.toLocaleString()}원</div>
+                            </div>
+                        ` : ""}
                     </div>
                 `).join("")}
             </div>

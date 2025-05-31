@@ -1,17 +1,16 @@
 package com.example.cafecontrolsystem.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateEmployeeDto {
-    private Long employeeId;
+public class MenuDto {
+    private Long id;
     private String name;
-    private String position;
-    private Integer salary;
-}
+    private String category;
+    private int price;
+    private String status;
+} 

@@ -12,6 +12,15 @@ body {
 
 .container {
     text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    width: 320px;
+}
+
+.form-container {
+    transition: all 0.3s ease;
 }
 
 .title {
@@ -46,7 +55,7 @@ body {
     color: #444;
 }
 
-.login-btn {
+.login-btn, .signup-btn {
     background-color: #ff8f8f;
     color: white;
     border: none;
@@ -56,15 +65,27 @@ body {
     font-size: 16px;
     cursor: pointer;
     margin-top: 10px;
+    transition: background-color 0.3s;
 }
 
-.signup {
+.login-btn:hover, .signup-btn:hover {
+    background-color: #ff6f6f;
+}
+
+.toggle-form {
     margin-top: 15px;
     font-size: 14px;
 }
 
-.signup a {
+.toggle-form a {
     color: #ff6f6f;
     text-decoration: none;
     font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.toggle-form a:hover {
+    color: #ff4f4f;
+    text-decoration: underline;
 }

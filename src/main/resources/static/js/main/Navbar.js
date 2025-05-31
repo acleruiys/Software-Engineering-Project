@@ -164,4 +164,8 @@ export default class Navbar extends Component {
       }
     }, 1000);
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b

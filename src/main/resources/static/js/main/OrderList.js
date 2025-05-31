@@ -5,14 +5,13 @@ export default class OrderList extends Component {
         this.state = {
             orders: []
         };
-        this.handleMenuItemSelected = this.handleMenuItemSelected.bind(this);
     }
 
     template() {
         return `
         <div class="order-list-items">
             ${this.state.orders.map((item, index) => `
-                <div class="order-item">
+                <div class="order-item" data-item-id="${item.id}">
                     <span>${index + 1}</span>
                     <span>${item.name}</span>
                     <span>${item.quantity}</span>
@@ -24,32 +23,41 @@ export default class OrderList extends Component {
     }
 
     mounted() {
-        if (!this._bound) {
-            document.addEventListener('menuItemSelected', this.handleMenuItemSelected);
-            this._bound = true;
-        }
+        this.bindOrderItemEvents();
+    }
+    
+    bindOrderItemEvents() {
+        // 주문 아이템 클릭 이벤트 추가
+        this.$target.querySelectorAll('.order-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const itemId = e.currentTarget.dataset.itemId;
+                this.selectOrderItem(itemId);
+            });
+        });
     }
 
-    handleMenuItemSelected(e) {
-        const { name, price } = e.detail;
-        const existing = this.state.orders.find(order => order.name === name);
-
-        let updatedOrders;
-        if (existing) {
-            updatedOrders = this.state.orders.map(order =>
-                order.name === name
-                    ? { ...order, quantity: order.quantity + 1 }
-                    : order
-            );
-        } else {
-            updatedOrders = [...this.state.orders, { name, price, quantity: 1 }];
+    selectOrderItem(itemId) {
+        // 클릭한 주문 아이템 선택 효과 추가
+        this.$target.querySelectorAll('.order-item').forEach(item => {
+            if (item.dataset.itemId === itemId) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+        
+        // 주문 아이템 선택 이벤트 발행
+        document.dispatchEvent(new CustomEvent('orderItemSelected', { detail: { itemId } }));
+        
+        // props로 전달된 콜백이 있으면 호출
+        if (this.props.onOrderItemSelect) {
+            this.props.onOrderItemSelect({ detail: { itemId } });
         }
-
-        this.setState({ orders: updatedOrders });
     }
 
     setState(newState) {
         super.setState(newState);
-        this.render();
+        // 상태가 변경된 후 이벤트 리스너 다시 바인딩
+        this.bindOrderItemEvents();
     }
 }

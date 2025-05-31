@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    // 모든 회원 목록 조회
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
+    }
 
     // 휴대전화로 회원 검색
     // Optional로 Null 값 허용
@@ -55,6 +61,5 @@ public class MemberService {
 
         return memberRepository.findByPhone(updateMemberDto.getAfterPhone()).orElseThrow(()-> new IllegalArgumentException("Error: 회원 수정 중 오류 " + updateMemberDto.getAfterPhone()));
     }
-
 
 }

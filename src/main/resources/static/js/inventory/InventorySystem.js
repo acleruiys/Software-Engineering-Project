@@ -293,4 +293,8 @@ export default class InventorySystem extends Component {
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b

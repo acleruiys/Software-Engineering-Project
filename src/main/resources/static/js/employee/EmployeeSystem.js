@@ -3,15 +3,159 @@ import Component from "../main/Component.js";
 export default class EmployeeSystem extends Component {
     setup() {
         this.state = {
+<<<<<<< HEAD
             employeeList: [
                 {id: 1, name: '서윤', position: '매니저', hourlyPay: '10,030'}
             ],
+=======
+            employeeList: [],
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
             isAdding: false,
             positionOptions: ['매니저', '파트타임', '풀타임'],
             selectedEmployeeId: null,
             isEditing: false,
             editEmployee: null,
         };
+<<<<<<< HEAD
+=======
+        this.fetchEmployees();
+    }
+
+    // 직원 목록 가져오기
+    async fetchEmployees() {
+        try {
+            const response = await fetch('/api/employee/list');
+            if (!response.ok) {
+                throw new Error('직원 목록을 가져오는 데 실패했습니다.');
+            }
+            const data = await response.json();
+            
+            // 백엔드 데이터 형식을 프론트엔드에 맞게 변환
+            this.state.employeeList = data.map(employee => ({
+                id: employee.employeeId,
+                name: employee.name,
+                position: this.translatePosition(employee.position),
+                hourlyPay: this.formatSalary(employee.salary)
+            }));
+            
+            this.renderEmployeeTable();
+        } catch (error) {
+            console.error('직원 목록 조회 오류:', error);
+            alert('직원 목록을 불러오는 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 직원 추가
+    async addEmployee(employeeData) {
+        try {
+            const response = await fetch('/api/employee/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: employeeData.name,
+                    // 백엔드 포맷에 맞게 변환
+                    position: this.getPositionCode(employeeData.position)
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('직원 추가에 실패했습니다.');
+            }
+            
+            await this.fetchEmployees();
+            return true;
+        } catch (error) {
+            console.error('직원 추가 오류:', error);
+            alert('직원 추가 중 오류가 발생했습니다.');
+            return false;
+        }
+    }
+
+    // 직원 수정
+    async updateEmployee(employeeData) {
+        try {
+            const response = await fetch('/api/employee/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    employeeId: employeeData.id,
+                    name: employeeData.name,
+                    position: this.getPositionCode(employeeData.position),
+                    salary: this.parseSalary(employeeData.hourlyPay)
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('직원 수정에 실패했습니다.');
+            }
+            
+            await this.fetchEmployees();
+            return true;
+        } catch (error) {
+            console.error('직원 수정 오류:', error);
+            alert('직원 수정 중 오류가 발생했습니다.');
+            return false;
+        }
+    }
+
+    // 직원 삭제
+    async deleteEmployee(employeeId) {
+        try {
+            const response = await fetch(`/api/employee/delete/${employeeId}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) {
+                throw new Error('직원 삭제에 실패했습니다.');
+            }
+            
+            const data = await response.json();
+            if (data.success) {
+                await this.fetchEmployees();
+                return true;
+            } else {
+                throw new Error('서버에서 직원 삭제를 완료하지 못했습니다.');
+            }
+        } catch (error) {
+            console.error('직원 삭제 오류:', error);
+            alert('직원 삭제 중 오류가 발생했습니다.');
+            return false;
+        }
+    }
+
+    // 포지션 코드 변환 (프론트엔드 -> 백엔드)
+    getPositionCode(position) {
+        switch (position) {
+            case '매니저': return 'manager';
+            case '파트타임': return 'part_time';
+            case '풀타임': return 'full_time';
+            default: return 'part_time';
+        }
+    }
+
+    // 포지션 코드 변환 (백엔드 -> 프론트엔드)
+    translatePosition(positionCode) {
+        switch (positionCode) {
+            case 'manager': return '매니저';
+            case 'part_time': return '파트타임';
+            case 'full_time': return '풀타임';
+            default: return '파트타임';
+        }
+    }
+
+    // 급여 형식 변환 (숫자 -> 문자열)
+    formatSalary(salary) {
+        return salary ? salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0';
+    }
+
+    // 급여 형식 변환 (문자열 -> 숫자)
+    parseSalary(salaryStr) {
+        return parseInt(salaryStr.replace(/,/g, ''), 10) || 10030;
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
     }
 
     template() {
@@ -81,14 +225,22 @@ export default class EmployeeSystem extends Component {
         const addBtn = this.$target.querySelector('.add-btn');
 
         if (addBtn) {
+<<<<<<< HEAD
             addBtn.addEventListener('click', () => {
+=======
+            addBtn.addEventListener('click', async () => {
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                 const { isAdding } = this.state;
 
                 if (!isAdding) {
                     this.state.isAdding = true;
+<<<<<<< HEAD
 
                     addBtn.textContent = "등록 완료";
 
+=======
+                    addBtn.textContent = "등록 완료";
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                     this.renderInputRow();
                 } else {
                     const name = this.$target.querySelector('.input-name').value;
@@ -100,12 +252,21 @@ export default class EmployeeSystem extends Component {
                     }
 
                     const newEmployee = {name, position, hourlyPay: "10030"};
+<<<<<<< HEAD
                     this.state.employeeList.push(newEmployee);
                     this.state.isAdding = false;
 
                     addBtn.textContent = "직원 등록";
 
                     this.renderEmployeeTable();
+=======
+                    const success = await this.addEmployee(newEmployee);
+                    
+                    if (success) {
+                        this.state.isAdding = false;
+                        addBtn.textContent = "직원 등록";
+                    }
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                 }
             });
         }
@@ -118,24 +279,40 @@ export default class EmployeeSystem extends Component {
 
         const deleteBtn = this.$target.querySelector('.delete-btn');
         if (deleteBtn) {
+<<<<<<< HEAD
             deleteBtn.addEventListener('click', () => {
                 const { selectedEmployeeId, employeeList } = this.state;
+=======
+            deleteBtn.addEventListener('click', async () => {
+                const { selectedEmployeeId } = this.state;
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
 
                 if (selectedEmployeeId === null) {
                     alert("삭제할 직원을 먼저 선택하세요.");
                     return;
                 }
 
+<<<<<<< HEAD
                 this.state.employeeList = employeeList.filter(employee => employee.id !== selectedEmployeeId);
                 this.state.selectedEmployeeId = null;
 
                 this.renderEmployeeTable();
+=======
+                if (confirm("정말 이 직원을 삭제하시겠습니까?")) {
+                    await this.deleteEmployee(selectedEmployeeId);
+                    this.state.selectedEmployeeId = null;
+                }
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
             });
         }
 
         const editBtn = this.$target.querySelector('.edit-btn');
         if (editBtn) {
+<<<<<<< HEAD
             editBtn.addEventListener('click', () => {
+=======
+            editBtn.addEventListener('click', async () => {
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                 const {isEditing, selectedEmployeeId, employeeList} = this.state;
 
                 if (!isEditing) {
@@ -160,6 +337,7 @@ export default class EmployeeSystem extends Component {
                         return;
                     }
 
+<<<<<<< HEAD
                     this.state.employeeList = employeeList.map(employee =>
                         employee.id === id ? {id, name, position, hourlyPay} : employee
                     );
@@ -168,14 +346,30 @@ export default class EmployeeSystem extends Component {
                     this.state.editingEmployeeId = null;
                     editBtn.textContent = "직원 수정";
                     this.renderEmployeeTable();
+=======
+                    const updatedEmployee = {id, name, position, hourlyPay};
+                    const success = await this.updateEmployee(updatedEmployee);
+                    
+                    if (success) {
+                        this.state.isEditing = false;
+                        this.state.editingEmployeeId = null;
+                        editBtn.textContent = "직원 수정";
+                    }
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
                 }
             });
         }
 
         document.addEventListener('click', (e) => {
+<<<<<<< HEAD
             const isClickInside = this.$target.contains(this.target);
             const modalContainer = this.$target.querySelector('.modal-container');
             const isModalVisible = modalContainer.style.display === 'block';
+=======
+            const isClickInside = this.$target.contains(e.target);
+            const modalContainer = this.$target.querySelector('.modal-container');
+            const isModalVisible = modalContainer && modalContainer.style.display === 'block';
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
 
             if (!isClickInside && isModalVisible) {
                 this.hideSalesUI();
@@ -204,6 +398,7 @@ export default class EmployeeSystem extends Component {
         const tbody = this.$target.querySelector('.modal-table tbody');
         if (!tbody) return;
 
+<<<<<<< HEAD
         const employeeRows = this.state.employeeList.map(employee => `
         <tr data-id="${employee.id}">
             <td>${employee.name}</td>
@@ -211,17 +406,36 @@ export default class EmployeeSystem extends Component {
             <td>${employee.hourlyPay}원</td>
         </tr>
     `).join('');
+=======
+        const { employeeList } = this.state;
+
+        const employeeRows = employeeList.map(employee => `
+            <tr data-id="${employee.id}">
+                <td>${employee.name}</td>
+                <td>${employee.position}</td>
+                <td>${employee.hourlyPay}원</td>
+            </tr>
+        `).join('');
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
 
         tbody.innerHTML = employeeRows;
     }
 
     renderInputRow() {
+<<<<<<< HEAD
         const { isAdding, positionOptions } = this.state;
 
+=======
+        const tbody = this.$target.querySelector('.modal-table tbody');
+        if (!tbody) return;
+
+        const positionOptions = this.state.positionOptions;
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
         const positionSelectOptions = ['<option value="">카테고리 선택</option>', ...positionOptions.map(
             option => `<option value="${option}">${option}</option>`
         )].join('');
 
+<<<<<<< HEAD
         const inputRow = isAdding ? `
         <tr class="input-row">
             <td><input type="text" placeholder="직원명" class="input-name" /></td>
@@ -277,11 +491,61 @@ export default class EmployeeSystem extends Component {
                 `;
                 }
             }).join('');
+=======
+        const inputRow = `
+            <tr class="input-row">
+                <td><input type="text" placeholder="이름" class="input-name" /></td>
+                <td>
+                    <select class="input-position">
+                        ${positionSelectOptions}
+                    </select>
+                </td>
+                <td><input type="text" placeholder="시급" class="input-hourlyPay" value="10,030" /></td>
+            </tr>
+        `;
+
+        tbody.innerHTML += inputRow;
+    }
+
+    renderEditRow() {
+        const tbody = this.$target.querySelector('.modal-table tbody');
+        if (!tbody) return;
+
+        const { employeeList, editingEmployeeId } = this.state;
+        const editEmployee = employeeList.find(emp => emp.id === editingEmployeeId);
+        
+        if (!editEmployee) return;
+
+        const positionOptions = this.state.positionOptions;
+        const positionSelectOptions = positionOptions.map(
+            option => `<option value="${option}" ${editEmployee.position === option ? 'selected' : ''}>${option}</option>`
+        ).join('');
+
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const editRow = rows.find(row => Number(row.dataset.id) === editingEmployeeId);
+        
+        if (editRow) {
+            editRow.innerHTML = `
+                <td><input type="text" placeholder="이름" class="input-name" value="${editEmployee.name}" /></td>
+                <td>
+                    <select class="input-position">
+                        ${positionSelectOptions}
+                    </select>
+                </td>
+                <td><input type="text" placeholder="시급" class="input-hourlyPay" value="${editEmployee.hourlyPay}" /></td>
+            `;
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
         }
     }
 
     hideSalesUI() {
+<<<<<<< HEAD
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';
     }
 }
+=======
+        this.$target.innerHTML = '';
+    }
+}
+>>>>>>> 1d35599a9935912c77206884fb5784decd4bb34b
