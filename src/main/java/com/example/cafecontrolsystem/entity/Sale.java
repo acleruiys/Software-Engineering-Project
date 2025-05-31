@@ -9,7 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "sale")
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
