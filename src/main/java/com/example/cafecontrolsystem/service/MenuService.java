@@ -3,10 +3,7 @@ package com.example.cafecontrolsystem.service;
 import com.example.cafecontrolsystem.dto.MenuDto;
 import com.example.cafecontrolsystem.dto.UpdateMenuDto;
 import com.example.cafecontrolsystem.entity.Menu_entity;
-import com.example.cafecontrolsystem.entity.MenuCategory_entity;
-import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
-import com.example.cafecontrolsystem.repository.MenuCategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +14,6 @@ public class MenuService {
 
     @Autowired
     private MenuRepository menuRepository;
-
-    @Autowired
-    private MenuCategoryRepository menuCategoryRepository;
 
     public List<Menu_entity> getMenusByCategory(String category) {
         return menuRepository.findByCategory(category);

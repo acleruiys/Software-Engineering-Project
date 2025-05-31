@@ -28,16 +28,13 @@ public class Menu_entity {
     @Column(nullable = false)
     private String category;
 
-    @Column(length = 500)
-    private String description;
-
     @Column
     private boolean available = true;
 
     // 더티체킹
     public void changeMenu(UpdateMenuDto updateMenuDto){
         this.price = updateMenuDto.getPrice();
-        this.description = updateMenuDto.getDescription();
+
     }
 
     // 더티체킹

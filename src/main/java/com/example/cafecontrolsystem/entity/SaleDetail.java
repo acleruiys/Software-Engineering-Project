@@ -29,5 +29,5 @@ public class SaleDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
-    private MenuOption option;
+    private String option;
 } 
