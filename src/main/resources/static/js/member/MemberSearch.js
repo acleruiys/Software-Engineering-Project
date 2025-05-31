@@ -161,12 +161,35 @@ class MemberSearch {
         try {
             let url;
             if (searchType === 'phone') {
-                url = `/api/members/phone/${searchValue}`;
+                // 전화번호에서 하이픈('-') 제거하여 숫자만 추출
+                const cleanedPhoneNumber = searchValue.replace(/-/g, '');
+                
+                // 전체 회원 목록을 가져와서 전화번호로 필터링
+                url = '/api/members';
                 const response = await fetch(url);
                 if (response.ok) {
-                    const member = await response.json();
-                    this.displaySearchResults([member]);
-                    this.totalMembers = 1;
+                    const allMembers = await response.json();
+                    // 회원의 전화번호 검색 - 두 가지 형식(하이픈 포함/미포함) 모두 확인
+                    const filteredMembers = allMembers.filter(member => {
+                        // 1. 원본 전화번호에 검색어가 포함되는지 확인 (하이픈 포함된 형식)
+                        if (member.phone.includes(searchValue)) {
+                            return true;
+                        }
+                        
+                        // 2. 하이픈이 제거된 전화번호에 검색어가 포함되는지 확인
+                        const memberPhoneDigits = member.phone.replace(/-/g, '');
+                        // 사용자 입력에서 하이픈 제거한 값과 회원 전화번호에서 하이픈 제거한 값 비교
+                        return memberPhoneDigits.includes(cleanedPhoneNumber);
+                    });
+                    
+                    this.totalMembers = filteredMembers.length;
+                    
+                    const startIndex = (this.currentPage - 1) * this.membersPerPage;
+                    const endIndex = startIndex + this.membersPerPage;
+                    const paginatedMembers = filteredMembers.slice(startIndex, endIndex);
+                    
+                    this.displaySearchResults(paginatedMembers);
+                    this.renderPagination();
                 } else {
                     this.displayNoResults();
                 }
