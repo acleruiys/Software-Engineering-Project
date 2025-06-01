@@ -41,4 +41,4 @@ public class Menu_entity {
     public void changeAvailable(){
         this.available = !this.available;
     }
-} 
+}
