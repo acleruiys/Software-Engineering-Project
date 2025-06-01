@@ -9,5 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface MenuCategoryRepository extends JpaRepository<MenuCategory_entity, Long> {
-    Optional<MenuCategory_entity> findByType(CategoryType type);
+    List<Menu_entity> findByCategory(String category);
+    List<Menu_entity> findByAvailableTrue();
+
+    Optional<Menu_entity> findByName(String name);
 } 
