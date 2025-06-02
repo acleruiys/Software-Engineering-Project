@@ -27,6 +27,7 @@ public class MemberInitializer implements CommandLineRunner {
             memberRepository.save(Member.builder()
                     .name(type.name())
                     .phone(type.getPhone())
+                    .password("0000")
                     .points(0)
                     .build());
         }
