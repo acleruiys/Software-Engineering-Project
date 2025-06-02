@@ -229,6 +229,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 - `member_id`: 회원 아이디 (PK)
 - `name`: 회원 이름
 - `phone`: 전화번호
+- `password`: 4자리 비밀번호 (NOT NULL)
 - `points`: 포인트
 
 #### 9. point_history (포인트 내역 테이블)
@@ -517,3 +518,18 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 - `SupplyController.java`: 공급업체 관련 API
 - `SupplyService.java`: 공급업체 서비스 로직
 - `Supply.java`: 공급업체 엔티티
+
+### 회원 관리 시스템
+- 회원 등록/수정/삭제 기능
+- 회원별 포인트 관리
+- 회원 인증 시스템:
+  - 4자리 비밀번호 필수 입력
+  - 전화번호로 회원 조회
+  - 비밀번호 변경 기능
+- 회원 정보 수정:
+  - 이름, 전화번호, 비밀번호 변경 가능
+  - 포인트 적립/사용 내역 관리
+- 초기 회원 데이터:
+  - 기본 비밀번호: "0000"
+  - 회원 등록 시 4자리 비밀번호 필수 입력
+  - 전화번호 중복 검증
