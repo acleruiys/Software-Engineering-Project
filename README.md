@@ -11,10 +11,53 @@
 - Gradle 8.5
 - intellij
 - JPA/Hibernate
-- Lombok
 - Spring Security
 - Thymeleaf
 - JUnit 5
+
+## 프로그래밍 언어 및 프레임워크 상세
+
+### Java
+- Java 21 또는 17 이상 버전 사용
+- 주요 사용 패키지:
+  - `java.util`: 컬렉션, 날짜/시간 처리
+  - `java.security`: 보안 관련 기능 (비밀번호 암호화 등)
+  - `java.time`: 날짜/시간 API
+  - `javax.persistence`: JPA 관련 어노테이션
+- 객체지향 프로그래밍 원칙 준수
+- 예외 처리 및 로깅 구현
+- 스트림 API 활용한 데이터 처리
+
+### JavaScript
+- ES6+ 문법 사용
+- 모듈화된 구조:
+  - 클래스 기반 컴포넌트 구현
+  - 비동기 처리 (async/await)
+  - 이벤트 기반 프로그래밍
+- 주요 기능:
+  - DOM 조작 및 이벤트 처리
+  - AJAX를 통한 비동기 통신
+  - 폼 유효성 검증
+  - 동적 UI 업데이트
+- 외부 라이브러리:
+  - Chart.js: 매출 데이터 시각화
+  - SweetAlert2: 사용자 알림
+  - Axios: HTTP 클라이언트
+
+### HTML
+- HTML5 표준 준수
+- 시맨틱 태그 활용:
+  - `<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`
+- 반응형 웹 디자인:
+  - 미디어 쿼리 사용
+  - Flexbox/Grid 레이아웃
+- 접근성 고려:
+  - ARIA 레이블 사용
+  - 키보드 네비게이션 지원
+- Thymeleaf 템플릿 엔진 활용:
+  - 동적 콘텐츠 렌더링
+  - 레이아웃 재사용
+  - 국제화(i18n) 지원
 
 ## 사용자 인증 및 보안
 
