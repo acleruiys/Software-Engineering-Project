@@ -258,3 +258,4 @@ export default class SupplySystem extends Component {
         this.$target.style.display = 'none';
     }
 }
+

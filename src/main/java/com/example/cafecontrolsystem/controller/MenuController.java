@@ -19,7 +19,7 @@ public class MenuController {
     private MenuService menuService;
     
     @GetMapping
-    public ResponseEntity<List<MenuDto>> getMenus(@RequestParam(required = false) CategoryType category) {
+    public ResponseEntity<List<MenuDto>> getMenus(@RequestParam(required = false) String category) {
         List<Menu_entity> menus;
         if (category != null) {
             menus = menuService.getMenusByCategory(category);
@@ -67,7 +67,7 @@ public class MenuController {
         dto.setId(menu.getId());
         dto.setName(menu.getName());
         dto.setPrice(menu.getPrice());
-        dto.setCategory(menu.getCategory().getType().getDisplayName());
+        dto.setCategory(menu.getCategory());
         dto.setStatus(menu.isAvailable() ? "판매중" : "품절");
         return dto;
     }
