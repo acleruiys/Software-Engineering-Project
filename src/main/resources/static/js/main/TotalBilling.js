@@ -9,17 +9,14 @@ export default class TotalBilling extends Component {
     }
 
     template() {
-        const { billingAmount, orderQuantity } = this.state;
-
         return `
       <div class="billing-section">
-        ${this.createItemTemplate('청구금액', billingAmount)}
-        ${this.createItemTemplate('주문수량', orderQuantity)}
+        ${this.createItemTemplate('청구금액', this.state.billingAmount)}
+        ${this.createItemTemplate('주문수량', this.state.orderQuantity)}
       </div>
     `;
     }
 
-    // 항목 렌더링
     createItemTemplate(label, value) {
         return `
       <div class="billing-item">
@@ -29,15 +26,11 @@ export default class TotalBilling extends Component {
     `;
     }
 
-    // 외부에서 값 갱신용
-    setState(newState) {
-        this.state = {
-            billingAmount: newState.billingAmount ?? this.state.billingAmount,
-            orderQuantity: newState.orderQuantity ?? this.state.orderQuantity
-        };
-        this.render();
+    setEvent() {
+
     }
 
-    setEvent() {}
-    updateValue() {}
+    updateValue(item) {
+
+    }
 }

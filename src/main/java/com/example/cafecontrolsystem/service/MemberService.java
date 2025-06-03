@@ -40,7 +40,6 @@ public class MemberService {
         memberRepository.save(Member.builder()
                 .name(member.getName())
                 .phone(member.getPhone())
-                .password(member.getPassword())
                 .points(0)
                 .build());
     }

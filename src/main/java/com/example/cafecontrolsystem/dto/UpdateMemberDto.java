@@ -10,6 +10,4 @@ public class UpdateMemberDto {
 
     private String afterPhone;
 
-    private String password;  // 4자리 비밀번호
-
 }

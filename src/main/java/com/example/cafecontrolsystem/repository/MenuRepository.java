@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface MenuRepository extends JpaRepository<Menu_entity, Long> {
-
-    List<Menu_entity> findByCategory(String category);
+    @Query("SELECT m FROM Menu_entity m WHERE m.category.type = :type")
+    List<Menu_entity> findByCategoryType(CategoryType type);
     List<Menu_entity> findByAvailableTrue();
 
     Optional<Menu_entity> findByName(String name);

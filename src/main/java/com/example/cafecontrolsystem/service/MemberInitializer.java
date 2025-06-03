@@ -2,6 +2,7 @@ package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.entity.Member;
+import com.example.cafecontrolsystem.entity.MenuCategory_entity;
 import com.example.cafecontrolsystem.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -27,7 +28,6 @@ public class MemberInitializer implements CommandLineRunner {
             memberRepository.save(Member.builder()
                     .name(type.name())
                     .phone(type.getPhone())
-                    .password("0000")
                     .points(0)
                     .build());
         }

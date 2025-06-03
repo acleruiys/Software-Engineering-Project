@@ -25,9 +25,6 @@ public class Member {
     @Column(unique = true)
     private String phone;
 
-    @Column(nullable = false, length = 4)
-    private String password;  // 4자리 비밀번호
-
     private Integer points;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -37,7 +34,6 @@ public class Member {
     public void updateMember(UpdateMemberDto updateMemberDto){
         this.phone = updateMemberDto.getAfterPhone();
         this.name = updateMemberDto.getName();
-        this.password = updateMemberDto.getPassword();  // 비밀번호 업데이트 추가
     }
 
     // 포인트 적립

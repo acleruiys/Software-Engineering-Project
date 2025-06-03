@@ -8,13 +8,7 @@ public enum CategoryType {
     SMOOTHIE("스무디/프라페"),
     ADE("에이드/주스"),
     SEASON("시즌메뉴"),
-    BREAD("빵류"),
-    DESSERT("디저트"),
-    SANDWICH("샌드위치"),
-    MD("MD상품"),
-    SET("세트메뉴"),
-    CAKE("케이크"),
-    ETC("기타");
+    BREAD("빵류");
 
     private final String displayName;
 

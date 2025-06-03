@@ -22,7 +22,7 @@ export default class Billing extends Component {
 
     createTotalItemTemplate(item) {
         return `
-      <div class="total-item" data-label="${item.label}">
+      <div class="total-item">
         <div>${item.label}</div>
         <div>${item.value}</div>
       </div>
@@ -37,21 +37,11 @@ export default class Billing extends Component {
     }
 
     updateValue(item) {
-        const label = item.dataset.label;
+        const label = item.querySelector('div').textContent;
         const index = this.state.items.findIndex(i => i.label === label);
         if (index !== -1) {
             this.state.items[index].value += 10;
             this.render();
         }
-    }
-
-    setState(newBilling) {
-        this.state.items = [
-            { label: '주문금액', value: newBilling.orderAmount || 0 },
-            { label: '서비스', value: newBilling.serviceFee || 0 },
-            { label: '할인금액', value: newBilling.discount || 0 },
-            { label: '봉사료', value: newBilling.tip || 0 }
-        ];
-        this.render();
     }
 }
