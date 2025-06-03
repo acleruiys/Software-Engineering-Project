@@ -4,14 +4,10 @@ import MenuGrid from './MenuGrid.js';
 import OrderList from './OrderList.js';
 import Billing from './Billing.js';
 import TotalBilling from './TotalBilling.js';
-import { menuItems } from '../data/MenuData.js';
 
 export default class App extends Component {
     setup() {
-        this.menuItemsByCategory = menuItems;
-
         this.state = {
-            menuItems: this.menuItemsByCategory.COFFEE,
             selectedOrderItemId: null,
             orderList: [],
             billing: {
@@ -31,7 +27,6 @@ export default class App extends Component {
     template() { return ''; }
 
     render() {
-        if (this.menuGrid)            this.menuGrid.setMenuItems(this.state.menuItems);
         if (this.orderListComponent)  this.orderListComponent.setState({ orders: this.state.orderList });
         if (this.billingComponent)    this.billingComponent.setState(this.state.billing);
 
@@ -53,18 +48,20 @@ export default class App extends Component {
                 target: document.querySelector('#categoryPanel'),
                 props: {
                     onCategorySelect: category => {
-                        const items = this.menuItemsByCategory[category] || [];
-                        this.setState({ menuItems: items });
+                        // 카테고리 변경 시 메뉴 그리드에 해당 카테고리의 메뉴 데이터 요청
+                        if (this.menuGrid) {
+                            this.menuGrid.fetchMenuItems(category);
+                        }
                     }
                 }
             });
         }
 
-        // 메뉴 그리드
+        // 메뉴 그리드 - 초기 메뉴 데이터는 서버에서 가져옴
         if (!this.menuGrid) {
             this.menuGrid = new MenuGrid({
                 target: document.querySelector('#menuGrid'),
-                props: { menuItems: this.state.menuItems }
+                props: {}
             });
         }
 

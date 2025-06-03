@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,7 +21,7 @@ public class MenuController {
     private MenuService menuService;
     
     @GetMapping
-    public ResponseEntity<List<MenuDto>> getMenus(@RequestParam(required = false) String category) {
+    public ResponseEntity<List<Map<String, Object>>> getMenus(@RequestParam(required = false) String category) {
         List<Menu_entity> menus;
         if (category != null) {
             menus = menuService.getMenusByCategory(category);
@@ -27,11 +29,11 @@ public class MenuController {
             menus = menuService.getAllAvailableMenus();
         }
         
-        List<MenuDto> menuDtos = menus.stream()
-            .map(this::convertToMenuDto)
+        List<Map<String, Object>> menuItems = menus.stream()
+            .map(this::convertToMenuMap)
             .collect(Collectors.toList());
             
-        return ResponseEntity.ok(menuDtos);
+        return ResponseEntity.ok(menuItems);
     }
     
     @GetMapping("/{id}")
@@ -59,6 +61,17 @@ public class MenuController {
     public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
         menuService.deleteMenu(id);
         return ResponseEntity.ok().build();
+    }
+    
+    // 메뉴 엔티티를 Map으로 변환 (클라이언트 요구 형식)
+    private Map<String, Object> convertToMenuMap(Menu_entity menu) {
+        Map<String, Object> menuMap = new HashMap<>();
+        menuMap.put("id", menu.getId().toString());
+        menuMap.put("name", menu.getName());
+        menuMap.put("price", menu.getPrice());
+        menuMap.put("category", menu.getCategory());
+        menuMap.put("status", menu.isAvailable() ? "판매중" : "품절");
+        return menuMap;
     }
     
     // 메뉴 엔티티를 DTO로 변환
