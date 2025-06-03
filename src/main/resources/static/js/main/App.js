@@ -2,14 +2,14 @@ import Component from './Component.js';
 import CategoryPanel from './CategoryPanel.js';
 import MenuGrid from './MenuGrid.js';
 import OrderList from './OrderList.js';
-import { menuItems } from '../data/MenuData.js';
+import ApiService from '../services/ApiService.js';
 
 export default class App extends Component {
     setup() {
-        this.menuItemsByCategory = menuItems;
+        this.menuItemsByCategory = {};
 
         this.state = {
-            menuItems: this.menuItemsByCategory.COFFEE,
+            menuItems: [],
             selectedOrderItemId: null,
             orderList: []
         };
@@ -21,6 +21,62 @@ export default class App extends Component {
         this.handleMenuItemSelected = this.handleMenuItemSelected.bind(this);
         this.handleOrderItemSelected = this.handleOrderItemSelected.bind(this);
         this.handleOrderAction = this.handleOrderAction.bind(this);
+        
+        this.loadInitialData();
+    }
+
+    async loadInitialData() {
+        try {
+            // 전체 메뉴 로드
+            const allMenus = await ApiService.getAllMenus();
+            
+            // 카테고리별로 메뉴 그룹화
+            this.menuItemsByCategory = this.groupMenusByCategory(allMenus);
+            
+            // 첫 번째 카테고리의 메뉴를 기본으로 설정 (커피)
+            const coffeeMenus = this.menuItemsByCategory['COFFEE'] || [];
+            this.setState({ menuItems: coffeeMenus });
+        } catch (error) {
+            console.error('초기 데이터 로딩 실패:', error);
+            this.setState({ menuItems: [] });
+        }
+    }
+
+    groupMenusByCategory(menus) {
+        const grouped = {};
+        menus.forEach(menu => {
+            // 백엔드에서 받은 카테고리 이름을 enum 값으로 변환
+            const categoryKey = this.getCategoryKeyFromName(menu.category);
+            if (!grouped[categoryKey]) {
+                grouped[categoryKey] = [];
+            }
+            grouped[categoryKey].push({
+                id: menu.id,
+                name: menu.name,
+                price: menu.price
+            });
+        });
+        return grouped;
+    }
+
+    getCategoryKeyFromName(categoryName) {
+        const categoryMap = {
+            '커피': 'COFFEE',
+            '디카페인': 'DECAF',
+            '논커피/과일라떼': 'NON_COFFEE',
+            '티': 'TEA',
+            '스무디/프라페': 'SMOOTHIE',
+            '에이드/주스': 'ADE',
+            '시즌메뉴': 'SEASON',
+            '빵': 'BREAD',
+            '디저트': 'DESSERT',
+            '샌드위치': 'SANDWICH',
+            'MD상품': 'MD',
+            '세트메뉴': 'SET',
+            '케이크': 'CAKE',
+            '기타': 'ETC'
+        };
+        return categoryMap[categoryName] || 'ETC';
     }
 
     template() {
@@ -42,9 +98,19 @@ export default class App extends Component {
             this.categoryPanel = new CategoryPanel({
                 target: document.querySelector('#categoryPanel'),
                 props: {
-                    onCategorySelect: (category) => {
-                        const items = this.menuItemsByCategory[category] || [];
-                        this.setState({ menuItems: items });
+                    onCategorySelect: async (category) => {
+                        try {
+                            const items = await ApiService.getMenusByCategory(category);
+                            const formattedItems = items.map(item => ({
+                                id: item.id,
+                                name: item.name,
+                                price: item.price
+                            }));
+                            this.setState({ menuItems: formattedItems });
+                        } catch (error) {
+                            console.error('카테고리별 메뉴 로딩 실패:', error);
+                            this.setState({ menuItems: [] });
+                        }
                     }
                 }
             });

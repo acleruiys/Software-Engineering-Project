@@ -16,7 +16,7 @@ public class MenuCategory_entity {
     private Long id; // 카테고리 ID
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private CategoryType type;
 
     @Column(nullable = false)

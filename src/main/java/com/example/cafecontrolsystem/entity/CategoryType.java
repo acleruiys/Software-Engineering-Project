@@ -4,11 +4,17 @@ public enum CategoryType {
     COFFEE("커피"),
     DECAF("디카페인"),
     NON_COFFEE("논커피/과일라떼"),
-    TEA("차"),
+    TEA("티"),
     SMOOTHIE("스무디/프라페"),
     ADE("에이드/주스"),
     SEASON("시즌메뉴"),
-    BREAD("빵류");
+    BREAD("빵"),
+    DESSERT("디저트"),
+    SANDWICH("샌드위치"),
+    MD("MD상품"),
+    SET("세트메뉴"),
+    CAKE("케이크"),
+    ETC("기타");
 
     private final String displayName;
 

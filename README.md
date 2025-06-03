@@ -369,9 +369,6 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 - `RowButton.js`: 하단 버튼 행 컴포넌트
 - `FooterPanel.js`: 푸터 영역 컴포넌트, 결제 버튼 등 포함
 
-##### 데이터 관리 (/js/data)
-- `MenuData.js`: 메뉴 데이터 정의 (카테고리, 메뉴 아이템)
-
 ##### 매출 관리 (/js/sales)
 - `SalesTime.js`: 기간별 매출 조회 메인 컴포넌트
 - `DailyView.js`: 일별 매출 조회 뷰
