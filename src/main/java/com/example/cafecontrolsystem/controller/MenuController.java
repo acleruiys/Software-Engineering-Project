@@ -67,7 +67,7 @@ public class MenuController {
         dto.setId(menu.getId());
         dto.setName(menu.getName());
         dto.setPrice(menu.getPrice());
-        dto.setCategory(menu.getCategory().getType().getDisplayName());
+        dto.setCategory(menu.getCategory());
         dto.setStatus(menu.isAvailable() ? "판매중" : "품절");
         return dto;
     }

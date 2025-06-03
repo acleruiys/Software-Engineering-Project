@@ -49,8 +49,8 @@ export default class FooterPanel extends Component {
                     this.openMemberSearchModal();
                 } else if (btnText === "반품") {
                     alert("반품 버튼이 클릭되었습니다.");
-                } else {
-                    alert(`'${btnText}' 버튼이 클릭되었습니다.`);
+                } else if (["포인트", "현금", "카드"].includes(btnText)) { // 수정됨
+                    this.openPaymentModal(btnText); // 수정됨
                 }
             });
         });
@@ -88,5 +88,25 @@ export default class FooterPanel extends Component {
         
         // 회원 선택 알림
         alert(`회원 ${name}님이 선택되었습니다.`);
+    }
+
+    //
+    openPaymentModal(paymentType) {
+        const modal = document.getElementById('modal');
+        modal.innerHTML = '';
+
+        import('../payment/Payment.js').then(({ default: Payment }) => {
+            const billingComponent = window.__billingComponent__; // 전역 등록된 billing 참조
+            if (!billingComponent) {
+                alert('Billing 컴포넌트가 초기화되지 않았습니다.');
+                return;
+            }
+            const payment = new Payment({ target: modal, billing: billingComponent });
+
+            // 바로 버튼 누른 타입에 따라 처리해주기
+            if (paymentType === '현금') payment.handleCash();
+            else if (paymentType === '카드') payment.handleCard();
+            else if (paymentType === '포인트') payment.handlePoint();
+        });
     }
 }

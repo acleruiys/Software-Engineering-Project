@@ -22,7 +22,7 @@ public class MenuService {
     private MenuCategoryRepository menuCategoryRepository;
 
     public List<Menu_entity> getMenusByCategory(CategoryType categoryType) {
-        return menuRepository.findByCategoryType(categoryType);
+        return menuRepository.findByCategory(categoryType.getDisplayName());
     }
 
     public List<Menu_entity> getAllAvailableMenus() {
