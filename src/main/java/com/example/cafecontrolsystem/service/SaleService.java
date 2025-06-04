@@ -31,6 +31,18 @@ public class SaleService {
                 .totalPrice(saveSaleDto.getTotalPrice())
                 .build());
 
+
+        if(saveSaleDto.getMemberId() != null){
+            Member m = memberRepository.findById(saveSaleDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("Member not found" + saveSaleDto.getMemberId()));
+            m.accumulatePoint((int) (saveSaleDto.getTotalPrice() * 0.01));
+            pointRepository.save(PointHistory.builder()
+                    .member(m)
+                    .sale(sale)
+                    .amount((int) (saveSaleDto.getTotalPrice() * 0.01))
+                    .type("reward")
+                    .build());
+        }
+
         saveSaleDto.getMenus()
                 .forEach(saleItemDto ->{
                     detailRepository.save(SaleDetail.builder()
@@ -47,29 +59,39 @@ public class SaleService {
 
         saveSaleDto.getPayments()
                 .forEach(salePaymentDto -> {
-                    paymentRepository.save(Payment.builder()
+
+            Optional<Member> memberOpt = saveSaleDto.getMemberId() == null ? Optional.empty() : memberRepository.findById(saveSaleDto.getMemberId());
+
+            if (salePaymentDto.getPayment().equals("POINT")) {
+                if (saveSaleDto.getMemberId() == null) {
+                    throw new IllegalArgumentException("MemberId must not be null when using POINT payment.");
+                }
+
+                Member member = memberOpt.orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
+
+                if (member.getPoints() < salePaymentDto.getPrice()) {
+                    throw new IllegalArgumentException("Member point must not be less than price");
+                }
+
+                pointRepository.save(PointHistory.builder()
+                        .member(member)
+                        .sale(sale)
+                        .amount(salePaymentDto.getPrice())
+                        .type("use")
+                        .build());
+
+                member.usePoint(salePaymentDto.getPrice());
+
+
+            } else {
+                paymentRepository.save(Payment.builder()
                         .sale(sale)
                         .method(salePaymentDto.getPayment())
                         .price(salePaymentDto.getPrice())
                         .build());
+            }
+        });
 
-                    if(salePaymentDto.getPayment().equals("POINT") && saveSaleDto.getMemberId() == null) {
-                        throw new IllegalArgumentException("MemberId must not be null when using POINT payment.");
-                    }
-                    else {
-                        pointRepository.save(PointHistory.builder()
-                                .member(memberRepository.findById(saveSaleDto.getMemberId())
-                                        .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId())))
-                                .sale(sale)
-                                .amount(salePaymentDto.getPrice())
-                                .type("reward")
-                                .build());
-
-                        memberRepository.findById(saveSaleDto.getMemberId())
-                                .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId()))
-                                .usePoint(salePaymentDto.getPrice());
-                    }
-                });
 
     }
 
