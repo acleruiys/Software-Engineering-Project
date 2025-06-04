@@ -11,6 +11,6 @@ public class SaleItemDto {
     private Integer quantity;
     private Integer price;
 
-    // 옵션이 여러가지일 때의 처리에 관한 회의 필요
-    private Long optionId;
+    // 옵션이 여러가지일 때의 처리
+    private List<Long> optionId;
 }

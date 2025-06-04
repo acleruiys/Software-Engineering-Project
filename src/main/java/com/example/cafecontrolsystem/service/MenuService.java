@@ -67,7 +67,7 @@ public class MenuService {
         menu.setPrice(dto.getPrice());
         menu.setAvailable(dto.getStatus().equals("판매중"));
 
-        // CategoryType을 MenuCategory_entity로 변환
+
         CategoryType categoryType = CategoryType.fromDisplayName(dto.getCategory());
         MenuCategory_entity category = menuCategoryRepository.findByType(categoryType)
                 .orElseGet(() -> {

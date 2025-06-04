@@ -10,6 +10,9 @@ import java.util.List;
 @Entity
 @Table(name = "sale")
 @Getter @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +26,10 @@ public class Sale {
     
     @Column(name = "total_price")
     private Integer totalPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "member")
+    private Member member;
     
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<Payment> payments = new ArrayList<>();
