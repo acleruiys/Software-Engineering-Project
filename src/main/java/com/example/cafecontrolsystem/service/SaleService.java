@@ -53,10 +53,10 @@ public class SaleService {
                         .price(salePaymentDto.getPrice())
                         .build());
 
-                    if(salePaymentDto.getPayment().equals("POINT")){
-                        Optional.ofNullable(saveSaleDto.getMemberId())
-                                .orElseThrow(() -> new IllegalArgumentException("MemberId must not be null"));
-
+                    if(salePaymentDto.getPayment().equals("POINT") && saveSaleDto.getMemberId() == null) {
+                        throw new IllegalArgumentException("MemberId must not be null when using POINT payment.");
+                    }
+                    else {
                         pointRepository.save(PointHistory.builder()
                                 .member(memberRepository.findById(saveSaleDto.getMemberId())
                                         .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId())))
