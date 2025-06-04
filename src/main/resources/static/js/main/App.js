@@ -93,6 +93,8 @@ export default class App extends Component {
         if (this.orderListComponent) {
             this.orderListComponent.setState({ orders: this.state.orderList });
         }
+
+        window.__orderList__ = this.state.orderList;
     }
 
     mounted() {
@@ -127,50 +129,25 @@ export default class App extends Component {
             });
         }
 
-        if (!this.orderListComponent) {
-            // Billing 컴포넌트 추가
-            this.billingComponent = new Billing({
-                target: document.querySelector('#billing'),
-                props: {
-                    updateTotalBilling: () => {
-                        console.log("합계 갱신"); // 필요한 로직으로 수정 가능
-                    }
-                }
-            });
-            window.__billingComponent__ = this.billingComponent;
+        this.totalBillingComponent = new TotalBilling({
+            target: document.querySelector('#totalBilling')
+        });
 
-            this.totalBillingComponent = new TotalBilling({
-                target: document.querySelector('#totalBilling')
-            });
+        this.billingComponent = new Billing({
+            target: document.querySelector('#billing'),
+            props: {
+                totalBillingComponent: this.totalBillingComponent
+            }
+        });
+        window.__billingComponent__ = this.billingComponent;
 
-            this.billingComponent = new Billing({
-                target: document.querySelector('#billing'),
-                props: {
-                    totalBillingComponent: this.totalBillingComponent
-                }
-            });
-
-            this.orderListComponent = new OrderList({
-                target: document.querySelector('.order-list'),
-                props: {
-                    billingComponent: this.billingComponent, // Billing 연동
-                    onOrderItemSelect: this.handleOrderItemSelected
-                }
-            });
-        }
-
-        if (!this.totalBillingComponent){
-            this.totalBillingComponent = new TotalBilling({
-                target: document.querySelector('#totalBilling')
-            });
-
-            this.billingComponent = new Billing({
-                target: document.querySelector('#billing'),
-                props: {
-                    totalBillingComponent: this.totalBillingComponent
-                }
-            });
-        }
+        this.orderListComponent = new OrderList({
+            target: document.querySelector('.order-list'),
+            props: {
+                billingComponent: this.billingComponent,
+                onOrderItemSelect: this.handleOrderItemSelected
+            }
+        });
 
         document.removeEventListener('menuItemSelected', this.handleMenuItemSelected);
         document.addEventListener('menuItemSelected', this.handleMenuItemSelected);
@@ -206,6 +183,8 @@ export default class App extends Component {
             ];
         }
 
+        window.__orderList__ = newOrderList;
+        this.billingComponent.updateOrderAmount(newOrderList.reduce((sum, item) => sum + item.totalPrice, 0));
         this.setState({ orderList: newOrderList });
     }
 
@@ -274,5 +253,8 @@ export default class App extends Component {
                 }
                 break;
         }
+
+        window.__orderList__ = newOrderList;
+        this.billingComponent.updateOrderAmount(newOrderList.reduce((sum, item) => sum + item.totalPrice, 0));
     }
 }

@@ -14,19 +14,17 @@ export default class Billing extends Component {
     }
 
     render() {
-        // 1. 부모 메서드 호출 (템플릿 렌더링)
         super.render();
 
-        // 2. 추가 작업: TotalBilling 갱신
         const orderAmount = this.getAmount('주문금액');
         const discountAmount = this.getAmount('할인금액');
-        const orderCount = window.__orderList__ ? window.__orderList__.reduce((sum, item) => sum + item.quantity, 0) : 0;
+        const orderList = window.__orderList__ || [];
+        const orderCount = orderList.reduce((acc, item) => acc + item.quantity, 0);
 
-        if (this.totalBillingComponent && typeof this.totalBillingComponent.updateTotal === 'function') {
+        if (this.totalBillingComponent) {
             this.totalBillingComponent.updateTotal(orderAmount, discountAmount, orderCount);
         }
 
-        // 3. 이벤트 바인딩
         this.setEvent();
     }
 
@@ -67,9 +65,7 @@ export default class Billing extends Component {
         const index = this.state.items.findIndex(i => i.label === '할인금액');
         if (index !== -1) {
             this.state.items[index].value = amount;
-            this.render();
-
-            this.updateTotalBilling(); // 총 합계 갱신
+            this.render(); // 여기서 render() 호출하면 updateTotal도 자동 호출됨
         }
     }
 
