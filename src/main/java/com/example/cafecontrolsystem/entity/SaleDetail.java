@@ -27,5 +27,5 @@ public class SaleDetail {
 
     private Integer price;
 
-    private String option;
+    private String menuOption;
 } 

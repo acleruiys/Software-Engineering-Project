@@ -27,7 +27,7 @@ public class MenuInitializer implements CommandLineRunner {
             menuRepository.save(Menu_entity.builder()
                     .name(type.name())
                     .price(type.getPrice())
-                    .category("default")
+                    .category("커피")
                     .available(true)
                     .build());
         }

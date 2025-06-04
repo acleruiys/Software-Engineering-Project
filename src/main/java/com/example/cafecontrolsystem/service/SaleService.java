@@ -43,7 +43,7 @@ public class SaleService {
                                     .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + saleItemDto.getMenuId())))
                             .price(saleItemDto.getPrice())
                             .quantity(saleItemDto.getQuantity())
-                            .option(saleItemDto.getOptionId().stream()
+                            .menuOption(saleItemDto.getOptionId().stream()
                                     .map(id -> optionRepository.findNameById(id).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 옵션 " + id)))
                                     .collect(Collectors.joining(" ")))
                             .build()));

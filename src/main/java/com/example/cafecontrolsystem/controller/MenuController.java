@@ -19,13 +19,10 @@ public class MenuController {
     private MenuService menuService;
     
     @GetMapping
-    public ResponseEntity<List<MenuDto>> getMenus(@RequestParam(required = false) String category) {
+    public ResponseEntity<List<MenuDto>> getMenus() {
         List<Menu_entity> menus;
-        if (category != null) {
-            menus = menuService.getMenusByCategory(category);
-        } else {
-            menus = menuService.getAllAvailableMenus();
-        }
+        menus = menuService.getAllAvailableMenus();
+
         
         List<MenuDto> menuDtos = menus.stream()
             .map(this::convertToMenuDto)
