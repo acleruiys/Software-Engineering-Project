@@ -37,6 +37,23 @@ public class MemberController {
         }
     }
 
+    // 회원 ID로 조회
+    @GetMapping("/{memberId}")
+    public ResponseEntity<?> getMemberById(@PathVariable Long memberId) {
+        try {
+            Optional<Member> member = memberService.findById(memberId);
+            if (member.isPresent()) {
+                return ResponseEntity.ok(member.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "회원을 찾을 수 없습니다."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "서버 오류가 발생했습니다."));
+        }
+    }
+
     // 회원 등록
     @PostMapping
     public ResponseEntity<?> registerMember(@RequestBody Member member) {
@@ -46,6 +63,26 @@ public class MemberController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    // 회원 비밀번호 검증
+    @PostMapping("/{memberId}/verify-password")
+    public ResponseEntity<?> verifyMemberPassword(@PathVariable Long memberId, 
+                                                 @RequestBody Map<String, Object> requestData) {
+        try {
+            Integer inputPassword = (Integer) requestData.get("password");
+            boolean isValid = memberService.verifyMemberPassword(memberId, inputPassword);
+            
+            Map<String, Object> response = Map.of(
+                "valid", isValid,
+                "message", isValid ? "비밀번호가 확인되었습니다." : "비밀번호가 일치하지 않습니다."
+            );
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "비밀번호 검증 중 오류가 발생했습니다."));
         }
     }
 

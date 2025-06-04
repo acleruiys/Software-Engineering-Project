@@ -27,6 +27,11 @@ public class MemberService {
         return memberRepository.findByPhone(phone);
     }
 
+    // ID로 회원 검색
+    public Optional<Member> findById(Long memberId) {
+        return memberRepository.findById(memberId);
+    }
+
     // Null일 때 예외처리
     public Member getMember(String phone){
         return memberRepository.findByPhone(phone).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + phone));
@@ -40,6 +45,7 @@ public class MemberService {
         memberRepository.save(Member.builder()
                 .name(member.getName())
                 .phone(member.getPhone())
+                .pw(member.getPw())
                 .points(0)
                 .build());
     }
@@ -60,6 +66,23 @@ public class MemberService {
                 .updateMember(updateMemberDto);
 
         return memberRepository.findByPhone(updateMemberDto.getAfterPhone()).orElseThrow(()-> new IllegalArgumentException("Error: 회원 수정 중 오류 " + updateMemberDto.getAfterPhone()));
+    }
+
+    // 회원 비밀번호 검증
+    public boolean verifyMemberPassword(Long memberId, Integer inputPassword) {
+        Optional<Member> memberOpt = memberRepository.findById(memberId);
+        if (memberOpt.isEmpty()) {
+            throw new IllegalArgumentException("회원을 찾을 수 없습니다.");
+        }
+        
+        Member member = memberOpt.get();
+        // 비밀번호가 null이거나 입력값이 null인 경우 처리
+        if (member.getPw() == null || inputPassword == null) {
+            return false;
+        }
+        
+        // 비밀번호 비교 (현재는 평문 비교, 추후 암호화 적용 필요)
+        return member.getPw().equals(inputPassword);
     }
 
 }

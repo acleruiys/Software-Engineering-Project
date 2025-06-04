@@ -55,9 +55,21 @@ export default class OrderList extends Component {
         }
     }
 
+    calculateTotalAmount() {
+        return this.state.orders.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    }
+
     setState(newState) {
         super.setState(newState);
         // 상태가 변경된 후 이벤트 리스너 다시 바인딩
         this.bindOrderItemEvents();
+
+        // 주문 금액 계산해서 Billing에 반영
+        if (this.props.billingComponent) {
+            const totalAmount = this.calculateTotalAmount();
+            this.props.billingComponent.updateOrderAmount(totalAmount);
+        } else {
+            console.warn('[OrderList] billingComponent 없음!');
+        }
     }
 }

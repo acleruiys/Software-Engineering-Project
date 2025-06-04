@@ -3,6 +3,8 @@ import CategoryPanel from './CategoryPanel.js';
 import MenuGrid from './MenuGrid.js';
 import OrderList from './OrderList.js';
 import ApiService from '../services/ApiService.js';
+import Billing from "./Billing.js";
+import TotalBilling from "./TotalBilling.js";
 
 export default class App extends Component {
     setup() {
@@ -21,7 +23,7 @@ export default class App extends Component {
         this.handleMenuItemSelected = this.handleMenuItemSelected.bind(this);
         this.handleOrderItemSelected = this.handleOrderItemSelected.bind(this);
         this.handleOrderAction = this.handleOrderAction.bind(this);
-        
+
         this.loadInitialData();
     }
 
@@ -29,10 +31,10 @@ export default class App extends Component {
         try {
             // 전체 메뉴 로드
             const allMenus = await ApiService.getAllMenus();
-            
+
             // 카테고리별로 메뉴 그룹화
             this.menuItemsByCategory = this.groupMenusByCategory(allMenus);
-            
+
             // 첫 번째 카테고리의 메뉴를 기본으로 설정 (커피)
             const coffeeMenus = this.menuItemsByCategory['COFFEE'] || [];
             this.setState({ menuItems: coffeeMenus });
@@ -87,7 +89,7 @@ export default class App extends Component {
         if (this.menuGrid) {
             this.menuGrid.setMenuItems(this.state.menuItems);
         }
-        
+
         if (this.orderListComponent) {
             this.orderListComponent.setState({ orders: this.state.orderList });
         }
@@ -124,22 +126,58 @@ export default class App extends Component {
                 }
             });
         }
-        
+
         if (!this.orderListComponent) {
+            // Billing 컴포넌트 추가
+            this.billingComponent = new Billing({
+                target: document.querySelector('#billing'),
+                props: {
+                    updateTotalBilling: () => {
+                        console.log("합계 갱신"); // 필요한 로직으로 수정 가능
+                    }
+                }
+            });
+            window.__billingComponent__ = this.billingComponent;
+
+            this.totalBillingComponent = new TotalBilling({
+                target: document.querySelector('#totalBilling')
+            });
+
+            this.billingComponent = new Billing({
+                target: document.querySelector('#billing'),
+                props: {
+                    totalBillingComponent: this.totalBillingComponent
+                }
+            });
+
             this.orderListComponent = new OrderList({
                 target: document.querySelector('.order-list'),
                 props: {
+                    billingComponent: this.billingComponent, // Billing 연동
                     onOrderItemSelect: this.handleOrderItemSelected
+                }
+            });
+        }
+
+        if (!this.totalBillingComponent){
+            this.totalBillingComponent = new TotalBilling({
+                target: document.querySelector('#totalBilling')
+            });
+
+            this.billingComponent = new Billing({
+                target: document.querySelector('#billing'),
+                props: {
+                    totalBillingComponent: this.totalBillingComponent
                 }
             });
         }
 
         document.removeEventListener('menuItemSelected', this.handleMenuItemSelected);
         document.addEventListener('menuItemSelected', this.handleMenuItemSelected);
-        
+
         document.removeEventListener('orderItemSelected', this.handleOrderItemSelected);
         document.addEventListener('orderItemSelected', this.handleOrderItemSelected);
-        
+
         document.removeEventListener('orderAction', this.handleOrderAction);
         document.addEventListener('orderAction', this.handleOrderAction);
     }
@@ -150,8 +188,8 @@ export default class App extends Component {
 
         let newOrderList;
         if (existing) {
-            newOrderList = this.state.orderList.map(item => 
-                item.id === selected.id 
+            newOrderList = this.state.orderList.map(item =>
+                item.id === selected.id
                     ? { ...item, quantity: item.quantity + 1, totalPrice: (item.quantity + 1) * item.price }
                     : item
             );
@@ -170,34 +208,34 @@ export default class App extends Component {
 
         this.setState({ orderList: newOrderList });
     }
-    
+
     handleOrderItemSelected(e) {
         const { itemId } = e.detail;
         this.setState({ selectedOrderItemId: itemId });
     }
-    
+
     handleOrderAction(e) {
         const { action, quantity, operation } = e.detail;
         let newOrderList = [...this.state.orderList];
-        
+
         switch(action) {
             case 'removeSelected':
                 if (this.state.selectedOrderItemId) {
                     newOrderList = newOrderList.filter(item => item.id !== this.state.selectedOrderItemId);
-                    this.setState({ 
+                    this.setState({
                         orderList: newOrderList,
-                        selectedOrderItemId: null 
+                        selectedOrderItemId: null
                     });
                 }
                 break;
-                
+
             case 'removeAll':
-                this.setState({ 
+                this.setState({
                     orderList: [],
-                    selectedOrderItemId: null 
+                    selectedOrderItemId: null
                 });
                 break;
-                
+
             case 'setQuantity':
                 if (this.state.selectedOrderItemId) {
                     newOrderList = newOrderList.map(item => {
@@ -213,7 +251,7 @@ export default class App extends Component {
                     this.setState({ orderList: newOrderList });
                 }
                 break;
-                
+
             case 'changeQuantity':
                 if (this.state.selectedOrderItemId) {
                     newOrderList = newOrderList.map(item => {

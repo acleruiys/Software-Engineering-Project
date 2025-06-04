@@ -33,4 +33,13 @@ export default class TotalBilling extends Component {
     updateValue(item) {
 
     }
+
+    // Billing 컴포넌트에서 호출될 외부 메서드 추가
+    updateTotal(orderAmount, discountAmount, orderCount) {
+        const billingAmount = orderAmount - discountAmount;
+        this.setState({
+            billingAmount,
+            orderQuantity: orderCount
+        });
+    }
 }
