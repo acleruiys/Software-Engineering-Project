@@ -1,17 +1,12 @@
 package com.example.cafecontrolsystem.service;
 
-import com.example.cafecontrolsystem.dto.SaleItemDto;
-import com.example.cafecontrolsystem.dto.SalePaymentDto;
-import com.example.cafecontrolsystem.dto.SaveSaleDto;
+import com.example.cafecontrolsystem.dto.*;
 import com.example.cafecontrolsystem.entity.*;
 import com.example.cafecontrolsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,7 +17,6 @@ public class SaleService {
     private final SaleRepository saleRepository;
     private final SaleDetailRepository detailRepository;
     private final PaymentRepository paymentRepository;
-    private final PaymentMethodRepository methodRepository;
     private final MenuRepository menuRepository;
     private final OptionRepository optionRepository;
     private final PointHistoryRepository pointRepository;
@@ -31,12 +25,14 @@ public class SaleService {
     @Transactional
     public void saveSale(SaveSaleDto saveSaleDto){
         Sale sale = saleRepository.save(Sale.builder()
+                .member(saveSaleDto.getMemberId() == null ? null :memberRepository.findById(saveSaleDto.getMemberId())
+                        .orElseThrow(() -> new IllegalArgumentException("Member not found" + saveSaleDto.getMemberId())))
                 .state("ACTIVE")
                 .totalPrice(saveSaleDto.getTotalPrice())
                 .build());
 
         saveSaleDto.getMenus()
-                .forEach(saleItemDto ->
+                .forEach(saleItemDto ->{
                     detailRepository.save(SaleDetail.builder()
                             .sale(sale)
                             .menu(menuRepository.findById(saleItemDto.getMenuId())
@@ -46,7 +42,8 @@ public class SaleService {
                             .menuOption(saleItemDto.getOptionId().stream()
                                     .map(id -> optionRepository.findNameById(id).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 옵션 " + id)))
                                     .collect(Collectors.joining(" ")))
-                            .build()));
+                            .build());
+                });
 
         saveSaleDto.getPayments()
                 .forEach(salePaymentDto -> {
@@ -55,7 +52,6 @@ public class SaleService {
                         .method(salePaymentDto.getPayment())
                         .price(salePaymentDto.getPrice())
                         .build());
-
 
                     if(salePaymentDto.getPayment().equals("POINT")){
                         Optional.ofNullable(saveSaleDto.getMemberId())
@@ -71,8 +67,30 @@ public class SaleService {
 
                         memberRepository.findById(saveSaleDto.getMemberId())
                                 .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 회원 " + saveSaleDto.getMemberId()))
-                                .accumulatePoint(salePaymentDto.getPrice());
+                                .usePoint(salePaymentDto.getPrice());
                     }
                 });
+
     }
+
+    public ShowSaleSummaryDto showSale(SaleSummaryDateDto saleSummaryDateDto){
+
+        System.out.println(saleRepository.getTotalmember(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()));
+        System.out.println(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()));
+        System.out.println(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
+                .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (Long) arr[2], (Long) arr[3])).collect(Collectors.toList()));
+
+
+        return ShowSaleSummaryDto.builder()
+                .totalMember(saleRepository.getTotalmember(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
+                .payments(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
+                .menus(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
+                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (Long) arr[2], (Long) arr[3])).collect(Collectors.toList()))
+                .build();
+       }
 }
+
+
+
+
+
