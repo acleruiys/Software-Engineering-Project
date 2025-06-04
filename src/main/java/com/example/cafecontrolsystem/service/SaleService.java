@@ -94,8 +94,6 @@ public class SaleService {
                                 .build());
                     }
                 });
-
-
     }
 
     public ShowSaleSummaryDto showSale(SaleSummaryDateDto saleSummaryDateDto){
