@@ -5,7 +5,7 @@ export default class MenuSystem extends Component {
         this.state = {
             menuList: [],
             isAdding: false,
-            categoryOptions: ['커피', '디카페인', '논커피/과일라떼', '티', '스무디/프라페', '에이드/주스', '시즌메뉴', '빵'],
+            categoryOptions: [],
             selectedMenuId: null,
             isEditing: false,
             editingMenuId: null,
