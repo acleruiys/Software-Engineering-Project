@@ -38,20 +38,26 @@
     import Navbar from '/js/main/Navbar.js';
     import MenuEntityTabs from '/js/main/Tab.js';
     import TotalSection from '/js/main/TotalSection.js';
+    import TotalItem from '/js/main/Billing.js';
+    import Billing from '/js/main/TotalBilling.js';
     import RowButton from '/js/main/RowButton.js';
     import CategoryPanel from "/js/main/CategoryPanel.js";
     import MenuGrid from "/js/main/MenuGrid.js";
     import FooterPanel from "/js/main/FooterPanel.js";
+    import SalesTime from "/js/sales/SalesTime.js";
     import App from '/js/main/App.js';
     import OrderList from "/js/main/OrderList.js";
 
     new Navbar({ target: document.querySelector('#navbar') });
     new MenuEntityTabs({ target: document.querySelector('#tab') });
     new TotalSection({ target: document.querySelector('#totalSection') });
+    new TotalItem({ target: document.querySelector('#billing') });
+    new Billing({ target: document.querySelector('#totalBilling') });
     new RowButton({ target: document.querySelector('#rowButton') });
     new CategoryPanel({ target: document.querySelector('#categoryPanel') });
     new MenuGrid({ target: document.querySelector('#menuGrid') });
     new FooterPanel({ target: document.querySelector('#footerPanel') });
+    const salesTimeComponent = new SalesTime({ target: document.querySelector('#salesTime') });
     new App({ target: document.body });
     new OrderList({
         target: document.querySelector('.order-list')
