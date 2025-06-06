@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class SalePaymentDto {
-
     private PaymentMethod payment;
 
     private Integer price;

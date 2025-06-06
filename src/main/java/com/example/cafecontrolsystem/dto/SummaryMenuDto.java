@@ -11,4 +11,5 @@ public class SummaryMenuDto {
     private String menu;
     private Long totalPrice;
     private Long totalQuantity;
+
 }

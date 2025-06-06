@@ -50,6 +50,7 @@ public class EmployeeAttendance {
         this.clockIn = updateAttendanceDto.getClockIn();
         this.clockOut = updateAttendanceDto.getClockOut();
         this.date = updateAttendanceDto.getDate();
+
         this.workHour = getWorkhour(clockIn, clockOut);
     }
 

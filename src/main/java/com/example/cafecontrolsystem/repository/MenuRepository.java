@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface MenuRepository extends JpaRepository<Menu_entity, Long> {
-
     List<Menu_entity> findByCategory(String category);
     List<Menu_entity> findByAvailableTrue();
 

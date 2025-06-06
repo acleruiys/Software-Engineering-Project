@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -18,4 +20,16 @@ public class CategoryController {
                 .toList());
     }
 
+    @GetMapping
+    public ResponseEntity<List<Map<String, String>>> getCategories() {
+        List<Map<String, String>> categories = Arrays.stream(CategoryType.values())
+                .map(categoryType -> {
+                    Map<String, String> category = new HashMap<>();
+                    category.put("label", categoryType.getDisplayName());
+                    category.put("value", categoryType.name());
+                    return category;
+                })
+                .toList();
+        return ResponseEntity.ok(categories);
+    }
 } 

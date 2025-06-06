@@ -51,7 +51,8 @@ public class SaleService {
                                     .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + saleItemDto.getMenuId())))
                             .price(saleItemDto.getPrice())
                             .quantity(saleItemDto.getQuantity())
-                            .menuOption(saleItemDto.getOptionId().stream()
+                            .menuOption(saleItemDto.getOptionId() == null ? "" : 
+                                    saleItemDto.getOptionId().stream()
                                     .map(id -> optionRepository.findNameById(id).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 옵션 " + id)))
                                     .collect(Collectors.joining(" ")))
                             .build());
@@ -77,6 +78,7 @@ public class SaleService {
         });
 
     }
+
 
     // 현금 결제
     public void payByCash(Sale sale, SalePaymentDto salePaymentDto){
@@ -149,8 +151,3 @@ public class SaleService {
                 .build();
        }
 }
-
-
-
-
-

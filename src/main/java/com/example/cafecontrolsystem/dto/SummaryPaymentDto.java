@@ -11,3 +11,4 @@ public class SummaryPaymentDto {
     private String method;
     private Long methodPerPrice;
 }
+

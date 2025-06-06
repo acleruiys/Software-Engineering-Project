@@ -10,6 +10,22 @@ export default class Billing extends Component {
                 { label: '봉사료', value: 0 }
             ]
         };
+        this.totalBillingComponent = this.props.totalBillingComponent;
+    }
+
+    render() {
+        super.render();
+
+        const orderAmount = this.getAmount('주문금액');
+        const discountAmount = this.getAmount('할인금액');
+        const orderList = window.__orderList__ || [];
+        const orderCount = orderList.reduce((acc, item) => acc + item.quantity, 0);
+
+        if (this.totalBillingComponent) {
+            this.totalBillingComponent.updateTotal(orderAmount, discountAmount, orderCount);
+        }
+
+        this.setEvent();
     }
 
     template() {
@@ -22,7 +38,7 @@ export default class Billing extends Component {
 
     createTotalItemTemplate(item) {
         return `
-      <div class="total-item" data-label="${item.label}">
+      <div class="total-item">
         <div>${item.label}</div>
         <div>${item.value}</div>
       </div>
@@ -37,7 +53,7 @@ export default class Billing extends Component {
     }
 
     updateValue(item) {
-        const label = item.dataset.label;
+        const label = item.querySelector('div').textContent;
         const index = this.state.items.findIndex(i => i.label === label);
         if (index !== -1) {
             this.state.items[index].value += 10;
@@ -45,13 +61,24 @@ export default class Billing extends Component {
         }
     }
 
-    setState(newBilling) {
-        this.state.items = [
-            { label: '주문금액', value: newBilling.orderAmount || 0 },
-            { label: '서비스', value: newBilling.serviceFee || 0 },
-            { label: '할인금액', value: newBilling.discount || 0 },
-            { label: '봉사료', value: newBilling.tip || 0 }
-        ];
-        this.render();
+    updateDiscountAmount(amount) {
+        const index = this.state.items.findIndex(i => i.label === '할인금액');
+        if (index !== -1) {
+            this.state.items[index].value = amount;
+            this.render(); // 여기서 render() 호출하면 updateTotal도 자동 호출됨
+        }
+    }
+
+    updateOrderAmount(amount) {
+        const index = this.state.items.findIndex(item => item.label === '주문금액');
+        if (index !== -1) {
+            this.state.items[index].value = amount;
+            this.render();
+        }
+    }
+
+    getAmount(label) {
+        const item = this.state.items.find(i => i.label === label);
+        return item ? item.value : 0;
     }
 }

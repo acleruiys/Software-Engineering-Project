@@ -2,210 +2,259 @@ import Component from './Component.js';
 import CategoryPanel from './CategoryPanel.js';
 import MenuGrid from './MenuGrid.js';
 import OrderList from './OrderList.js';
-import Billing from './Billing.js';
-import TotalBilling from './TotalBilling.js';
-import { menuItems } from '../data/MenuData.js';
+import ApiService from '../services/ApiService.js';
+import Billing from "./Billing.js";
+import TotalBilling from "./TotalBilling.js";
 
 export default class App extends Component {
     setup() {
-        this.menuItemsByCategory = menuItems;
+        this.menuItemsByCategory = {};
 
         this.state = {
-            menuItems: this.menuItemsByCategory.COFFEE,
+            menuItems: [],
             selectedOrderItemId: null,
-            orderList: [],
-            billing: {
-                orderAmount: 0,
-                serviceFee: 0,
-                discount: 0,
-                tip: 0
-            }
+            orderList: []
         };
 
-        this.handleMenuItemSelected  = this.handleMenuItemSelected.bind(this);
+        this.menuGrid = null;
+        this.categoryPanel = null;
+        this.orderListComponent = null;
+
+        this.handleMenuItemSelected = this.handleMenuItemSelected.bind(this);
         this.handleOrderItemSelected = this.handleOrderItemSelected.bind(this);
-        this.handleOrderAction       = this.handleOrderAction.bind(this);
-        this.handleBillingAction     = this.handleBillingAction.bind(this);
+        this.handleOrderAction = this.handleOrderAction.bind(this);
+
+        this.loadInitialData();
     }
 
-    template() { return ''; }
+    async loadInitialData() {
+        try {
+            // 전체 메뉴 로드
+            const allMenus = await ApiService.getAllMenus();
 
-    render() {
-        if (this.menuGrid)            this.menuGrid.setMenuItems(this.state.menuItems);
-        if (this.orderListComponent)  this.orderListComponent.setState({ orders: this.state.orderList });
-        if (this.billingComponent)    this.billingComponent.setState(this.state.billing);
+            // 카테고리별로 메뉴 그룹화
+            this.menuItemsByCategory = this.groupMenusByCategory(allMenus);
 
-        if (this.totalBillingComponent) {
-            const { orderQuantity } = this.getOrderSummary(this.state.orderList);
-            const billingAmount     = this.getPayableAmount(this.state.billing);
-
-            this.totalBillingComponent.setState({
-                billingAmount,
-                orderQuantity
-            });
+            // 첫 번째 카테고리의 메뉴를 기본으로 설정 (커피)
+            const coffeeMenus = this.menuItemsByCategory['COFFEE'] || [];
+            this.setState({ menuItems: coffeeMenus });
+        } catch (error) {
+            console.error('초기 데이터 로딩 실패:', error);
+            this.setState({ menuItems: [] });
         }
     }
 
+    groupMenusByCategory(menus) {
+        const grouped = {};
+        menus.forEach(menu => {
+            // 백엔드에서 받은 카테고리 이름을 enum 값으로 변환
+            const categoryKey = this.getCategoryKeyFromName(menu.category);
+            if (!grouped[categoryKey]) {
+                grouped[categoryKey] = [];
+            }
+            grouped[categoryKey].push({
+                id: menu.id,
+                name: menu.name,
+                price: menu.price
+            });
+        });
+        return grouped;
+    }
+
+    getCategoryKeyFromName(categoryName) {
+        const categoryMap = {
+            '커피': 'COFFEE',
+            '디카페인': 'DECAF',
+            '논커피/과일라떼': 'NON_COFFEE',
+            '티': 'TEA',
+            '스무디/프라페': 'SMOOTHIE',
+            '에이드/주스': 'ADE',
+            '시즌메뉴': 'SEASON',
+            '빵': 'BREAD',
+            '디저트': 'DESSERT',
+            '샌드위치': 'SANDWICH',
+            'MD상품': 'MD',
+            '세트메뉴': 'SET',
+            '케이크': 'CAKE',
+            '기타': 'ETC'
+        };
+        return categoryMap[categoryName] || 'ETC';
+    }
+
+    template() {
+        return '';
+    }
+
+    render() {
+        if (this.menuGrid) {
+            this.menuGrid.setMenuItems(this.state.menuItems);
+        }
+
+        if (this.orderListComponent) {
+            this.orderListComponent.setState({ orders: this.state.orderList });
+        }
+
+        window.__orderList__ = this.state.orderList;
+    }
+
     mounted() {
-        // 카테고리 패널
         if (!this.categoryPanel) {
             this.categoryPanel = new CategoryPanel({
                 target: document.querySelector('#categoryPanel'),
                 props: {
-                    onCategorySelect: category => {
-                        const items = this.menuItemsByCategory[category] || [];
-                        this.setState({ menuItems: items });
+                    onCategorySelect: async (category) => {
+                        try {
+                            const items = await ApiService.getMenusByCategory(category);
+                            const formattedItems = items.map(item => ({
+                                id: item.id,
+                                name: item.name,
+                                price: item.price
+                            }));
+                            this.setState({ menuItems: formattedItems });
+                        } catch (error) {
+                            console.error('카테고리별 메뉴 로딩 실패:', error);
+                            this.setState({ menuItems: [] });
+                        }
                     }
                 }
             });
         }
 
-        // 메뉴 그리드
         if (!this.menuGrid) {
             this.menuGrid = new MenuGrid({
                 target: document.querySelector('#menuGrid'),
-                props: { menuItems: this.state.menuItems }
+                props: {
+                    menuItems: this.state.menuItems
+                }
             });
         }
 
-        // 주문 리스트
-        if (!this.orderListComponent) {
-            this.orderListComponent = new OrderList({
-                target: document.querySelector('.order-list'),
-                props: { onOrderItemSelect: this.handleOrderItemSelected }
-            });
-        }
+        this.totalBillingComponent = new TotalBilling({
+            target: document.querySelector('#totalBilling')
+        });
 
-        // 결제 내역(항목별)
-        if (!this.billingComponent) {
-            this.billingComponent = new Billing({
-                target: document.querySelector('#billing'),
-                props : { billing: this.state.billing }
-            });
-        }
+        this.billingComponent = new Billing({
+            target: document.querySelector('#billing'),
+            props: {
+                totalBillingComponent: this.totalBillingComponent
+            }
+        });
+        window.__billingComponent__ = this.billingComponent;
 
-        // 결제 합계(금액/수량)
-        if (!this.totalBillingComponent) {
-            this.totalBillingComponent = new TotalBilling({
-                target: document.querySelector('#totalBilling'),
-                props : { billingAmount: 0, orderQuantity: 0 }
-            });
-        }
+        this.orderListComponent = new OrderList({
+            target: document.querySelector('.order-list'),
+            props: {
+                billingComponent: this.billingComponent,
+                onOrderItemSelect: this.handleOrderItemSelected
+            }
+        });
 
-        // 글로벌 이벤트
-        document.removeEventListener('menuItemSelected',  this.handleMenuItemSelected);
-        document.addEventListener   ('menuItemSelected',  this.handleMenuItemSelected);
+        document.removeEventListener('menuItemSelected', this.handleMenuItemSelected);
+        document.addEventListener('menuItemSelected', this.handleMenuItemSelected);
 
         document.removeEventListener('orderItemSelected', this.handleOrderItemSelected);
-        document.addEventListener   ('orderItemSelected', this.handleOrderItemSelected);
+        document.addEventListener('orderItemSelected', this.handleOrderItemSelected);
 
-        document.removeEventListener('orderAction',       this.handleOrderAction);
-        document.addEventListener   ('orderAction',       this.handleOrderAction);
-
-        document.removeEventListener('billingAction',     this.handleBillingAction);
-        document.addEventListener   ('billingAction',     this.handleBillingAction);
+        document.removeEventListener('orderAction', this.handleOrderAction);
+        document.addEventListener('orderAction', this.handleOrderAction);
     }
 
-    // 주문 리스트 → { orderAmount, orderQuantity } 반환
-    getOrderSummary(orderList) {
-        return orderList.reduce(
-            (acc, item) => {
-                acc.orderAmount  += item.totalPrice;
-                acc.orderQuantity += item.quantity;
-                return acc;
-            },
-            { orderAmount: 0, orderQuantity: 0 }
-        );
-    }
-
-    // 결제 세부 항목 → 실제 청구 금액 반환
-    getPayableAmount({ orderAmount, serviceFee, discount, tip }) {
-        return orderAmount + serviceFee + tip - discount;
-    }
-
-    // 메뉴 선택 → 주문 추가
     handleMenuItemSelected(e) {
-        const selected = e.detail;                 // { id, name, price }
-        const existed  = this.state.orderList.find(i => i.id === selected.id);
+        const selected = e.detail;
+        const existing = this.state.orderList.find(item => item.id === selected.id);
 
-        const newOrderList = existed
-            ? this.state.orderList.map(i =>
-                i.id === selected.id
-                    ? { ...i, quantity: i.quantity + 1, totalPrice: (i.quantity + 1) * i.price }
-                    : i
-            )
-            : [
+        let newOrderList;
+        if (existing) {
+            newOrderList = this.state.orderList.map(item =>
+                item.id === selected.id
+                    ? { ...item, quantity: item.quantity + 1, totalPrice: (item.quantity + 1) * item.price }
+                    : item
+            );
+        } else {
+            newOrderList = [
                 ...this.state.orderList,
-                { id: selected.id, name: selected.name, price: selected.price,
-                    quantity: 1, totalPrice: selected.price }
+                {
+                    id: selected.id,
+                    name: selected.name,
+                    quantity: 1,
+                    price: selected.price,
+                    totalPrice: selected.price
+                }
             ];
+        }
 
-        const { orderAmount } = this.getOrderSummary(newOrderList);
-
-        this.setState({
-            orderList: newOrderList,
-            billing  : { ...this.state.billing, orderAmount }
-        });
+        window.__orderList__ = newOrderList;
+        this.billingComponent.updateOrderAmount(newOrderList.reduce((sum, item) => sum + item.totalPrice, 0));
+        this.setState({ orderList: newOrderList });
     }
 
-    // 주문 항목 선택
     handleOrderItemSelected(e) {
-        this.setState({ selectedOrderItemId: e.detail.itemId });
+        const { itemId } = e.detail;
+        this.setState({ selectedOrderItemId: itemId });
     }
 
-    // 주문 리스트 액션
     handleOrderAction(e) {
         const { action, quantity, operation } = e.detail;
         let newOrderList = [...this.state.orderList];
 
-        switch (action) {
+        switch(action) {
             case 'removeSelected':
-                if (this.state.selectedOrderItemId)
-                    newOrderList = newOrderList.filter(i => i.id !== this.state.selectedOrderItemId);
+                if (this.state.selectedOrderItemId) {
+                    newOrderList = newOrderList.filter(item => item.id !== this.state.selectedOrderItemId);
+                    this.setState({
+                        orderList: newOrderList,
+                        selectedOrderItemId: null
+                    });
+                }
                 break;
 
             case 'removeAll':
-                newOrderList = [];
+                this.setState({
+                    orderList: [],
+                    selectedOrderItemId: null
+                });
                 break;
 
             case 'setQuantity':
-                if (this.state.selectedOrderItemId && quantity > 0)
-                    newOrderList = newOrderList.map(i =>
-                        i.id === this.state.selectedOrderItemId
-                            ? { ...i, quantity, totalPrice: quantity * i.price }
-                            : i
-                    );
+                if (this.state.selectedOrderItemId) {
+                    newOrderList = newOrderList.map(item => {
+                        if (item.id === this.state.selectedOrderItemId) {
+                            return {
+                                ...item,
+                                quantity: quantity,
+                                totalPrice: quantity * item.price
+                            };
+                        }
+                        return item;
+                    });
+                    this.setState({ orderList: newOrderList });
+                }
                 break;
 
             case 'changeQuantity':
-                if (this.state.selectedOrderItemId)
-                    newOrderList = newOrderList.map(i => {
-                        if (i.id !== this.state.selectedOrderItemId) return i;
-                        const nextQ = operation === '+' ? i.quantity + 1
-                            : Math.max(1, i.quantity - 1);
-                        return { ...i, quantity: nextQ, totalPrice: nextQ * i.price };
+                if (this.state.selectedOrderItemId) {
+                    newOrderList = newOrderList.map(item => {
+                        if (item.id === this.state.selectedOrderItemId) {
+                            let newQuantity = item.quantity;
+                            if (operation === '+') {
+                                newQuantity += 1;
+                            } else if (operation === '-' && item.quantity > 1) {
+                                newQuantity -= 1;
+                            }
+                            return {
+                                ...item,
+                                quantity: newQuantity,
+                                totalPrice: newQuantity * item.price
+                            };
+                        }
+                        return item;
                     });
+                    this.setState({ orderList: newOrderList });
+                }
                 break;
         }
 
-        const { orderAmount } = this.getOrderSummary(newOrderList);
-
-        this.setState({
-            orderList: newOrderList,
-            selectedOrderItemId: (action === 'removeSelected' || action === 'removeAll')
-                ? null
-                : this.state.selectedOrderItemId,
-            billing: { ...this.state.billing, orderAmount }
-        });
-    }
-
-    // Billing(할인·팁 등) 액션
-    handleBillingAction(e) {
-        const { key, value } = e.detail;           // { key: 'discount', value: 1500 }
-        if (!['serviceFee', 'discount', 'tip'].includes(key)) return;
-
-        this.setState({
-            billing: { ...this.state.billing, [key]: value }
-        });
+        window.__orderList__ = newOrderList;
+        this.billingComponent.updateOrderAmount(newOrderList.reduce((sum, item) => sum + item.totalPrice, 0));
     }
 }

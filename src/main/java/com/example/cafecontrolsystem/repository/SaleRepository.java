@@ -32,3 +32,4 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             "GROUP BY m.name, d.menuOption")
     public List<Object[]> findSummaryMenuByDate(LocalDateTime startDate, LocalDateTime endDate);
 }
+

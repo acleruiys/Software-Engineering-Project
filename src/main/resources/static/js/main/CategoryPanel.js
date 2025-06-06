@@ -1,11 +1,23 @@
 import Component from "./Component.js";
-import { categories } from "../data/MenuData.js";
+import ApiService from "../services/ApiService.js";
 
 export default class CategoryPanel extends Component {
     setup() {
         this.state = {
-            categories: categories
+            categories: []
         };
+        this.loadCategories();
+    }
+
+    async loadCategories() {
+        try {
+            const categories = await ApiService.getCategories();
+            this.setState({ categories });
+        } catch (error) {
+            console.error('카테고리 로딩 실패:', error);
+            // 에러 발생 시 빈 배열로 설정
+            this.setState({ categories: [] });
+        }
     }
 
     template() {

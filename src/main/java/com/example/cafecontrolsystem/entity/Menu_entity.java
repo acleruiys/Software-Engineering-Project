@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
@@ -41,4 +41,4 @@ public class Menu_entity {
     public void changeAvailable(){
         this.available = !this.available;
     }
-} 
+}

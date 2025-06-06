@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,3 +16,4 @@ public class ShowSaleSummaryDto {
     private List<SummaryMenuDto> menus;
     private List<SummaryPaymentDto> payments;
 }
+

@@ -5,10 +5,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "payment")
-@Getter
+@Getter @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

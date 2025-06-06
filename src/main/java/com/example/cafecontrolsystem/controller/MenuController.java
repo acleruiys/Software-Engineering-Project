@@ -17,17 +17,16 @@ public class MenuController {
     
     @Autowired
     private MenuService menuService;
-    
+
     @GetMapping
     public ResponseEntity<List<MenuDto>> getMenus() {
         List<Menu_entity> menus;
         menus = menuService.getAllAvailableMenus();
 
-        
         List<MenuDto> menuDtos = menus.stream()
-            .map(this::convertToMenuDto)
-            .collect(Collectors.toList());
-            
+                .map(this::convertToMenuDto)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(menuDtos);
     }
     

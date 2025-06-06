@@ -25,6 +25,8 @@ public class Member {
     @Column(unique = true)
     private String phone;
 
+    private Integer pw;
+
     private Integer points;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

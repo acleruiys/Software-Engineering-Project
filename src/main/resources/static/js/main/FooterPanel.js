@@ -49,8 +49,12 @@ export default class FooterPanel extends Component {
                     this.openMemberSearchModal();
                 } else if (btnText === "반품") {
                     alert("반품 버튼이 클릭되었습니다.");
-                } else {
-                    alert(`'${btnText}' 버튼이 클릭되었습니다.`);
+                } else if (btnText === "포인트") {
+                    this.openPointModal(); // 모달 열기
+                } else if (btnText === "현금") {
+                    alert("현금 결제가 완료되었습니다.");
+                } else if (btnText === "카드") {
+                    alert("카드 결제가 완료되었습니다.");
                 }
             });
         });
@@ -74,7 +78,10 @@ export default class FooterPanel extends Component {
     // 회원 선택 이벤트 처리
     handleMemberSelected(event) {
         const { memberId, name, phone, points } = event.detail;
-        
+
+        // 전역 저장 추가
+        window.__selectedMember__ = event.detail;
+
         // 회원 정보 업데이트
         this.state.userInf = [
             { label: "회원번호", value: memberId },
@@ -89,4 +96,20 @@ export default class FooterPanel extends Component {
         // 회원 선택 알림
         alert(`회원 ${name}님이 선택되었습니다.`);
     }
+
+    //
+    openPointModal() {
+        const modal = document.getElementById('modal');
+        modal.innerHTML = '';
+
+        import('../payment/Payment.js').then(({ default: Payment }) => {
+            const billingComponent = window.__billingComponent__;
+            if (!billingComponent) {
+                alert('Billing 컴포넌트가 초기화되지 않았습니다.');
+                return;
+            }
+            new Payment({ target: modal, billing: billingComponent });
+        });
+    }
+
 }

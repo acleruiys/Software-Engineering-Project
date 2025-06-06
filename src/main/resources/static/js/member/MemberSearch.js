@@ -672,4 +672,4 @@ class MemberSearch {
 }
 
 // MemberSearch 클래스를 export
-export default MemberSearch; 
+export default MemberSearch;
