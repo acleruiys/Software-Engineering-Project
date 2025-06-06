@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class ShowSaleSummaryDto {
-    private Integer totalMember;
+    private Long totalMember;
+    private Long totalPrice;
     private List<SummaryMenuDto> menus;
     private List<SummaryPaymentDto> payments;
 }
