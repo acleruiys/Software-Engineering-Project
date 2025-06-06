@@ -23,13 +23,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             "GROUP BY p.method")
     public List<SummaryPaymentDto> findPaymentByDate(LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query("SELECT m.name, d.menuOption, SUM(d.price) AS totalPrice, SUM(d.quantity) AS totalQuantity " +
+    @Query("SELECT m.name, d.menuOption, m.category, SUM(d.price) AS totalPrice, SUM(d.quantity) AS totalQuantity " +
             "FROM SaleDetail d " +
             "JOIN d.menu m " +
             "WHERE EXISTS (" +
             "   SELECT 1 FROM Sale s WHERE s.id = d.sale.id " +
             "   AND s.createdAt BETWEEN :startDate AND :endDate) " +
-            "GROUP BY m.name, d.menuOption")
+            "GROUP BY m.name, d.menuOption, m.category")
     public List<Object[]> findSummaryMenuByDate(LocalDateTime startDate, LocalDateTime endDate);
 }
 

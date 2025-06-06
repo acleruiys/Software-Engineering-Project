@@ -142,7 +142,7 @@ public class SaleService {
                 .totalPrice((Long) totalInfo.get(0)[1])
                 .payments(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
                 .menus(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
-                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (Long) arr[2], (Long) arr[3])).collect(Collectors.toList()))
+                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (String) arr[2], (Long) arr[3], (Long) arr[4])).collect(Collectors.toList()))
                 .build();
        }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class SummaryMenuDto {
     private String menu;
+    private String category;
     private Long totalPrice;
     private Long totalQuantity;
 
