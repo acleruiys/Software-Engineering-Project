@@ -24,27 +24,27 @@ public class SaleService {
 
     @Transactional
     public void saveSale(SaveSaleDto saveSaleDto){
+
+        Member member = saveSaleDto.getMemberId() == null ? null : memberRepository.findById(saveSaleDto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("Error: Member not found" + saveSaleDto.getMemberId()));
+
+        // Sale DB에 Insert
         Sale sale = saleRepository.save(Sale.builder()
-                .member(saveSaleDto.getMemberId() == null ? null :memberRepository.findById(saveSaleDto.getMemberId())
-                        .orElseThrow(() -> new IllegalArgumentException("Member not found" + saveSaleDto.getMemberId())))
+                .member(member)
                 .state("ACTIVE")
                 .totalPrice(saveSaleDto.getTotalPrice())
                 .build());
 
+        // Member 존재할 경우 PointHistory DB에 Insert 및 포인트 적립
+        if(member != null){
+            member.accumulatePoint((int) Math.round(saveSaleDto.getTotalPrice() * 0.01));
 
-        if(saveSaleDto.getMemberId() != null){
-            Member m = memberRepository.findById(saveSaleDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("Member not found" + saveSaleDto.getMemberId()));
-            m.accumulatePoint((int) (saveSaleDto.getTotalPrice() * 0.01));
-            pointRepository.save(PointHistory.builder()
-                    .member(m)
-                    .sale(sale)
-                    .amount((int) (saveSaleDto.getTotalPrice() * 0.01))
-                    .type("reward")
-                    .build());
+            savePointHistory(member, sale, (int) Math.round(saveSaleDto.getTotalPrice() * 0.01), "REWARD");
         }
 
+        // 메뉴 별로 SaleDetail DB에 Insert
         saveSaleDto.getMenus()
-                .forEach(saleItemDto ->{
+                .forEach(saleItemDto -> {
                     detailRepository.save(SaleDetail.builder()
                             .sale(sale)
                             .menu(menuRepository.findById(saleItemDto.getMenuId())
@@ -57,43 +57,81 @@ public class SaleService {
                             .build());
                 });
 
+
+        // 결제
         saveSaleDto.getPayments()
                 .forEach(salePaymentDto -> {
-
-            Optional<Member> memberOpt = saveSaleDto.getMemberId() == null ? Optional.empty() : memberRepository.findById(saveSaleDto.getMemberId());
-
-            if (salePaymentDto.getPayment().equals("POINT")) {
-                if (saveSaleDto.getMemberId() == null) {
-                    throw new IllegalArgumentException("MemberId must not be null when using POINT payment.");
-                }
-
-                Member member = memberOpt.orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
-
-                if (member.getPoints() < salePaymentDto.getPrice()) {
-                    throw new IllegalArgumentException("Member point must not be less than price");
-                }
-
-                pointRepository.save(PointHistory.builder()
-                        .member(member)
-                        .sale(sale)
-                        .amount(salePaymentDto.getPrice())
-                        .type("use")
-                        .build());
-
-                member.usePoint(salePaymentDto.getPrice());
-
-
-            } else {
-                paymentRepository.save(Payment.builder()
-                        .sale(sale)
-                        .method(salePaymentDto.getPayment())
-                        .price(salePaymentDto.getPrice())
-                        .build());
-            }
+                    switch (salePaymentDto.getPayment()){
+                        case CASH:
+                            payByCash(sale, salePaymentDto);
+                            break;
+                        case CARD:
+                            payByCard(sale, salePaymentDto);
+                            break;
+                        case POINT:
+                            payByPoint(sale, member, salePaymentDto);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Error: 지원하지 않는 결제 방식: " + salePaymentDto.getPayment());
+                    }
         });
 
-
     }
+
+    // 현금 결제
+    public void payByCash(Sale sale, SalePaymentDto salePaymentDto){
+        paymentRepository.save(Payment.builder()
+                .sale(sale)
+                .method(salePaymentDto.getPayment().name())
+                .price(salePaymentDto.getPrice())
+                .build());
+    }
+
+    // 카드 결제
+    public void payByCard(Sale sale, SalePaymentDto salePaymentDto){
+        paymentRepository.save(Payment.builder()
+                .sale(sale)
+                .method(salePaymentDto.getPayment().name())
+                .price(salePaymentDto.getPrice())
+                .build());
+    }
+
+    // 포인트 결제
+    public void payByPoint(Sale sale, Member member, SalePaymentDto salePaymentDto){
+
+        // member가 null일 때 에러 처리
+        if(member == null){
+            throw new IllegalArgumentException("Error: MemberId must not be null when using POINT payment");
+        }
+
+        // member point가 가격보다 낮을 경우 에러 처리
+        else if(member.getPoints() < salePaymentDto.getPrice()){
+            throw new IllegalArgumentException("Error: Member point must not be less than price");
+        }
+        else {
+            paymentRepository.save(Payment.builder()
+                    .sale(sale)
+                    .method(salePaymentDto.getPayment().name())
+                    .price(salePaymentDto.getPrice())
+                    .build());
+
+            // 포인터 처리
+            member.usePoint(salePaymentDto.getPrice());
+
+            savePointHistory(member, sale, salePaymentDto.getPrice(), "USE");
+        }
+    }
+
+    // PointHistory DB에 내역 Insert
+    private void savePointHistory(Member member, Sale sale, int amount, String type){
+        pointRepository.save(PointHistory.builder()
+                .member(member)
+                .sale(sale)
+                .amount(amount)
+                .type(type)
+                .build());
+    }
+
 
     public ShowSaleSummaryDto showSale(SaleSummaryDateDto saleSummaryDateDto){
 
