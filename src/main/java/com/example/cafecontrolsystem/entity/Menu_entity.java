@@ -2,6 +2,7 @@ package com.example.cafecontrolsystem.entity;
 
 import com.example.cafecontrolsystem.dto.UpdateMenuDto;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "menus")
+@Table(name = "menus", indexes = @Index(name = "idx_id_name_category", columnList = "id, name, category"))
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
