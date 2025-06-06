@@ -7,7 +7,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,18 +137,11 @@ public class SaleService {
 
 
     public ShowSaleSummaryDto showSale(SaleSummaryDateDto saleSummaryDateDto){
-
-        System.out.println(saleRepository.getTotalmember(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()));
-        System.out.println(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()));
-        System.out.println(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
-                .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (Long) arr[2], (Long) arr[3])).collect(Collectors.toList()));
-
-
         return ShowSaleSummaryDto.builder()
                 .totalMember(saleRepository.getTotalmember(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
                 .payments(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
                 .menus(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
-                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (Long) arr[2], (Long) arr[3])).collect(Collectors.toList()))
+                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (String) arr[2], ((BigDecimal) arr[3]).longValue(), ((BigDecimal) arr[4]).longValue())).collect(Collectors.toList()))
                 .build();
        }
 }
