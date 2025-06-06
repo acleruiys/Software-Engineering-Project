@@ -1,126 +1,186 @@
 import Component from "../main/Component.js";
 
+const DEFAULT_SUMMARY_ITEMS = {
+    매출총액: "0",
+    공급가액: "0",
+    부가세액: "0",
+    회원할인: "0",
+    일반할인: "0",
+    순매출액: "0",
+    합계금액: "0",
+    현금소계: "0",
+    신용카드: "0",
+    네이버페이: "0",
+    포인트: "0",
+    상품권: "0",
+    토스페이: "0",
+    제휴및기타: "0",
+    고객수: "0",
+    객단가: "0",
+    테이블: "0",
+    포장: "0",
+};
+
+/** 결제수단 코드 → summaryItems 키 */
+const PAYMENT_METHOD_MAP = {
+    CASH: "현금소계",
+    CARD: "신용카드",
+    NAVERPAY: "네이버페이",
+    POINT: "포인트",
+    GIFT: "상품권",
+    TOSS: "토스페이",
+    ETC: "제휴및기타",
+};
+
+/** 숫자를 천 단위 콤마로 포맷 */
+const fmt = (n) => Number(n || 0).toLocaleString();
+
 export default class SalesSummary extends Component {
+    static today() {
+        return new Date().toISOString().slice(0, 10);
+    }
+
     setup() {
+        const today = SalesSummary.today();
         this.state = {
-            summaryItems: {
-                매출총액: "6,800",
-                공급가액: "6,182",
-                부가세액: "618",
-                회원할인: "0",
-                일반할인: "0",
-                순매출액: "6,800",
-                합계금액: "6,800",
-                현금소계: "1,500",
-                신용카드: "5,300",
-                네이버페이: "0",
-                포인트: "0",
-                상품권: "0",
-                토스페이: "0",
-                제휴및기타: "0",
-                고객수: "2",
-                객단가: "3,400",
-                테이블: "2",
-                포장: "0"
-            },
-            saleData: [
-                { category: "커피", name: "아이스커피", price: "5,000", qty: 3, total: "15,000" },
-                { category: "커피", name: "라떼", price: "3,000", qty: 3, total: "9,000" },
-            ],
+            dateRange: { start: today, end: today },
+            summaryItems: { ...DEFAULT_SUMMARY_ITEMS },
+            saleData: [],
         };
     }
 
     template() {
-        return `
+        const { start, end } = this.state.dateRange;
+        return /* html */ `
       <div class="modal-container">
-        <div class="sales-summary-header">
+        ${this.renderHeader(start, end)}
+        <div class="sales-contents">
+          ${this.renderPaymentTable()}
+          ${this.renderMenuTable()}
+        </div>
+      </div>`;
+    }
+
+    renderHeader(start, end) {
+        return `
+      <div class="sales-summary-header">
         <div class="sales-summary-setting">
           <button class="all-summary">전체</button>
-          <input type="date" class="summary-date-input start-date" value="2025-04-19">
-          <input type="date" class="summary-date-input end-date" value="2025-04-19">
+          <input type="date" class="summary-date-input start-date" value="${start}">
+          <span>~</span>
+          <input type="date" class="summary-date-input end-date" value="${end}">
           <button class="search-btn">조회</button>
           <button class="print-btn">🖨️</button>
           <button class="print-btn">🔼</button>
-          <button class="print-btn">🔽</button>      
+          <button class="print-btn">🔽</button>
         </div>
-        <div class="close-btn">✕</div>
-      </div>
-        <div class="sales-contents">
-          <div class="sales-summary-payment">
-            <table class="payment-summary-table">
-              <tbody>
-                ${this.renderPaymentSummary()}
-              </tbody>
-            </table>
-          </div>
-          <div class="sales-summary-menu">
-            <table class="menu-summary-table">
-              <thead>
-                <tr>
-                  <th>분류명</th>
-                  <th>메뉴</th>
-                  <th>단가</th>
-                  <th>수량</th>
-                  <th>매출금액</th>
-                </tr>
-              </thead>
-              <tbody class="menu-table-body">
-                ${this.renderMenuRows()}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
+        <button class="close-btn">✕</button>
+      </div>`;
     }
 
-    renderPaymentSummary() {
-        return Object.entries(this.state.summaryItems)
-            .map(([label, value]) => `
-      <tr>
-        <td class="left">${label}</td>
-        <td class="right">${value}</td>
-      </tr>
-    `)
+    renderPaymentTable() {
+        const rows = Object.entries(this.state.summaryItems)
+            .map(([k, v]) => `<tr><td class="left">${k}</td><td class="right">${fmt(v)}</td></tr>`)
             .join("");
+        return `
+      <div class="sales-summary-payment">
+        <table class="payment-summary-table"><tbody>${rows}</tbody></table>
+      </div>`;
     }
 
-
-    renderMenuRows() {
-        const { saleData } = this.state;
-
-        return saleData.map(item => `
-    <tr>
-      <td>${item.category}</td>
-      <td>${item.name}</td>
-      <td>${item.price}</td>
-      <td>${item.qty}</td>
-      <td>${item.total}</td>
-    </tr>
-  `).join("");
+    renderMenuTable() {
+        const rows = this.state.saleData
+            .map(
+                (m) => `<tr><td>${m.category}</td><td>${m.name}</td><td>${fmt(m.price)}</td><td>${fmt(m.qty)}</td><td>${fmt(m.total)}</td></tr>`,
+            )
+            .join("");
+        return `
+      <div class="sales-summary-menu">
+        <table class="menu-summary-table">
+          <thead>
+            <tr><th>분류명</th><th>메뉴</th><th>단가</th><th>수량</th><th>매출금액</th></tr>
+          </thead>
+          <tbody class="menu-table-body">${rows}</tbody>
+        </table>
+      </div>`;
     }
 
     mounted() {
-        this.setEvent();
+        this.bindEvents();
+        this.fetchSalesData();
     }
 
-    setEvent() {
-        this.$target.querySelector(".close-btn")?.addEventListener("click", () => {
-            this.hideSalesUI();
-        });
-
-        this.$target.querySelector(".search-btn")?.addEventListener("click", () => {
-            this.fetchSalesData();
+    bindEvents() {
+        this.$target.addEventListener("click", (e) => {
+            if (e.target.closest(".close-btn")) return this.hide();
+            if (e.target.closest(".search-btn")) return this.fetchSalesData();
         });
     }
 
-    hideSalesUI() {
-        document.querySelector(".overlay").style.display = "none";
+    hide() {
+        document.querySelector(".overlay")?.style.setProperty("display", "none");
         this.$target.style.display = "none";
     }
 
-    fetchSalesData() {
-        console.log("매출 데이터 조회");
-        // 실제로는 API 호출 후 setState로 summaryItems, saleData 갱신
+    async fetchSalesData() {
+        const start = this.$target.querySelector(".start-date")?.value;
+        const end = this.$target.querySelector(".end-date")?.value;
+        if (!start || !end) return alert("조회 기간을 선택해 주세요.");
+
+        const payload = {
+            startDate: `${start}T00:00:00Z`,
+            endDate: `${end}T23:59:59Z`,
+        };
+
+        try {
+            const res = await fetch("/api/sales/summary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const api = await res.json();
+            const summaryItems = this.buildSummaryItems(api);
+            const saleData = this.buildSaleData(api);
+
+            this.setState({ summaryItems, saleData, dateRange: { start, end } });
+        } catch (err) {
+            console.error(err);
+            alert("매출 데이터를 불러오는 데 실패했습니다.");
+        }
+    }
+
+    buildSummaryItems({ totalMember = 0, menus = [], payments = [] }) {
+        const totalSales = menus.reduce((sum, m) => sum + +m.totalPrice, 0);
+        const vat = Math.floor(totalSales * 0.1);
+        const supply = totalSales - vat;
+
+        const result = { ...DEFAULT_SUMMARY_ITEMS };
+        result.매출총액 = result.순매출액 = result.합계금액 = totalSales;
+        result.공급가액 = supply;
+        result.부가세액 = vat;
+        result.고객수 = String(totalMember);
+        result.객단가 = totalMember ? Math.round(totalSales / totalMember) : "0";
+
+        payments.forEach(({ method, methodPerPrice }) => {
+            const key = PAYMENT_METHOD_MAP[method];
+            if (key) result[key] = methodPerPrice;
+        });
+
+        return result; // 숫자 상태 그대로 보관, 렌더 시 fmt 처리
+    }
+
+    buildSaleData({ menus = [] }) {
+        return menus.map((m) => {
+            const unit = m.totalQuantity ? m.totalPrice / m.totalQuantity : 0;
+            return {
+                category: "-",
+                name: m.menu.trim(),
+                price: unit,
+                qty: m.totalQuantity,
+                total: m.totalPrice,
+            };
+        });
     }
 }

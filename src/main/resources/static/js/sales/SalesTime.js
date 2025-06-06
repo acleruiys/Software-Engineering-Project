@@ -245,11 +245,6 @@ export default class SalesTime extends Component {
         return summary;
     }
 
-    showSalesUI() {
-        document.querySelector('.overlay').style.display = 'block';
-        this.$target.style.display = 'block';
-    }
-
     hideSalesUI() {
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';

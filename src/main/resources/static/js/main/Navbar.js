@@ -4,6 +4,7 @@ import MenuSystem from "../menu/MenuSystem.js";
 import EmployeeSystem from "../employee/employeeSystem.js";
 import InventorySystem from "../inventory/InventorySystem.js";
 import SupplySystem from "../supply/SupplySystem.js";
+import SalesSummary from "../sales/SalesSummary.js";
 
 export default class Navbar extends Component {
   setup() {
@@ -69,55 +70,23 @@ export default class Navbar extends Component {
         return;
       }
 
-      // 모달 내용 초기화
       modalRoot.innerHTML = '';
-      
-      // 모달과 오버레이 표시
       modalRoot.style.display = 'block';
       overlay.style.display = 'block';
 
-      // 컴포넌트 생성
-      const component = new ComponentClass({ target: modalRoot });
+      new ComponentClass({ target: modalRoot });
 
-      // 모달 닫기 함수
-      const closeModal = () => {
-        modalRoot.style.display = 'none';
-        overlay.style.display = 'none';
-        modalRoot.innerHTML = '';
-      };
-
-      // ESC 키로 모달 닫기
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') {
-          closeModal();
-          document.removeEventListener('keydown', handleKeyDown);
+      const handleOutsideClick = (e) => {
+        if (!modalRoot.contains(e.target)) {
+          modalRoot.style.display = 'none';
+          overlay.style.display = 'none';
+          document.removeEventListener('click', handleOutsideClick);
         }
       };
 
-      // 오버레이 클릭으로 모달 닫기
-      const handleOverlayClick = (e) => {
-        if (e.target === overlay) {
-          closeModal();
-          overlay.removeEventListener('click', handleOverlayClick);
-          document.removeEventListener('keydown', handleKeyDown);
-        }
-      };
-
-      // 이벤트 리스너 등록
-      document.addEventListener('keydown', handleKeyDown);
-      overlay.addEventListener('click', handleOverlayClick);
-
-      // 모달 내부의 닫기 버튼 처리
       setTimeout(() => {
-        const closeBtn = modalRoot.querySelector('.close-btn');
-        if (closeBtn) {
-          closeBtn.addEventListener('click', () => {
-            closeModal();
-            overlay.removeEventListener('click', handleOverlayClick);
-            document.removeEventListener('keydown', handleKeyDown);
-          });
-        }
-      }, 100);
+        document.addEventListener('click', handleOutsideClick);
+      }, 0);
     };
 
     // 매출 버튼 클릭
@@ -138,11 +107,19 @@ export default class Navbar extends Component {
 
         setTimeout(() => {
           const periodBtn = this.$target.querySelector('#sales-period-btn');
+          const summaryBtn = this.$target.querySelector('#sales-summary-btn');
+
           periodBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
             openModalComponent(SalesTime);
             submenuContainer.style.display = 'none';
           });
+
+          summaryBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModalComponent(SalesSummary);
+            submenuContainer.style.display = 'none';
+          })
         }, 0);
       }
     });

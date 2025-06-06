@@ -13,10 +13,9 @@ import java.util.List;
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
-
     @Query("SELECT COUNT(*) AS totalMember, SUM(s.totalPrice) AS totalPrice FROM Sale AS s " +
             "WHERE s.createdAt BETWEEN :startDate AND :endDate")
-    public Integer getTotalmember(LocalDateTime startDate, LocalDateTime endDate);
+    public List<Object[]> getTotalmember(LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("SELECT new com.example.cafecontrolsystem.dto.SummaryPaymentDto(p.method, SUM(p.price)) FROM Payment p " +
             "WHERE EXISTS (" +
