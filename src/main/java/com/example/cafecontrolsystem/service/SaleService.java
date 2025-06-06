@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,7 +143,7 @@ public class SaleService {
                 .totalPrice((Long) totalInfo.get(0)[1])
                 .payments(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
                 .menus(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
-                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (String) arr[2], (Long) arr[3], (Long) arr[4])).collect(Collectors.toList()))
+                        .map(arr -> new SummaryMenuDto((String) arr[0] + " " + arr[1], (String) arr[2], ((BigDecimal) arr[3]).longValue(), ((BigDecimal) arr[4]).longValue())).collect(Collectors.toList()))
                 .build();
        }
 }
