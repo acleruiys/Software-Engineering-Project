@@ -1,6 +1,7 @@
 package com.example.cafecontrolsystem.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sale")
+@Table(name = "sale", indexes = @Index(name = "idx_created_id", columnList = "created_at, id"))
 @Getter
 @Builder
 @NoArgsConstructor
