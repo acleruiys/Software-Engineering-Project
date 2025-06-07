@@ -2,7 +2,7 @@
  * 회원 검색 기능을 위한 JavaScript 파일
  */
 
-class MemberSearch {
+class MemberUI {
     constructor({ target }) {
         this.target = target;
         this.render();
@@ -398,10 +398,10 @@ class MemberSearch {
                 // 선택된 회원 정보를 이벤트로 발송
                 const memberSelectedEvent = new CustomEvent('memberSelected', {
                     detail: {
-                        memberId,
+                        memberId: parseInt(memberId),
                         name,
                         phone,
-                        points
+                        points: parseInt(points)
                     }
                 });
                 document.dispatchEvent(memberSelectedEvent);
@@ -671,5 +671,5 @@ class MemberSearch {
     }
 }
 
-// MemberSearch 클래스를 export
-export default MemberSearch;
+// MemberUI 클래스를 export
+export default MemberUI;

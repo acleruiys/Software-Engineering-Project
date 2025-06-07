@@ -2,7 +2,7 @@ package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.dto.UserDto;
 import com.example.cafecontrolsystem.dto.SaveEmployeeDto;
-import com.example.cafecontrolsystem.entity.User;
+import com.example.cafecontrolsystem.entity.Admin;
 import com.example.cafecontrolsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class UserService {
      * @return 저장된 사용자 엔티티
      * @throws IllegalArgumentException 사용자명이 이미 존재할 경우 발생
      */
-    public User registerUser(UserDto userDto) {
+    public Admin registerUser(UserDto userDto) {
         // 이름 길이 제한
         if (userDto.getUsername() == null || userDto.getUsername().length() < 2 || userDto.getUsername().length() > 20) {
             throw new IllegalArgumentException("이름은 2자 이상 20자 이하로 입력해주세요.");
@@ -60,7 +60,7 @@ public class UserService {
             throw new IllegalArgumentException("역할을 선택해주세요.");
         }
         try {
-            User.UserRole.valueOf(userDto.getRole());
+            Admin.UserRole.valueOf(userDto.getRole());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("유효하지 않은 역할입니다.");
         }
@@ -73,22 +73,22 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 전화번호입니다.");
         }
         // 사용자 객체 생성
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(encodePassword(userDto.getPassword()));
-        user.setPhone(userDto.getPhone());
-        user.setRole(User.UserRole.valueOf(userDto.getRole()));
+        Admin admin = new Admin();
+        admin.setUsername(userDto.getUsername());
+        admin.setPassword(encodePassword(userDto.getPassword()));
+        admin.setPhone(userDto.getPhone());
+        admin.setRole(Admin.UserRole.valueOf(userDto.getRole()));
 
         // 데이터베이스에 저장
-        User savedUser = userRepository.save(user);
+        Admin savedAdmin = userRepository.save(admin);
         
         // 직원(STAFF) 역할인 경우 Employee 데이터베이스에도 저장
-        if (user.getRole() == User.UserRole.STAFF) {
-            SaveEmployeeDto saveEmployeeDto = new SaveEmployeeDto(user.getUsername(), "part_time");
+        if (admin.getRole() == Admin.UserRole.STAFF) {
+            SaveEmployeeDto saveEmployeeDto = new SaveEmployeeDto(admin.getUsername(), "part_time");
             employeeService.saveEmployee(saveEmployeeDto);
         }
         
-        return savedUser;
+        return savedAdmin;
     }
     
     /**ㅣ
@@ -99,21 +99,21 @@ public class UserService {
      * @return 인증된 사용자 엔티티
      * @throws IllegalArgumentException 사용자가 존재하지 않거나 비밀번호가 일치하지 않을 경우 발생
      */
-    public User loginUser(String username, String password) {
+    public Admin loginUser(String username, String password) {
         // 사용자 조회
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<Admin> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
         
-        User user = userOptional.get();
+        Admin admin = userOptional.get();
         
         // 비밀번호 검증
-        if (!user.getPassword().equals(encodePassword(password))) {
+        if (!admin.getPassword().equals(encodePassword(password))) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         
-        return user;
+        return admin;
     }
     
     /**

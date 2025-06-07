@@ -1,6 +1,6 @@
 package com.example.cafecontrolsystem.config;
 
-import com.example.cafecontrolsystem.entity.Menu_entity;
+import com.example.cafecontrolsystem.entity.Menu;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +25,21 @@ public class DataInitializer {
                 System.out.println("메뉴 데이터 초기화 시작...");
                 
                 // 커피 메뉴 추가
-                Menu_entity americano = Menu_entity.builder()
+                Menu americano = Menu.builder()
                         .name("아메리카노")
                         .price(3000)
                         .category(CategoryType.COFFEE.name())
                         .available(true)
                         .build();
                 
-                Menu_entity latte = Menu_entity.builder()
+                Menu latte = Menu.builder()
                         .name("카페라떼")
                         .price(5500)
                         .category(CategoryType.COFFEE.name())
                         .available(true)
                         .build();
                 
-                Menu_entity cappuccino = Menu_entity.builder()
+                Menu cappuccino = Menu.builder()
                         .name("카푸치노")
                         .price(5500)
                         .category(CategoryType.COFFEE.name())
@@ -47,14 +47,14 @@ public class DataInitializer {
                         .build();
                 
                 // 디카페인 메뉴 추가
-                Menu_entity decafAmericano = Menu_entity.builder()
+                Menu decafAmericano = Menu.builder()
                         .name("디카페인 아메리카노")
                         .price(3500)
                         .category(CategoryType.DECAF.name())
                         .available(true)
                         .build();
                 
-                Menu_entity decafLatte = Menu_entity.builder()
+                Menu decafLatte = Menu.builder()
                         .name("디카페인 카페라떼")
                         .price(6000)
                         .category(CategoryType.DECAF.name())
@@ -62,14 +62,14 @@ public class DataInitializer {
                         .build();
                 
                 // 논커피 메뉴 추가
-                Menu_entity strawberryLatte = Menu_entity.builder()
+                Menu strawberryLatte = Menu.builder()
                         .name("딸기라떼")
                         .price(6000)
                         .category(CategoryType.NON_COFFEE.name())
                         .available(true)
                         .build();
                 
-                Menu_entity chocolateLatte = Menu_entity.builder()
+                Menu chocolateLatte = Menu.builder()
                         .name("초코라떼")
                         .price(5500)
                         .category(CategoryType.NON_COFFEE.name())
@@ -77,14 +77,14 @@ public class DataInitializer {
                         .build();
                 
                 // 티 메뉴 추가
-                Menu_entity greenTea = Menu_entity.builder()
+                Menu greenTea = Menu.builder()
                         .name("녹차")
                         .price(5000)
                         .category(CategoryType.TEA.name())
                         .available(true)
                         .build();
                 
-                Menu_entity blackTea = Menu_entity.builder()
+                Menu blackTea = Menu.builder()
                         .name("홍차")
                         .price(5000)
                         .category(CategoryType.TEA.name())
@@ -92,14 +92,14 @@ public class DataInitializer {
                         .build();
                 
                 // 스무디 메뉴 추가
-                Menu_entity strawberrySmoothie = Menu_entity.builder()
+                Menu strawberrySmoothie = Menu.builder()
                         .name("딸기스무디")
                         .price(6500)
                         .category(CategoryType.SMOOTHIE.name())
                         .available(true)
                         .build();
                 
-                Menu_entity mangoSmoothie = Menu_entity.builder()
+                Menu mangoSmoothie = Menu.builder()
                         .name("망고스무디")
                         .price(6500)
                         .category(CategoryType.SMOOTHIE.name())
@@ -107,14 +107,14 @@ public class DataInitializer {
                         .build();
                 
                 // 에이드 메뉴 추가
-                Menu_entity lemonAde = Menu_entity.builder()
+                Menu lemonAde = Menu.builder()
                         .name("레몬에이드")
                         .price(6000)
                         .category(CategoryType.ADE.name())
                         .available(true)
                         .build();
                 
-                Menu_entity grapefruitAde = Menu_entity.builder()
+                Menu grapefruitAde = Menu.builder()
                         .name("자몽에이드")
                         .price(6000)
                         .category(CategoryType.ADE.name())
@@ -122,7 +122,7 @@ public class DataInitializer {
                         .build();
                 
                 // 모든 메뉴 저장
-                List<Menu_entity> initialMenus = Arrays.asList(
+                List<Menu> initialMenus = Arrays.asList(
                         americano, latte, cappuccino,
                         decafAmericano, decafLatte,
                         strawberryLatte, chocolateLatte,

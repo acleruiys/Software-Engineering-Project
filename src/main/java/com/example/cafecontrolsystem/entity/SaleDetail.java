@@ -21,7 +21,7 @@ public class SaleDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
-    private Menu_entity menu;
+    private Menu menu;
 
     private Integer quantity;
 

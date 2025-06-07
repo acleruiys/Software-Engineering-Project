@@ -19,7 +19,7 @@ public class InventoryHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id")
-    private Inventory_entitiy inventory;
+    private Inventory inventory;
 
     private String type;
 

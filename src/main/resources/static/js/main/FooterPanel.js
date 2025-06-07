@@ -1,5 +1,5 @@
 import Component from "./Component.js";
-import MemberSearch from "../member/MemberSearch.js";
+import MemberUI from "../member/MemberUI.js";
 
 export default class FooterPanel extends Component {
     setup() {
@@ -19,6 +19,8 @@ export default class FooterPanel extends Component {
         
         // 선택된 회원 정보를 수신하기 위한 이벤트 리스너 등록
         document.addEventListener('memberSelected', this.handleMemberSelected.bind(this));
+        // 포인트 업데이트 이벤트 리스너 등록
+        document.addEventListener('memberPointsUpdated', this.handleMemberPointsUpdated.bind(this));
     }
 
     template() {
@@ -52,9 +54,9 @@ export default class FooterPanel extends Component {
                 } else if (btnText === "포인트") {
                     this.openPointModal(); // 모달 열기
                 } else if (btnText === "현금") {
-                    alert("현금 결제가 완료되었습니다.");
+                    this.processPayment("현금");
                 } else if (btnText === "카드") {
-                    alert("카드 결제가 완료되었습니다.");
+                    this.processPayment("카드");
                 }
             });
         });
@@ -70,7 +72,7 @@ export default class FooterPanel extends Component {
     // 회원 검색 모달 열기
     openMemberSearchModal() {
         const modal = document.getElementById('modal');
-        const memberSearch = new MemberSearch({ target: modal });
+        const memberSearch = new MemberUI({ target: modal });
         // 초기 회원 목록 로드
         memberSearch.getAllMembers();
     }
@@ -97,7 +99,13 @@ export default class FooterPanel extends Component {
         alert(`회원 ${name}님이 선택되었습니다.`);
     }
 
-    //
+    // 포인트 업데이트 이벤트 처리
+    handleMemberPointsUpdated(event) {
+        const member = event.detail;
+        this.updateMemberDisplay(member);
+    }
+
+    // 포인트 모달 열기
     openPointModal() {
         const modal = document.getElementById('modal');
         modal.innerHTML = '';
@@ -110,6 +118,139 @@ export default class FooterPanel extends Component {
             }
             new Payment({ target: modal, billing: billingComponent });
         });
+    }
+
+    // 현금/카드 결제 처리 및 포인트 적립
+    async processPayment(paymentMethod) {
+        try {
+            // 선택된 회원이 있는지 확인
+            const selectedMember = window.__selectedMember__;
+            if (!selectedMember) {
+                alert(`${paymentMethod} 결제가 완료되었습니다.`);
+                return;
+            }
+
+            // 총 결제 금액 확인
+            const billingComponent = window.__billingComponent__;
+            if (!billingComponent) {
+                alert('결제 정보를 불러올 수 없습니다.');
+                return;
+            }
+
+            // 총 결제 금액 가져오기 (할인이 적용된 최종 금액)
+            const finalAmount = this.getFinalPaymentAmount();
+            if (finalAmount <= 0) {
+                alert('결제할 금액이 없습니다.');
+                return;
+            }
+
+            // 포인트 적립 계산 (결제 금액의 1%)
+            const earnedPoints = Math.floor(finalAmount * 0.01);
+
+            if (earnedPoints > 0) {
+                // 포인트 적립 확인 메시지
+                const confirmEarn = confirm(
+                    `${paymentMethod} 결제 완료!\n` +
+                    `결제 금액: ${finalAmount.toLocaleString()}원\n` +
+                    `적립 포인트: ${earnedPoints}P\n\n` +
+                    `포인트를 적립하시겠습니까?`
+                );
+
+                if (confirmEarn) {
+                    // 서버에 포인트 적립 요청
+                    await this.updateMemberPoints(selectedMember.memberId, earnedPoints);
+                    
+                    // 회원 정보 업데이트
+                    selectedMember.points += earnedPoints;
+                    window.__selectedMember__ = selectedMember;
+                    
+                    // UI 회원 정보 업데이트
+                    this.updateMemberDisplay(selectedMember);
+                    
+                    alert(`${paymentMethod} 결제가 완료되었습니다.\n${earnedPoints}P가 적립되었습니다.`);
+                } else {
+                    alert(`${paymentMethod} 결제가 완료되었습니다.`);
+                }
+            } else {
+                alert(`${paymentMethod} 결제가 완료되었습니다.`);
+            }
+
+        } catch (error) {
+            console.error('결제 처리 중 오류:', error);
+            alert('결제 처리 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 최종 결제 금액 계산
+    getFinalPaymentAmount() {
+        try {
+            const billingComponent = window.__billingComponent__;
+            if (!billingComponent || !billingComponent.state) {
+                console.log('Billing 컴포넌트를 찾을 수 없습니다.');
+                return 0;
+            }
+
+            // Billing 컴포넌트에서 직접 금액 계산
+            const orderAmount = billingComponent.getAmount('주문금액');
+            const discountAmount = billingComponent.getAmount('할인금액');
+            const finalAmount = Math.max(orderAmount - discountAmount, 0);
+            
+            console.log(`주문금액: ${orderAmount}, 할인금액: ${discountAmount}, 최종금액: ${finalAmount}`);
+            return finalAmount;
+
+        } catch (error) {
+            console.error('결제 금액 계산 오류:', error);
+            return 0;
+        }
+    }
+
+    // 회원 포인트 업데이트 API 호출
+    async updateMemberPoints(memberId, pointsToAdd) {
+        try {
+            console.log(`포인트 적립 API 호출: /api/members/${memberId}/points`, {
+                points: pointsToAdd,
+                action: 'ADD'
+            });
+
+            const response = await fetch(`/api/members/${memberId}/points`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    points: pointsToAdd,
+                    action: 'ADD' // 포인트 적립
+                })
+            });
+
+            console.log('포인트 적립 API 응답 상태:', response.status);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('포인트 적립 API 오류:', errorText);
+                throw new Error(`포인트 적립 실패: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('포인트 적립 API 성공:', result);
+            return result;
+        } catch (error) {
+            console.error('포인트 업데이트 오류:', error);
+            throw error;
+        }
+    }
+
+    // 회원 정보 화면 업데이트
+    updateMemberDisplay(member) {
+        this.state.userInf = [
+            { label: "회원번호", value: member.memberId },
+            { label: "회원명", value: member.name },
+            { label: "잔여포인트", value: `${parseInt(member.points).toLocaleString()}P` }
+        ];
+        
+        // UI 업데이트
+        this.render();
+        this.setEvent();
     }
 
 }

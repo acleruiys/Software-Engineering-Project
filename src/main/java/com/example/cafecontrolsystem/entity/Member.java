@@ -48,4 +48,9 @@ public class Member {
         this.points = this.points - point;
     }
 
+    // 포인트 업데이트 (직접 설정)
+    public void updatePoints(int newPoints) {
+        this.points = newPoints;
+    }
+
 } 

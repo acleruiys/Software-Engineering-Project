@@ -1,6 +1,5 @@
 package com.example.cafecontrolsystem.dto;
 
-import com.example.cafecontrolsystem.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

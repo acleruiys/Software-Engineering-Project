@@ -2,7 +2,7 @@ package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.dto.LoginDto;
 import com.example.cafecontrolsystem.dto.UserDto;
-import com.example.cafecontrolsystem.entity.User;
+import com.example.cafecontrolsystem.entity.Admin;
 import com.example.cafecontrolsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,11 +29,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
         try {
-            User user = userService.registerUser(userDto);
+            Admin admin = userService.registerUser(userDto);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "사용자가 성공적으로 등록되었습니다.");
-            response.put("userId", user.getId());
+            response.put("userId", admin.getId());
             
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -54,13 +54,13 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
         try {
-            User user = userService.loginUser(loginDto.getUsername(), loginDto.getPassword());
+            Admin admin = userService.loginUser(loginDto.getUsername(), loginDto.getPassword());
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "로그인 성공");
-            response.put("userId", user.getId());
-            response.put("username", user.getUsername());
-            response.put("role", user.getRole().toString());
+            response.put("userId", admin.getId());
+            response.put("username", admin.getUsername());
+            response.put("role", admin.getRole().toString());
             
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {

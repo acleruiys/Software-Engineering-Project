@@ -3,13 +3,12 @@ package com.example.cafecontrolsystem.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-public class User {
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

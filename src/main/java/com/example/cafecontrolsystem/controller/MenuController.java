@@ -1,8 +1,7 @@
 package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.dto.MenuDto;
-import com.example.cafecontrolsystem.entity.Menu_entity;
-import com.example.cafecontrolsystem.entity.CategoryType;
+import com.example.cafecontrolsystem.entity.Menu;
 import com.example.cafecontrolsystem.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +13,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/menus")
 public class MenuController {
-    
+
     @Autowired
     private MenuService menuService;
 
     @GetMapping
     public ResponseEntity<List<MenuDto>> getMenus() {
-        List<Menu_entity> menus;
+        List<Menu> menus;
         menus = menuService.getAllAvailableMenus();
 
         List<MenuDto> menuDtos = menus.stream()
@@ -29,36 +28,36 @@ public class MenuController {
 
         return ResponseEntity.ok(menuDtos);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable Long id) {
-        Menu_entity menu = menuService.getMenu(id);
+        Menu menu = menuService.getMenu(id);
         return ResponseEntity.ok(convertToMenuDto(menu));
     }
-    
+
     @PostMapping
     public ResponseEntity<MenuDto> addMenu(@RequestBody MenuDto menuDto) {
-        Menu_entity menu = convertToMenuEntity(menuDto);
-        Menu_entity savedMenu = menuService.saveMenu(menu);
+        Menu menu = convertToMenuEntity(menuDto);
+        Menu savedMenu = menuService.saveMenu(menu);
         return ResponseEntity.ok(convertToMenuDto(savedMenu));
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<MenuDto> updateMenu(@PathVariable Long id, @RequestBody MenuDto menuDto) {
-        Menu_entity menu = convertToMenuEntity(menuDto);
+        Menu menu = convertToMenuEntity(menuDto);
         menu.setId(id);
-        Menu_entity updatedMenu = menuService.saveMenu(menu);
+        Menu updatedMenu = menuService.saveMenu(menu);
         return ResponseEntity.ok(convertToMenuDto(updatedMenu));
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
         menuService.deleteMenu(id);
         return ResponseEntity.ok().build();
     }
-    
+
     // 메뉴 엔티티를 DTO로 변환
-    private MenuDto convertToMenuDto(Menu_entity menu) {
+    private MenuDto convertToMenuDto(Menu menu) {
         MenuDto dto = new MenuDto();
         dto.setId(menu.getId());
         dto.setName(menu.getName());
@@ -67,9 +66,9 @@ public class MenuController {
         dto.setStatus(menu.isAvailable() ? "판매중" : "품절");
         return dto;
     }
-    
+
     // DTO를 메뉴 엔티티로 변환 - 카테고리 처리는 서비스에서 처리
-    private Menu_entity convertToMenuEntity(MenuDto dto) {
+    private Menu convertToMenuEntity(MenuDto dto) {
         return menuService.createMenuFromDto(dto);
     }
 } 
