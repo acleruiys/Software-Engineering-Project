@@ -46,21 +46,28 @@ export default class FooterPanel extends Component {
         this.$target.querySelectorAll(".footer-button").forEach(btn => {
             btn.addEventListener("click", () => {
                 const btnText = btn.textContent.trim();
-                
+
                 if (btnText === "회원 검색") {
                     this.openMemberSearchModal();
                 } else if (btnText === "반품") {
                     alert("반품 버튼이 클릭되었습니다.");
                 } else if (btnText === "포인트") {
-                    this.openPointModal(); // 모달 열기
-                } else if (btnText === "현금") {
-                    this.processPayment("현금");
-                } else if (btnText === "카드") {
-                    this.processPayment("카드");
+                    this.openPointModal();
+                } else if (btnText === "현금" || btnText === "카드") {
+                    import('../payment/HandlePayment.js').then(({ default: HandlePayment }) => {
+                        const appInstance = window.__app__;
+                        if (!appInstance) {
+                            alert("App 인스턴스를 찾을 수 없습니다.");
+                            return;
+                        }
+
+                        const handler = new HandlePayment({ appInstance });
+                        handler.process(btnText === "현금" ? "CASH" : "CARD");
+                    });
                 }
             });
         });
-        
+
         this.$target.querySelectorAll(".footer-center-button").forEach(btn => {
             btn.addEventListener("click", () => {
                 const btnText = btn.textContent.trim();
@@ -240,7 +247,6 @@ export default class FooterPanel extends Component {
         }
     }
 
-    // 회원 정보 화면 업데이트
     updateMemberDisplay(member) {
         this.state.userInf = [
             { label: "회원번호", value: member.memberId },
@@ -252,5 +258,14 @@ export default class FooterPanel extends Component {
         this.render();
         this.setEvent();
     }
-
+    // FooterPanel.js 내부에 추가
+    resetUserInf() {
+        this.state.userInf = [
+            { label: "회원번호", value: "-" },
+            { label: "회원명", value: "-" },
+            { label: "잔여포인트", value: "-" }
+        ];
+        this.render();
+        this.setEvent();
+    }
 }

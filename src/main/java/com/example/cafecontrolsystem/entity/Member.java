@@ -1,6 +1,7 @@
 package com.example.cafecontrolsystem.entity;
 
 import com.example.cafecontrolsystem.dto.UpdateMemberDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -29,6 +30,7 @@ public class Member {
 
     private Integer points;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PointHistory> pointHistories = new ArrayList<>();
 
