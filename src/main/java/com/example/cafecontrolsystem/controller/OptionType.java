@@ -1,4 +1,4 @@
-package com.example.cafecontrolsystem.service;
+package com.example.cafecontrolsystem.controller;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

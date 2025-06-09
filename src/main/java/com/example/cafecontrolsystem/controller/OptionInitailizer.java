@@ -1,4 +1,4 @@
-package com.example.cafecontrolsystem.service;
+package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.entity.MenuOption;
 import com.example.cafecontrolsystem.repository.OptionRepository;
