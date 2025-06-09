@@ -1,7 +1,6 @@
 package com.example.cafecontrolsystem.dto;
 
-import com.example.cafecontrolsystem.service.PaymentMethod;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.example.cafecontrolsystem.controller.PaymentMethod;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
