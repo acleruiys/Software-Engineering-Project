@@ -71,7 +71,7 @@ public class MenuDataInitializer implements CommandLineRunner {
 
     private void initializeMenus() {
         // 커피
-        createMenusForCategory(CategoryType.COFFEE, Arrays.asList(
+        createMenusForCategory(CategoryType.커피, Arrays.asList(
             new MenuData("아메리카노", 3000),
             new MenuData("카페라떼", 5500),
             new MenuData("카푸치노", 5500),
@@ -84,14 +84,14 @@ public class MenuDataInitializer implements CommandLineRunner {
         ));
 
         // 디카페인
-        createMenusForCategory(CategoryType.DECAF, Arrays.asList(
+        createMenusForCategory(CategoryType.디카페인, Arrays.asList(
             new MenuData("디카페인 아메리카노", 3500),
             new MenuData("디카페인 카페라떼", 6000),
             new MenuData("디카페인 바닐라라떼", 6300)
         ));
 
         // 논커피/과일라떼
-        createMenusForCategory(CategoryType.NON_COFFEE, Arrays.asList(
+        createMenusForCategory(CategoryType.논커피, Arrays.asList(
             new MenuData("딸기라떼", 6000),
             new MenuData("바나나라떼", 6000),
             new MenuData("초코라떼", 5500),

@@ -1,9 +1,9 @@
 package com.example.cafecontrolsystem.entity;
 
 public enum CategoryType {
-    COFFEE("커피"),
-    DECAF("디카페인"),
-    NON_COFFEE("논커피/과일라떼"),
+    커피("커피"),
+    디카페인("디카페인"),
+    논커피("논커피/과일라떼"),
     TEA("티"),
     SMOOTHIE("스무디/프라페"),
     ADE("에이드/주스"),

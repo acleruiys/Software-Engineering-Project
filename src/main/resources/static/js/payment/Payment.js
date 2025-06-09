@@ -83,14 +83,23 @@ export default class Payment {
             return;
         }
 
+        // 주문 총액 계산
+        const totalAmount = this.billing.getTotalAmount();
+        const maxUsablePoints = Math.min(this.selectedMember.points, totalAmount);
+
         const area = this.target.querySelector('#payment-area');
         area.innerHTML = `
+            <p>주문 총액: ${totalAmount.toLocaleString()}원</p>
             <p>잔여 포인트: ${this.selectedMember.points.toLocaleString()}P</p>
+            <p>사용 가능 포인트: ${maxUsablePoints.toLocaleString()}P</p>
             <input type="password" id="memberPwd" placeholder="비밀번호 입력" />
             <button id="verifyPwdBtn">확인</button>
             <div id="pointInputArea" style="display:none;">
-                <input type="number" id="usePoint" placeholder="사용할 포인트" />
-                <button id="usePointBtn">사용</button>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <input type="number" id="usePoint" placeholder="사용할 포인트" style="flex: 1;" />
+                </div>
+                <button id="maxPointBtn" style="padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">최대치</button>
+                <button id="usePointBtn" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">사용</button>
             </div>
         `;
 
@@ -123,8 +132,9 @@ export default class Payment {
 
                 if (result.valid) {
                     document.getElementById('pointInputArea').style.display = 'block';
-                    // 비밀번호 입력 필드 초기화
-                    this.target.querySelector('#memberPwd').value = '';
+                    // 비밀번호 입력창과 확인 버튼 숨기기
+                    this.target.querySelector('#memberPwd').style.display = 'none';
+                    this.target.querySelector('#verifyPwdBtn').style.display = 'none';
                 } else {
                     alert(result.message || '비밀번호가 일치하지 않습니다.');
                 }
@@ -137,14 +147,26 @@ export default class Payment {
         this.target.querySelector('#pointInputArea').addEventListener('click', (e) => {
             if (e.target.id === 'usePointBtn') {
                 this.usePoints();
+            } else if (e.target.id === 'maxPointBtn') {
+                this.setMaxPoints();
             }
         });
+    }
+
+    // 최대치 포인트 설정
+    setMaxPoints() {
+        const totalAmount = this.billing.getTotalAmount();
+        const maxUsablePoints = Math.min(this.selectedMember.points, totalAmount);
+        
+        const pointInput = document.getElementById('usePoint');
+        pointInput.value = maxUsablePoints;
     }
 
     // 포인트 사용 처리
     async usePoints() {
         const pointInput = document.getElementById('usePoint');
         const point = parseInt(pointInput.value);
+        const totalAmount = this.billing.getTotalAmount();
 
         // 입력값 검증
         if (!point || point <= 0) {
@@ -154,6 +176,11 @@ export default class Payment {
 
         if (point > this.selectedMember.points) {
             alert('잔여 포인트보다 많습니다.');
+            return;
+        }
+
+        if (point > totalAmount) {
+            alert('주문 총액보다 많은 포인트는 사용할 수 없습니다.');
             return;
         }
 

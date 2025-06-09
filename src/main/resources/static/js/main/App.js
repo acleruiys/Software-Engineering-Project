@@ -99,10 +99,20 @@ export default class App extends Component {
     }
 
     mounted() {
+        if (!this.menuGrid) {
+            this.menuGrid = new MenuGrid({
+                target: document.querySelector('#menuGrid'),
+                props: {
+                    menuItems: this.state.menuItems
+                }
+            });
+        }
+
         if (!this.categoryPanel) {
             this.categoryPanel = new CategoryPanel({
                 target: document.querySelector('#categoryPanel'),
                 props: {
+                    menuGrid: this.menuGrid,
                     onCategorySelect: async (category) => {
                         try {
                             const items = await ApiService.getMenusByCategory(category);
@@ -117,15 +127,6 @@ export default class App extends Component {
                             this.setState({ menuItems: [] });
                         }
                     }
-                }
-            });
-        }
-
-        if (!this.menuGrid) {
-            this.menuGrid = new MenuGrid({
-                target: document.querySelector('#menuGrid'),
-                props: {
-                    menuItems: this.state.menuItems
                 }
             });
         }

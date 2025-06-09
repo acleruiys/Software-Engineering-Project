@@ -81,4 +81,11 @@ export default class Billing extends Component {
         const item = this.state.items.find(i => i.label === label);
         return item ? item.value : 0;
     }
+
+    // 할인이 적용된 최종 결제 금액을 반환
+    getTotalAmount() {
+        const orderAmount = this.getAmount('주문금액');
+        const discountAmount = this.getAmount('할인금액');
+        return Math.max(orderAmount - discountAmount, 0);
+    }
 }

@@ -28,21 +28,21 @@ public class DataInitializer {
                 Menu americano = Menu.builder()
                         .name("아메리카노")
                         .price(3000)
-                        .category(CategoryType.COFFEE.name())
+                        .category(CategoryType.커피.name())
                         .available(true)
                         .build();
                 
                 Menu latte = Menu.builder()
                         .name("카페라떼")
                         .price(5500)
-                        .category(CategoryType.COFFEE.name())
+                        .category(CategoryType.커피.name())
                         .available(true)
                         .build();
                 
                 Menu cappuccino = Menu.builder()
                         .name("카푸치노")
                         .price(5500)
-                        .category(CategoryType.COFFEE.name())
+                        .category(CategoryType.커피.name())
                         .available(true)
                         .build();
                 
@@ -50,14 +50,14 @@ public class DataInitializer {
                 Menu decafAmericano = Menu.builder()
                         .name("디카페인 아메리카노")
                         .price(3500)
-                        .category(CategoryType.DECAF.name())
+                        .category(CategoryType.디카페인.name())
                         .available(true)
                         .build();
                 
                 Menu decafLatte = Menu.builder()
                         .name("디카페인 카페라떼")
                         .price(6000)
-                        .category(CategoryType.DECAF.name())
+                        .category(CategoryType.디카페인.name())
                         .available(true)
                         .build();
                 
@@ -65,14 +65,14 @@ public class DataInitializer {
                 Menu strawberryLatte = Menu.builder()
                         .name("딸기라떼")
                         .price(6000)
-                        .category(CategoryType.NON_COFFEE.name())
+                        .category(CategoryType.논커피.name())
                         .available(true)
                         .build();
                 
                 Menu chocolateLatte = Menu.builder()
                         .name("초코라떼")
                         .price(5500)
-                        .category(CategoryType.NON_COFFEE.name())
+                        .category(CategoryType.논커피.name())
                         .available(true)
                         .build();
                 
