@@ -31,6 +31,7 @@ export default class OrderList extends Component {
         this.$target.querySelectorAll('.order-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 const itemId = e.currentTarget.dataset.itemId;
+                console.log(`[OrderList] 주문 항목 클릭됨:`, itemId);
                 this.selectOrderItem(itemId);
             });
         });

@@ -1,5 +1,3 @@
-// Payment.js (간소화된 포인트 결제 전용 모달)
-
 export default class Payment {
     constructor({ target, billing }) {
         this.target = target;
@@ -22,7 +20,6 @@ export default class Payment {
             </div>
         `;
 
-        // 모달 스타일 추가 (중복 방지)
         if (!document.getElementById('paymentModalStyle')) {
             const style = document.createElement('style');
             style.id = 'paymentModalStyle';
@@ -39,7 +36,6 @@ export default class Payment {
                     align-items: center;
                     z-index: 1000;
                 }
-
                 .payment-modal-content {
                     background-color: white;
                     padding: 20px;
@@ -48,14 +44,12 @@ export default class Payment {
                     max-height: 90vh;
                     overflow-y: auto;
                 }
-
                 .modal-header {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     margin-bottom: 20px;
                 }
-
                 .close-button {
                     background: none;
                     border: none;
@@ -69,6 +63,14 @@ export default class Payment {
 
     initListeners() {
         this.target.querySelector('.close-button').addEventListener('click', () => this.close());
+
+        const orderList = window.__orderList__ || [];
+        if (orderList.length === 0) {
+            alert('주문 내역이 없습니다.');
+            this.close();
+            return;
+        }
+
         this.renderPointUI();
     }
 
@@ -96,35 +98,24 @@ export default class Payment {
 
         this.target.querySelector('#verifyPwdBtn').addEventListener('click', async () => {
             const inputPwd = parseInt(this.target.querySelector('#memberPwd').value);
-
-            // 입력값 검증
             if (!inputPwd || inputPwd.toString().length !== 4) {
                 alert('4자리 숫자 비밀번호를 입력해주세요.');
                 return;
             }
 
             try {
-                // 서버 측 비밀번호 검증 API 호출
                 const res = await fetch(`/api/members/${this.selectedMember.memberId}/verify-password`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        password: inputPwd
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: inputPwd })
                 });
 
-                if (!res.ok) {
-                    throw new Error('비밀번호 검증 실패');
-                }
-
                 const result = await res.json();
+                if (res.ok && result.valid) {
 
-                if (result.valid) {
+                    this.target.querySelector('#memberPwd').remove();
+                    this.target.querySelector('#verifyPwdBtn').remove();
                     document.getElementById('pointInputArea').style.display = 'block';
-                    // 비밀번호 입력 필드 초기화
-                    this.target.querySelector('#memberPwd').value = '';
                 } else {
                     alert(result.message || '비밀번호가 일치하지 않습니다.');
                 }
@@ -141,14 +132,21 @@ export default class Payment {
         });
     }
 
-    // 포인트 사용 처리
     async usePoints() {
         const pointInput = document.getElementById('usePoint');
         const point = parseInt(pointInput.value);
 
-        // 입력값 검증
         if (!point || point <= 0) {
             alert('사용할 포인트를 입력해주세요.');
+            return;
+        }
+
+        const orderAmount = this.billing.getAmount('주문금액');
+        const discountAmount = this.billing.getAmount('할인금액');
+        const finalAmount = orderAmount - discountAmount;
+
+        if (point > orderAmount) {
+            alert('포인트 사용 금액이 주문 금액을 초과할 수 없습니다.');
             return;
         }
 
@@ -157,71 +155,52 @@ export default class Payment {
             return;
         }
 
-        console.log(`포인트 사용 시도: ${point}P, 회원ID: ${this.selectedMember.memberId}`);
+        const isPointFullPayment = point === finalAmount;
 
+        if (isPointFullPayment) {
+            // 전액 포인트 결제는 바로 처리
+            import('./HandlePayment.js').then(({ default: HandlePayment }) => {
+                const handler = new HandlePayment({ appInstance: window.__app__ });
+                handler.process('POINT');
+            });
+            this.close();
+            return;
+        }
+
+        // 일반 포인트 차감 로직
         try {
-            // 서버에 포인트 차감 요청
-            const result = await this.updateMemberPoints(this.selectedMember.memberId, point);
-            console.log('포인트 차감 결과:', result);
-            
-            // 로컬 회원 정보 업데이트
+            await this.updateMemberPoints(this.selectedMember.memberId, point);
             this.selectedMember.points -= point;
             window.__selectedMember__ = this.selectedMember;
-            
-            // 할인 금액 적용
+
             this.billing.updateDiscountAmount(point);
-            
-            // 화면의 회원 정보 업데이트
             this.updateMemberDisplay();
-            
+
             alert(`${point}P가 사용되었습니다.`);
+
             this.close();
-            
         } catch (error) {
             console.error('포인트 사용 오류:', error);
             alert('포인트 사용 중 오류가 발생했습니다.');
         }
     }
 
-    // 회원 포인트 차감 API 호출
     async updateMemberPoints(memberId, pointsToDeduct) {
-        try {
-            console.log(`API 호출: /api/members/${memberId}/points`, {
-                points: pointsToDeduct,
-                action: 'DEDUCT'
-            });
+        const response = await fetch(`/api/members/${memberId}/points`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ points: pointsToDeduct, action: 'DEDUCT' })
+        });
 
-            const response = await fetch(`/api/members/${memberId}/points`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    points: pointsToDeduct,
-                    action: 'DEDUCT' // 포인트 차감
-                })
-            });
-
-            console.log('API 응답 상태:', response.status);
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('API 오류 응답:', errorText);
-                throw new Error(`포인트 차감 실패: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('API 성공 응답:', result); 
-            return result;
-        } catch (error) {
-            console.error('포인트 업데이트 오류:', error);
-            throw error;
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`포인트 차감 실패: ${response.status} / ${errorText}`);
         }
+
+        return await response.json();
     }
 
-    // 화면의 회원 정보 업데이트
     updateMemberDisplay() {
-        // FooterPanel의 회원 정보 업데이트를 위한 이벤트 발생
         const event = new CustomEvent('memberPointsUpdated', {
             detail: this.selectedMember
         });

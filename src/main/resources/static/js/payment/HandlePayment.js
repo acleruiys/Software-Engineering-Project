@@ -1,5 +1,3 @@
-// payment/HandlePayment.js
-
 export default class HandlePayment {
     constructor({ appInstance }) {
         this.app = appInstance;
@@ -18,8 +16,10 @@ export default class HandlePayment {
 
         const orderAmount = billing.getAmount('주문금액');
         const discountAmount = billing.getAmount('할인금액');
+
         const finalAmount = orderAmount - discountAmount;
-        const earnedPoint = window.__selectedMember__ ? Math.floor(finalAmount * 0.01) : 0;
+        const isPointOnly = type === 'POINT' && finalAmount === 0;
+        const earnedPoint = (!window.__selectedMember__ || isPointOnly) ? 0 : Math.floor(finalAmount * 0.01);
 
         const menus = orderList.map(item => ({
             menuId: item.id,
@@ -28,23 +28,41 @@ export default class HandlePayment {
             optionId: []
         }));
 
-        const payments = [{
-            payment: type,
-            price: finalAmount
-        }];
+        const payments = [];
+
+        if (isPointOnly) {
+            payments.push({
+                payment: 'POINT',
+                price: discountAmount
+            });
+        } else if (type === 'POINT') {
+            // 포인트 사용 후 차액 결제는 여기서 종료하지 않음 (버튼 눌렀을 때 처리)
+            return;
+        } else {
+            if (discountAmount > 0) {
+                payments.push({
+                    payment: 'POINT',
+                    price: discountAmount
+                });
+            }
+            if (finalAmount > 0) {
+                payments.push({
+                    payment: type,
+                    price: finalAmount
+                });
+            }
+        }
 
         const paymentData = {
             memberId: window.__selectedMember__?.memberId || null,
             menus,
             payments,
-            totalPrice: finalAmount,
-            earnedPoint
+            totalPrice: orderAmount,
+            usedPoint: discountAmount,
+            earnedPoint: earnedPoint
         };
 
         console.log('[결제 전송 데이터]', paymentData);
-        console.log("paymentData 전송 내용:", JSON.stringify(paymentData, null, 2));
-        console.log(`[포인트 적립] 회원: ${window.__selectedMember__?.name || '비회원'}, 적립 포인트: ${earnedPoint}P`);
-
 
         fetch('/api/sales', {
             method: 'POST',
@@ -54,20 +72,33 @@ export default class HandlePayment {
             .then(res => {
                 if (!res.ok) throw new Error('결제 실패');
 
-                // 알림 메시지 만들기
-                let alertMessage = `${type === 'CASH' ? '현금' : '카드'} 결제가 완료되었습니다.`;
-                if (earnedPoint > 0) {
-                    alertMessage += `\n${earnedPoint.toLocaleString()}P가 적립되었습니다.`;
+                let alertMessage = '';
+                if (isPointOnly) {
+                    alertMessage = `포인트로 전액 결제가 완료되었습니다.`;
+                    if (earnedPoint > 0) {
+                        alertMessage += `\n적립: ${earnedPoint.toLocaleString()}P`;
+                    }
+                } else {
+                    alertMessage = `${type === 'CASH' ? '현금' : '카드'} 결제가 완료되었습니다.`;
+                    if (discountAmount > 0) {
+                        alertMessage += `\n포인트 ${discountAmount.toLocaleString()}P 사용`;
+                    }
+                    if (finalAmount > 0) {
+                        alertMessage += `\n결제 금액: ${finalAmount.toLocaleString()}원`;
+                    }
+                    if (earnedPoint > 0) {
+                        alertMessage += `\n적립: ${earnedPoint.toLocaleString()}P`;
+                    }
                 }
 
                 alert(alertMessage);
 
-                // 타이밍 보정
                 setTimeout(() => {
                     const footerPanel = this.app.footerPanelComponent;
 
                     window.__orderList__ = [];
                     window.__selectedMember__ = null;
+                    window.__passwordVerifiedForMember__ = null;
 
                     this.app.setState({
                         orderList: [],
@@ -79,7 +110,7 @@ export default class HandlePayment {
                     billing.updateDiscountAmount(0);
                     totalBilling.updateTotal(0, 0, 0);
 
-                    footerPanel.resetUserInf(); // ← 항상 초기 상태로 리셋
+                    footerPanel.resetUserInf();
                 }, 0);
             })
             .catch(err => {

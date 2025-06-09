@@ -156,7 +156,6 @@ export default class App extends Component {
             });
             window.__footerPanelComponent__ = this.footerPanelComponent;
         }
-
         window.__app__ = this;
 
         document.removeEventListener('menuItemSelected', this.handleMenuItemSelected);

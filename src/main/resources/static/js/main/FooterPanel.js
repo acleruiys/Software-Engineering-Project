@@ -90,6 +90,9 @@ export default class FooterPanel extends Component {
 
         // 전역 저장 추가
         window.__selectedMember__ = event.detail;
+        
+        // 회원이 변경되면 비밀번호 세션 초기화
+        window.__passwordVerifiedForMember__ = null;
 
         // 회원 정보 업데이트
         this.state.userInf = [
@@ -117,7 +120,7 @@ export default class FooterPanel extends Component {
         const modal = document.getElementById('modal');
         modal.innerHTML = '';
 
-        import('../payment/Payment.js').then(({ default: Payment }) => {
+        import('../payment/PointModal.js').then(({ default: Payment }) => {
             const billingComponent = window.__billingComponent__;
             if (!billingComponent) {
                 alert('Billing 컴포넌트가 초기화되지 않았습니다.');
@@ -260,6 +263,9 @@ export default class FooterPanel extends Component {
     }
     // FooterPanel.js 내부에 추가
     resetUserInf() {
+        // 회원 정보 초기화 시 비밀번호 세션도 초기화
+        window.__passwordVerifiedForMember__ = null;
+        
         this.state.userInf = [
             { label: "회원번호", value: "-" },
             { label: "회원명", value: "-" },
