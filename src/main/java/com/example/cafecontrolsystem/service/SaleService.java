@@ -39,9 +39,17 @@ public class SaleService {
 
         // Member 존재할 경우 PointHistory DB에 Insert 및 포인트 적립
         if(member != null){
-            member.accumulatePoint((int) Math.round(saveSaleDto.getTotalPrice() * 0.01));
+            // 전달받은 적립 포인트 사용 (없으면 기본 1% 계산)
+            int earnedPoint = saveSaleDto.getEarnedPoint() != null ? 
+                saveSaleDto.getEarnedPoint() : 
+                (int) Math.round(saveSaleDto.getTotalPrice() * 0.01);
+            
+            member.accumulatePoint(earnedPoint);
+            
+            // 회원 테이블에 포인트 적립 정보 저장
+            memberRepository.save(member);
 
-            savePointHistory(member, sale, (int) Math.round(saveSaleDto.getTotalPrice() * 0.01), "REWARD");
+            savePointHistory(member, sale, earnedPoint, "REWARD");
         }
 
         // 메뉴 별로 SaleDetail DB에 Insert
@@ -121,6 +129,9 @@ public class SaleService {
 
             // 포인터 처리
             member.usePoint(salePaymentDto.getPrice());
+            
+            // 회원 테이블에 포인트 사용 정보 저장
+            memberRepository.save(member);
 
             savePointHistory(member, sale, salePaymentDto.getPrice(), "USE");
         }

@@ -115,4 +115,73 @@ public class MemberController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
+
+    // 회원 포인트 업데이트 (적립/차감)
+    @PostMapping("/{memberId}/points")
+    public ResponseEntity<?> updateMemberPoints(@PathVariable Long memberId, 
+                                              @RequestBody Map<String, Object> requestData) {
+        try {
+            Integer points = (Integer) requestData.get("points");
+            String action = (String) requestData.get("action");
+            
+            System.out.println("포인트 업데이트 요청 - 회원ID: " + memberId + ", 포인트: " + points + ", 액션: " + action);
+            
+            if (points == null || points <= 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "유효한 포인트 값을 입력해주세요."));
+            }
+            
+            if (action == null || (!action.equals("ADD") && !action.equals("DEDUCT"))) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "유효한 액션을 입력해주세요. (ADD 또는 DEDUCT)"));
+            }
+            
+            Optional<Member> memberOpt = memberService.findById(memberId);
+            if (!memberOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "회원을 찾을 수 없습니다."));
+            }
+            
+            Member member = memberOpt.get();
+            int currentPoints = member.getPoints();
+            int newPoints;
+            
+            System.out.println("현재 포인트: " + currentPoints);
+            
+            if (action.equals("ADD")) {
+                newPoints = currentPoints + points;
+            } else { // DEDUCT
+                if (currentPoints < points) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("message", "잔여 포인트가 부족합니다."));
+                }
+                newPoints = currentPoints - points;
+            }
+            
+            System.out.println("새로운 포인트: " + newPoints);
+            
+            // 포인트 업데이트
+            boolean updated = memberService.updateMemberPoints(memberId, newPoints);
+            
+            System.out.println("포인트 업데이트 결과: " + updated);
+            
+            if (updated) {
+                return ResponseEntity.ok(Map.of(
+                    "message", action.equals("ADD") ? "포인트가 적립되었습니다." : "포인트가 차감되었습니다.",
+                    "previousPoints", currentPoints,
+                    "currentPoints", newPoints,
+                    "pointsChanged", points
+                ));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("message", "포인트 업데이트 중 오류가 발생했습니다."));
+            }
+            
+        } catch (Exception e) {
+            System.err.println("포인트 업데이트 중 예외 발생: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "서버 오류가 발생했습니다: " + e.getMessage()));
+        }
+    }
 }

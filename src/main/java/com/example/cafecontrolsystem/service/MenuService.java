@@ -2,8 +2,8 @@ package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.dto.MenuDto;
 import com.example.cafecontrolsystem.dto.UpdateMenuDto;
-import com.example.cafecontrolsystem.entity.Menu_entity;
-import com.example.cafecontrolsystem.entity.MenuCategory_entity;
+import com.example.cafecontrolsystem.entity.Menu;
+import com.example.cafecontrolsystem.entity.MenuCategory;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
 import com.example.cafecontrolsystem.repository.MenuCategoryRepository;
@@ -21,20 +21,20 @@ public class MenuService {
     @Autowired
     private MenuCategoryRepository menuCategoryRepository;
 
-    public List<Menu_entity> getMenusByCategory(CategoryType categoryType) {
+    public List<Menu> getMenusByCategory(CategoryType categoryType) {
         return menuRepository.findByCategory(categoryType.getDisplayName());
     }
 
-    public List<Menu_entity> getAllAvailableMenus() {
+    public List<Menu> getAllAvailableMenus() {
         return menuRepository.findByAvailableTrue();
     }
 
-    public Menu_entity getMenu(Long id) {
+    public Menu getMenu(Long id) {
         return menuRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("메뉴를 찾을 수 없습니다: " + id));
     }
 
-    public Menu_entity getMenuByName(String name) {
+    public Menu getMenuByName(String name) {
         return menuRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("메뉴를 찾을 수 없습니다: " + name));
     }
@@ -53,7 +53,7 @@ public class MenuService {
                 .changeAvailable();
     }
 
-    public Menu_entity saveMenu(Menu_entity menuEntity) {
+    public Menu saveMenu(Menu menuEntity) {
         return menuRepository.save(menuEntity);
     }
 
@@ -61,17 +61,17 @@ public class MenuService {
         menuRepository.deleteById(id);
     }
 
-    public Menu_entity createMenuFromDto(MenuDto dto) {
-        Menu_entity menu = new Menu_entity();
+    public Menu createMenuFromDto(MenuDto dto) {
+        Menu menu = new Menu();
         menu.setName(dto.getName());
         menu.setPrice(dto.getPrice());
         menu.setAvailable(dto.getStatus().equals("판매중"));
 
 
         CategoryType categoryType = CategoryType.fromDisplayName(dto.getCategory());
-        MenuCategory_entity category = menuCategoryRepository.findByType(categoryType)
+        MenuCategory category = menuCategoryRepository.findByType(categoryType)
                 .orElseGet(() -> {
-                    MenuCategory_entity newCategory = new MenuCategory_entity();
+                    MenuCategory newCategory = new MenuCategory();
                     newCategory.setType(categoryType);
                     newCategory.setName(categoryType.getDisplayName());
                     return menuCategoryRepository.save(newCategory);

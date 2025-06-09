@@ -1,7 +1,6 @@
 package com.example.cafecontrolsystem.service;
 
 import com.example.cafecontrolsystem.entity.MenuOption;
-import com.example.cafecontrolsystem.entity.Menu_entity;
 import com.example.cafecontrolsystem.repository.OptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

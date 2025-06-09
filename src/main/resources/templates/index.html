@@ -51,8 +51,14 @@
     new Navbar({ target: document.querySelector('#navbar') });
     new MenuEntityTabs({ target: document.querySelector('#tab') });
     new TotalSection({ target: document.querySelector('#totalSection') });
-    new TotalItem({ target: document.querySelector('#billing') });
-    new Billing({ target: document.querySelector('#totalBilling') });
+    
+    // Billing 컴포넌트를 전역에 저장
+    const totalBillingComponent = new Billing({ target: document.querySelector('#totalBilling') });
+    window.__billingComponent__ = new TotalItem({ 
+        target: document.querySelector('#billing'),
+        totalBillingComponent: totalBillingComponent
+    });
+    
     new RowButton({ target: document.querySelector('#rowButton') });
     new CategoryPanel({ target: document.querySelector('#categoryPanel') });
     new MenuGrid({ target: document.querySelector('#menuGrid') });

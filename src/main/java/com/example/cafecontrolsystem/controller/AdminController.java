@@ -1,9 +1,9 @@
 package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.dto.LoginDto;
-import com.example.cafecontrolsystem.dto.UserDto;
-import com.example.cafecontrolsystem.entity.User;
-import com.example.cafecontrolsystem.service.UserService;
+import com.example.cafecontrolsystem.dto.AdminDto;
+import com.example.cafecontrolsystem.entity.Admin;
+import com.example.cafecontrolsystem.service.AdminrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,23 +17,23 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class AdminController {
 
-    private final UserService userService;
+    private final AdminrService adminrService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public AdminController(AdminrService adminrService) {
+        this.adminrService = adminrService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> registerUser(@RequestBody AdminDto adminDto) {
         try {
-            User user = userService.registerUser(userDto);
+            Admin admin = adminrService.registerUser(adminDto);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "사용자가 성공적으로 등록되었습니다.");
-            response.put("userId", user.getId());
+            response.put("userId", admin.getId());
             
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -54,13 +54,13 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
         try {
-            User user = userService.loginUser(loginDto.getUsername(), loginDto.getPassword());
+            Admin admin = adminrService.loginUser(loginDto.getUsername(), loginDto.getPassword());
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "로그인 성공");
-            response.put("userId", user.getId());
-            response.put("username", user.getUsername());
-            response.put("role", user.getRole().toString());
+            response.put("userId", admin.getId());
+            response.put("username", admin.getUsername());
+            response.put("role", admin.getRole().toString());
             
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {

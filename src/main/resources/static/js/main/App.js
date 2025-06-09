@@ -5,6 +5,7 @@ import OrderList from './OrderList.js';
 import ApiService from '../services/ApiService.js';
 import Billing from "./Billing.js";
 import TotalBilling from "./TotalBilling.js";
+import FooterPanel from './FooterPanel.js';
 
 export default class App extends Component {
     setup() {
@@ -148,6 +149,15 @@ export default class App extends Component {
                 onOrderItemSelect: this.handleOrderItemSelected
             }
         });
+
+        if (!this.footerPanelComponent) {
+            this.footerPanelComponent = new FooterPanel({
+                target: document.querySelector('#footerPanel')
+            });
+            window.__footerPanelComponent__ = this.footerPanelComponent;
+        }
+
+        window.__app__ = this;
 
         document.removeEventListener('menuItemSelected', this.handleMenuItemSelected);
         document.addEventListener('menuItemSelected', this.handleMenuItemSelected);

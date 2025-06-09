@@ -2,14 +2,14 @@ package com.example.cafecontrolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "menu_categories")
-public class MenuCategory_entity {
+public class MenuCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -29,7 +29,7 @@ public class MenuCategory_entity {
     private CategoryStatus status = CategoryStatus.ACTIVE;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Menu_entity> menuEntities = new ArrayList<>();
+    private List<Menu> menuEntities = new ArrayList<>();
 
     public enum CategoryStatus {
         ACTIVE, INACTIVE

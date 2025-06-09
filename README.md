@@ -392,8 +392,8 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 - 다양한 유틸리티 함수 및 헬퍼 클래스
 
 ##### 인증 관련
-- `login.js`: 로그인 처리
-- `adminSignIn.js`: 관리자 로그인 처리
+- `AdminSignUpSystem.js`: 로그인 처리
+- `AdminSignInSystem.js`: 관리자 로그인 처리
 
 #### CSS 파일 (/css)
 - `style.css`: 메인 스타일시트, 전체 애플리케이션 스타일 정의

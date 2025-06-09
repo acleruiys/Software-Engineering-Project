@@ -85,4 +85,33 @@ public class MemberService {
         return member.getPw().equals(inputPassword);
     }
 
+    // 회원 포인트 업데이트
+    @Transactional
+    public boolean updateMemberPoints(Long memberId, int newPoints) {
+        try {
+            System.out.println("MemberService - 포인트 업데이트 시작: 회원ID=" + memberId + ", 새포인트=" + newPoints);
+            
+            Optional<Member> memberOpt = memberRepository.findById(memberId);
+            if (memberOpt.isEmpty()) {
+                System.err.println("회원을 찾을 수 없습니다: " + memberId);
+                throw new IllegalArgumentException("회원을 찾을 수 없습니다.");
+            }
+            
+            Member member = memberOpt.get();
+            System.out.println("업데이트 전 포인트: " + member.getPoints());
+            
+            member.updatePoints(newPoints);
+            Member savedMember = memberRepository.save(member);
+            
+            System.out.println("업데이트 후 포인트: " + savedMember.getPoints());
+            System.out.println("포인트 업데이트 성공!");
+            
+            return true;
+        } catch (Exception e) {
+            System.err.println("포인트 업데이트 실패: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

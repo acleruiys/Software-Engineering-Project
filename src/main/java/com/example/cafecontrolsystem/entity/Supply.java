@@ -21,5 +21,5 @@ public class Supply {
     private String phone;
     
     @OneToMany(mappedBy = "supply", cascade = CascadeType.ALL)
-    private List<Inventory_entitiy> inventoryItems = new ArrayList<>();
+    private List<Inventory> inventoryItems = new ArrayList<>();
 } 

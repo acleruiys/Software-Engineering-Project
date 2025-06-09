@@ -1,7 +1,7 @@
 package com.example.cafecontrolsystem.service;
 
-import com.example.cafecontrolsystem.entity.Menu_entity;
-import com.example.cafecontrolsystem.entity.MenuCategory_entity;
+import com.example.cafecontrolsystem.entity.Menu;
+import com.example.cafecontrolsystem.entity.MenuCategory;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
 import com.example.cafecontrolsystem.repository.MenuCategoryRepository;
@@ -43,10 +43,11 @@ public class MenuDataInitializer implements CommandLineRunner {
             logger.info("카테고리 초기화 완료");
         }
         
-        // 메뉴 초기화 (항상 실행하도록 변경)
-        logger.info("메뉴 초기화 시작");
-        initializeMenus();
-        logger.info("메뉴 초기화 완료");
+        if(menuCount == 0) {
+            logger.info("메뉴 초기화 시작");
+            initializeMenus();
+            logger.info("메뉴 초기화 완료");
+        }
         
         logger.info("MenuDataInitializer 완료");
     }
@@ -55,10 +56,10 @@ public class MenuDataInitializer implements CommandLineRunner {
         for (CategoryType categoryType : CategoryType.values()) {
             try {
                 if (!menuCategoryRepository.findByType(categoryType).isPresent()) {
-                    MenuCategory_entity category = new MenuCategory_entity();
+                    MenuCategory category = new MenuCategory();
                     category.setType(categoryType);
                     category.setName(categoryType.getDisplayName());
-                    category.setStatus(MenuCategory_entity.CategoryStatus.ACTIVE);
+                    category.setStatus(MenuCategory.CategoryStatus.ACTIVE);
                     menuCategoryRepository.save(category);
                     logger.info("카테고리 생성: {} - {}", categoryType.name(), categoryType.getDisplayName());
                 }
@@ -189,14 +190,14 @@ public class MenuDataInitializer implements CommandLineRunner {
         logger.info("{} 카테고리 메뉴 생성 시작 - {} 개", categoryType.getDisplayName(), menuDataList.size());
         
         // 카테고리 엔티티 찾기
-        MenuCategory_entity category = menuCategoryRepository.findByType(categoryType)
+        MenuCategory category = menuCategoryRepository.findByType(categoryType)
                 .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다: " + categoryType));
         
         for (MenuData menuData : menuDataList) {
             try {
                 // 중복 메뉴 체크
                 if (menuRepository.findByName(menuData.name).isEmpty()) {
-                    Menu_entity menu = Menu_entity.builder()
+                    Menu menu = Menu.builder()
                         .name(menuData.name)
                         .price(menuData.price)
                         .category(categoryType.getDisplayName())

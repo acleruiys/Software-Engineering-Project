@@ -37,7 +37,8 @@ import java.util.List;
                       "price": 3000
                     }
                   ],
-                  "totalPrice": 6100
+                  "totalPrice": 6100,
+                  "earnedPoint": 61
                 }
                 """
 )
@@ -50,4 +51,6 @@ public class SaveSaleDto {
     private List<SalePaymentDto> payments;
 
     private Integer totalPrice;
+    
+    private Integer earnedPoint;
 }

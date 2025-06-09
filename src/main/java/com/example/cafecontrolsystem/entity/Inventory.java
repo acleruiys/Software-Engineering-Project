@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "inventory")
-public class Inventory_entitiy {
+public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inventory_id")
@@ -17,7 +17,7 @@ public class Inventory_entitiy {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    private Inventory_category_entity category; // 재고 카테고리 ID
+    private InventoryCategory category; // 재고 카테고리 ID
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supply_id")

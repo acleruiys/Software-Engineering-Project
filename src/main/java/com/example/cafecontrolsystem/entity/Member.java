@@ -1,6 +1,7 @@
 package com.example.cafecontrolsystem.entity;
 
 import com.example.cafecontrolsystem.dto.UpdateMemberDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -29,6 +30,7 @@ public class Member {
 
     private Integer points;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PointHistory> pointHistories = new ArrayList<>();
 
@@ -46,6 +48,11 @@ public class Member {
     // 포인트 사용
     public void usePoint(Integer point){
         this.points = this.points - point;
+    }
+
+    // 포인트 업데이트 (직접 설정)
+    public void updatePoints(int newPoints) {
+        this.points = newPoints;
     }
 
 } 

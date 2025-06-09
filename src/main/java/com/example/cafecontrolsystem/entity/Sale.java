@@ -1,5 +1,6 @@
 package com.example.cafecontrolsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -32,12 +33,15 @@ public class Sale {
     @JoinColumn(name = "member")
     private Member member;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<Payment> payments = new ArrayList<>();
     
+    @JsonIgnore
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<SaleDetail> saleDetails = new ArrayList<>();
     
+    @JsonIgnore
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<PointHistory> pointHistories = new ArrayList<>();
 

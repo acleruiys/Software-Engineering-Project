@@ -1,20 +1,16 @@
 package com.example.cafecontrolsystem.repository;
 
-import com.example.cafecontrolsystem.entity.Menu_entity;
-import com.example.cafecontrolsystem.entity.CategoryType;
+import com.example.cafecontrolsystem.entity.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MenuRepository extends JpaRepository<Menu_entity, Long> {
-    List<Menu_entity> findByCategory(String category);
-    List<Menu_entity> findByAvailableTrue();
+public interface MenuRepository extends JpaRepository<Menu, Long> {
+    List<Menu> findByCategory(String category);
+    List<Menu> findByAvailableTrue();
 
-    Optional<Menu_entity> findByName(String name);
+    Optional<Menu> findByName(String name);
 } 

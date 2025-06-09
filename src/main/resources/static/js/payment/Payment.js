@@ -136,15 +136,95 @@ export default class Payment {
 
         this.target.querySelector('#pointInputArea').addEventListener('click', (e) => {
             if (e.target.id === 'usePointBtn') {
-                const point = parseInt(document.getElementById('usePoint').value);
-                if (point > this.selectedMember.points) {
-                    alert('잔여 포인트보다 많습니다.');
-                    return;
-                }
-                this.billing.updateDiscountAmount(point);
-                alert(`${point}P가 사용되었습니다.`);
-                this.close();
+                this.usePoints();
             }
         });
+    }
+
+    // 포인트 사용 처리
+    async usePoints() {
+        const pointInput = document.getElementById('usePoint');
+        const point = parseInt(pointInput.value);
+
+        // 입력값 검증
+        if (!point || point <= 0) {
+            alert('사용할 포인트를 입력해주세요.');
+            return;
+        }
+
+        if (point > this.selectedMember.points) {
+            alert('잔여 포인트보다 많습니다.');
+            return;
+        }
+
+        console.log(`포인트 사용 시도: ${point}P, 회원ID: ${this.selectedMember.memberId}`);
+
+        try {
+            // 서버에 포인트 차감 요청
+            const result = await this.updateMemberPoints(this.selectedMember.memberId, point);
+            console.log('포인트 차감 결과:', result);
+            
+            // 로컬 회원 정보 업데이트
+            this.selectedMember.points -= point;
+            window.__selectedMember__ = this.selectedMember;
+            
+            // 할인 금액 적용
+            this.billing.updateDiscountAmount(point);
+            
+            // 화면의 회원 정보 업데이트
+            this.updateMemberDisplay();
+            
+            alert(`${point}P가 사용되었습니다.`);
+            this.close();
+            
+        } catch (error) {
+            console.error('포인트 사용 오류:', error);
+            alert('포인트 사용 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 회원 포인트 차감 API 호출
+    async updateMemberPoints(memberId, pointsToDeduct) {
+        try {
+            console.log(`API 호출: /api/members/${memberId}/points`, {
+                points: pointsToDeduct,
+                action: 'DEDUCT'
+            });
+
+            const response = await fetch(`/api/members/${memberId}/points`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    points: pointsToDeduct,
+                    action: 'DEDUCT' // 포인트 차감
+                })
+            });
+
+            console.log('API 응답 상태:', response.status);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API 오류 응답:', errorText);
+                throw new Error(`포인트 차감 실패: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('API 성공 응답:', result); 
+            return result;
+        } catch (error) {
+            console.error('포인트 업데이트 오류:', error);
+            throw error;
+        }
+    }
+
+    // 화면의 회원 정보 업데이트
+    updateMemberDisplay() {
+        // FooterPanel의 회원 정보 업데이트를 위한 이벤트 발생
+        const event = new CustomEvent('memberPointsUpdated', {
+            detail: this.selectedMember
+        });
+        document.dispatchEvent(event);
     }
 }

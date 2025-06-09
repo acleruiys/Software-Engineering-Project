@@ -1,5 +1,6 @@
 package com.example.cafecontrolsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,13 +16,15 @@ public class SaleDetail {
     @Column(name = "detail_id")
     private Long detailId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
-    private Menu_entity menu;
+    private Menu menu;
 
     private Integer quantity;
 
