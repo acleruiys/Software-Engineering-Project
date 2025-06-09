@@ -5,7 +5,6 @@ import com.example.cafecontrolsystem.dto.UpdateMenuDto;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.entity.Menu;
 import com.example.cafecontrolsystem.repository.MenuRepository;
-import com.example.cafecontrolsystem.service.MenuService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

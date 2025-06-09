@@ -3,7 +3,6 @@ package com.example.cafecontrolsystem.controller;
 import com.example.cafecontrolsystem.dto.UpdateMemberDto;
 import com.example.cafecontrolsystem.entity.Member;
 import com.example.cafecontrolsystem.repository.MemberRepository;
-import com.example.cafecontrolsystem.service.MemberService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
