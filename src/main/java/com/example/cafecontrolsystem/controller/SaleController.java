@@ -55,7 +55,7 @@ public class SaleController {
     )
     @PostMapping("/summary")
     public ResponseEntity<ShowSaleSummaryDto> summary(@RequestBody SaleSummaryDateDto saleSummaryDateDto){
-        return ResponseEntity.ok(showSale(saleSummaryDateDto));
+        return ResponseEntity.ok(showSaleSummary(saleSummaryDateDto));
     }
 
 
@@ -181,7 +181,7 @@ public class SaleController {
     }
 
 
-    public ShowSaleSummaryDto showSale(SaleSummaryDateDto saleSummaryDateDto){
+    public ShowSaleSummaryDto showSaleSummary(SaleSummaryDateDto saleSummaryDateDto){
         List<Object[]> totalInfo = saleRepository.getTotalmember(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate());
         return ShowSaleSummaryDto.builder()
                 .totalMember((Long) totalInfo.get(0)[0])
