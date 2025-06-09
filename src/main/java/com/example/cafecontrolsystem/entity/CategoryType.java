@@ -1,5 +1,8 @@
 package com.example.cafecontrolsystem.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum CategoryType {
     COFFEE("커피"),
     DECAF("디카페인"),
@@ -20,10 +23,6 @@ public enum CategoryType {
 
     CategoryType(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public static CategoryType fromDisplayName(String displayName) {

@@ -3,10 +3,8 @@ package com.example.cafecontrolsystem.service;
 import com.example.cafecontrolsystem.dto.MenuDto;
 import com.example.cafecontrolsystem.dto.UpdateMenuDto;
 import com.example.cafecontrolsystem.entity.Menu;
-import com.example.cafecontrolsystem.entity.MenuCategory;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
-import com.example.cafecontrolsystem.repository.MenuCategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +16,6 @@ public class MenuService {
     @Autowired
     private MenuRepository menuRepository;
 
-    @Autowired
-    private MenuCategoryRepository menuCategoryRepository;
 
     public List<Menu> getMenusByCategory(CategoryType categoryType) {
         return menuRepository.findByCategory(categoryType.getDisplayName());
@@ -62,22 +58,17 @@ public class MenuService {
     }
 
     public Menu createMenuFromDto(MenuDto dto) {
-        Menu menu = new Menu();
-        menu.setName(dto.getName());
-        menu.setPrice(dto.getPrice());
-        menu.setAvailable(dto.getStatus().equals("판매중"));
-
-
-        CategoryType categoryType = CategoryType.fromDisplayName(dto.getCategory());
-        MenuCategory category = menuCategoryRepository.findByType(categoryType)
-                .orElseGet(() -> {
-                    MenuCategory newCategory = new MenuCategory();
-                    newCategory.setType(categoryType);
-                    newCategory.setName(categoryType.getDisplayName());
-                    return menuCategoryRepository.save(newCategory);
-                });
-        menu.setCategory(category.getName());
-
-        return menu;
+        try{
+            Menu menu = new Menu();
+            menu.setName(dto.getName());
+            menu.setPrice(dto.getPrice());
+            menu.setAvailable(dto.getStatus().equals("판매중"));
+            CategoryType categoryType = CategoryType.fromDisplayName(dto.getCategory());
+            menu.setCategory(categoryType.getDisplayName());
+            return menu;
+        }
+        catch (Exception e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 } 

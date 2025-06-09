@@ -1,10 +1,8 @@
 package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.entity.Menu;
-import com.example.cafecontrolsystem.entity.MenuCategory;
 import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.repository.MenuRepository;
-import com.example.cafecontrolsystem.repository.MenuCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -23,8 +21,6 @@ public class MenuDataInitializer implements CommandLineRunner {
     @Autowired
     private MenuRepository menuRepository;
 
-    @Autowired
-    private MenuCategoryRepository menuCategoryRepository;
 
     @Override
     @Transactional
@@ -32,16 +28,8 @@ public class MenuDataInitializer implements CommandLineRunner {
         logger.info("MenuDataInitializer 시작");
         
         long menuCount = menuRepository.count();
-        long categoryCount = menuCategoryRepository.count();
         
-        logger.info("현재 메뉴 개수: {}, 카테고리 개수: {}", menuCount, categoryCount);
-        
-        // 카테고리가 없으면 초기화
-        if (categoryCount == 0) {
-            logger.info("카테고리 초기화 시작");
-            initializeCategories();
-            logger.info("카테고리 초기화 완료");
-        }
+        logger.info("현재 메뉴 개수: {}", menuCount);
         
         if(menuCount == 0) {
             logger.info("메뉴 초기화 시작");
@@ -50,23 +38,6 @@ public class MenuDataInitializer implements CommandLineRunner {
         }
         
         logger.info("MenuDataInitializer 완료");
-    }
-
-    private void initializeCategories() {
-        for (CategoryType categoryType : CategoryType.values()) {
-            try {
-                if (!menuCategoryRepository.findByType(categoryType).isPresent()) {
-                    MenuCategory category = new MenuCategory();
-                    category.setType(categoryType);
-                    category.setName(categoryType.getDisplayName());
-                    category.setStatus(MenuCategory.CategoryStatus.ACTIVE);
-                    menuCategoryRepository.save(category);
-                    logger.info("카테고리 생성: {} - {}", categoryType.name(), categoryType.getDisplayName());
-                }
-            } catch (Exception e) {
-                logger.error("카테고리 생성 실패: {} - {}", categoryType.name(), e.getMessage());
-            }
-        }
     }
 
     private void initializeMenus() {
@@ -188,10 +159,6 @@ public class MenuDataInitializer implements CommandLineRunner {
 
     private void createMenusForCategory(CategoryType categoryType, List<MenuData> menuDataList) {
         logger.info("{} 카테고리 메뉴 생성 시작 - {} 개", categoryType.getDisplayName(), menuDataList.size());
-        
-        // 카테고리 엔티티 찾기
-        MenuCategory category = menuCategoryRepository.findByType(categoryType)
-                .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다: " + categoryType));
         
         for (MenuData menuData : menuDataList) {
             try {
