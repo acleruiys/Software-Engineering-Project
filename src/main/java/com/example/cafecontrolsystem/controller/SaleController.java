@@ -6,8 +6,10 @@ import com.example.cafecontrolsystem.repository.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,11 @@ public class SaleController {
     private final PointHistoryRepository pointRepository;
     private final MemberRepository memberRepository;
 
+    // @Transactional 처리를 위함
+    @Resource(name = "saleController")
+    @Lazy
+    SaleController self;
+
     @Operation(
             summary = "결제 및 매출 데이터 저장",
             description = "현금, 카드, 포인트 결제 처리 및 포인트 적립",
@@ -39,9 +46,8 @@ public class SaleController {
             }
     )
     @PostMapping("")
-    @Transactional
     public ResponseEntity<String> pay(@RequestBody SaveSaleDto saveSaleDto){
-        saveSale(saveSaleDto);
+        self.saveSale(saveSaleDto);
 
         return ResponseEntity.ok("Success");
     }
@@ -59,6 +65,7 @@ public class SaleController {
     }
 
 
+    @Transactional
     public void saveSale(SaveSaleDto saveSaleDto){
 
         Member member = saveSaleDto.getMemberId() == null ? null : memberRepository.findById(saveSaleDto.getMemberId())
