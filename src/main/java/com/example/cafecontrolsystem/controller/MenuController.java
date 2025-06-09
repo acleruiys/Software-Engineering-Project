@@ -1,8 +1,12 @@
 package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.dto.MenuDto;
+import com.example.cafecontrolsystem.dto.UpdateMenuDto;
+import com.example.cafecontrolsystem.entity.CategoryType;
 import com.example.cafecontrolsystem.entity.Menu;
+import com.example.cafecontrolsystem.repository.MenuRepository;
 import com.example.cafecontrolsystem.service.MenuService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +19,12 @@ import java.util.stream.Collectors;
 public class MenuController {
 
     @Autowired
-    private MenuService menuService;
+    private MenuRepository menuRepository;
 
     @GetMapping
     public ResponseEntity<List<MenuDto>> getMenus() {
         List<Menu> menus;
-        menus = menuService.getAllAvailableMenus();
+        menus = getAllAvailableMenus();
 
         List<MenuDto> menuDtos = menus.stream()
                 .map(this::convertToMenuDto)
@@ -31,14 +35,14 @@ public class MenuController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MenuDto> getMenu(@PathVariable Long id) {
-        Menu menu = menuService.getMenu(id);
+        Menu menu = getMenuById(id);
         return ResponseEntity.ok(convertToMenuDto(menu));
     }
 
     @PostMapping
     public ResponseEntity<MenuDto> addMenu(@RequestBody MenuDto menuDto) {
         Menu menu = convertToMenuEntity(menuDto);
-        Menu savedMenu = menuService.saveMenu(menu);
+        Menu savedMenu = saveMenu(menu);
         return ResponseEntity.ok(convertToMenuDto(savedMenu));
     }
 
@@ -46,13 +50,13 @@ public class MenuController {
     public ResponseEntity<MenuDto> updateMenu(@PathVariable Long id, @RequestBody MenuDto menuDto) {
         Menu menu = convertToMenuEntity(menuDto);
         menu.setId(id);
-        Menu updatedMenu = menuService.saveMenu(menu);
+        Menu updatedMenu = saveMenu(menu);
         return ResponseEntity.ok(convertToMenuDto(updatedMenu));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
-        menuService.deleteMenu(id);
+        deleteMenuById(id);
         return ResponseEntity.ok().build();
     }
 
@@ -67,8 +71,61 @@ public class MenuController {
         return dto;
     }
 
-    // DTO를 메뉴 엔티티로 변환 - 카테고리 처리는 서비스에서 처리
+
     private Menu convertToMenuEntity(MenuDto dto) {
-        return menuService.createMenuFromDto(dto);
+        try{
+            Menu menu = new Menu();
+            menu.setName(dto.getName());
+            menu.setPrice(dto.getPrice());
+            menu.setAvailable(dto.getStatus().equals("판매중"));
+            CategoryType categoryType = CategoryType.fromDisplayName(dto.getCategory());
+            menu.setCategory(categoryType.getDisplayName());
+            return menu;
+        }
+        catch (Exception e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
+
+
+    public List<Menu> getMenusByCategory(CategoryType categoryType) {
+        return menuRepository.findByCategory(categoryType.getDisplayName());
+    }
+
+    public List<Menu> getAllAvailableMenus() {
+        return menuRepository.findByAvailableTrue();
+    }
+
+    public Menu getMenuById(Long id) {
+        return menuRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("메뉴를 찾을 수 없습니다: " + id));
+    }
+
+    public Menu getMenuByName(String name) {
+        return menuRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("메뉴를 찾을 수 없습니다: " + name));
+    }
+
+    // 가격 및 설명 변경 -> 이름으로 찾을지 id로 찾을지 회의 필요
+    @Transactional
+    public void changeMenu(UpdateMenuDto updateMenuDto){
+        menuRepository.findByName(updateMenuDto.getName()).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + updateMenuDto.getName()))
+                .changeMenu(updateMenuDto);
+    }
+
+    // 허용 여부 변경
+    @Transactional
+    public void changeAvailable(String name){
+        menuRepository.findByName(name).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + name))
+                .changeAvailable();
+    }
+
+    public Menu saveMenu(Menu menuEntity) {
+        return menuRepository.save(menuEntity);
+    }
+
+    public void deleteMenuById(Long id) {
+        menuRepository.deleteById(id);
+    }
+
 } 
