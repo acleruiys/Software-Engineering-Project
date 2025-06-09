@@ -1,17 +1,18 @@
-package com.example.cafecontrolsystem.service;
+package com.example.cafecontrolsystem.controller;
 
 import com.example.cafecontrolsystem.entity.MenuOption;
 import com.example.cafecontrolsystem.repository.OptionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Service
+@RestController
 @RequiredArgsConstructor
-public class OptionService {
-
+@RequestMapping("api/options")
+public class OptionController {
     private final OptionRepository optionRepository;
 
     // 옵션 추가 -> default available = true
