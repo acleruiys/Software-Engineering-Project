@@ -90,7 +90,7 @@ public class MemberController {
 
     // 회원 정보 수정
     @PutMapping("/{memberId}")
-    public ResponseEntity<?> updateMember(@PathVariable Long memberId, 
+    public ResponseEntity<?> updateMember(@PathVariable(name = "memberId") Long memberId,
                                          @RequestBody Map<String, Object> updateData) {
         try {
             // 실제 구현에서는 회원 업데이트 로직을 구현해야 합니다.
@@ -120,7 +120,7 @@ public class MemberController {
 
     // 회원 포인트 업데이트 (적립/차감)
     @PostMapping("/{memberId}/points")
-    public ResponseEntity<?> updateMemberPoints(@PathVariable Long memberId, 
+    public ResponseEntity<?> updateMemberPoints(@PathVariable(name = "memberId") Long memberId,
                                               @RequestBody Map<String, Object> requestData) {
         try {
             Integer points = (Integer) requestData.get("points");
