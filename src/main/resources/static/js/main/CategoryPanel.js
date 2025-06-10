@@ -32,11 +32,16 @@ export default class CategoryPanel extends Component {
     `;
     }
 
+    render() {
+        this.$target.innerHTML = this.template();
+        this.setEvent(); // 반드시 필요!
+    }
+
     setEvent() {
         this.$target.querySelectorAll(".category-button[data-category]")
             .forEach(btn => {
-                btn.addEventListener("click", e => {
-                    const category = e.target.dataset.category;
+                btn.addEventListener("click", () => {
+                    const category = btn.dataset.category;
                     this.props.onCategorySelect?.(category);
                 });
             });

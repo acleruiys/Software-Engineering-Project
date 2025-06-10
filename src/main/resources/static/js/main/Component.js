@@ -28,7 +28,15 @@ export default class Component {
 
   setEvent() {}
   mounted() {}
-  
+
+  setProps(newProps) {
+    this.props = {
+      ...this.props,
+      ...newProps
+    };
+    this.render();   // 변경된 props 기반으로 다시 렌더링
+  }
+
   // 이벤트 구독
   on(eventName, callback) {
     this.events[eventName] = this.events[eventName] || [];

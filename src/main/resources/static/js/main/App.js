@@ -106,6 +106,7 @@ export default class App extends Component {
                     onCategorySelect: async (category) => {
                         try {
                             const items = await ApiService.getMenusByCategory(category);
+                            console.log(items);
                             const formattedItems = items.map(item => ({
                                 id: item.id,
                                 name: item.name,

@@ -5,9 +5,9 @@ export default class FooterPanel extends Component {
     setup() {
         this.state = {
             userInf: [
-                { label: "회원번호", value: "A920945" },
-                { label: "회원명", value: "홍길동" },
-                { label: "잔여포인트", value: "13,200P" }
+                { label: "회원번호", value: "-" },
+                { label: "회원명", value: "-" },
+                { label: "잔여포인트", value: "-" }
             ],
             leftButtons: ["회원 검색", "반품"],
             centerButtons: [
