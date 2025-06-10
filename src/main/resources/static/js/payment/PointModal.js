@@ -150,54 +150,27 @@ export default class Payment {
             return;
         }
 
+        if (point < orderAmount) {
+            alert('분할 납부는 지원하지 않습니다');
+            return;
+        }
+
         if (point > this.selectedMember.points) {
             alert('잔여 포인트보다 많습니다.');
             return;
         }
 
-        const isPointFullPayment = point === finalAmount;
 
-        if (isPointFullPayment) {
+        this.billing.updateDiscountAmount(point);
+        this.updateMemberDisplay();
+
             // 전액 포인트 결제는 바로 처리
-            import('./HandlePayment.js').then(({ default: HandlePayment }) => {
-                const handler = new HandlePayment({ appInstance: window.__app__ });
-                handler.process('POINT');
-            });
-            this.close();
-            return;
-        }
-
-        // 일반 포인트 차감 로직
-        try {
-            await this.updateMemberPoints(this.selectedMember.memberId, point);
-            this.selectedMember.points -= point;
-            window.__selectedMember__ = this.selectedMember;
-
-            this.billing.updateDiscountAmount(point);
-            this.updateMemberDisplay();
-
-            alert(`${point}P가 사용되었습니다.`);
-
-            this.close();
-        } catch (error) {
-            console.error('포인트 사용 오류:', error);
-            alert('포인트 사용 중 오류가 발생했습니다.');
-        }
-    }
-
-    async updateMemberPoints(memberId, pointsToDeduct) {
-        const response = await fetch(`/api/members/${memberId}/points`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ points: pointsToDeduct, action: 'DEDUCT' })
+        import('./HandlePayment.js').then(({ default: HandlePayment }) => {
+            const handler = new HandlePayment({ appInstance: window.__app__ });
+            handler.process('POINT');
         });
+        this.close();
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`포인트 차감 실패: ${response.status} / ${errorText}`);
-        }
-
-        return await response.json();
     }
 
     updateMemberDisplay() {

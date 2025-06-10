@@ -35,9 +35,6 @@ export default class HandlePayment {
                 payment: 'POINT',
                 price: discountAmount
             });
-        } else if (type === 'POINT') {
-            // 포인트 사용 후 차액 결제는 여기서 종료하지 않음 (버튼 눌렀을 때 처리)
-            return;
         } else {
             if (discountAmount > 0) {
                 payments.push({
