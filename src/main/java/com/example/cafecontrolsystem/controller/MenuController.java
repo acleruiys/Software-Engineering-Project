@@ -7,9 +7,11 @@ import com.example.cafecontrolsystem.entity.Menu;
 import com.example.cafecontrolsystem.repository.MenuRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,15 +22,22 @@ public class MenuController {
     @Autowired
     private MenuRepository menuRepository;
 
-    @GetMapping
-    public ResponseEntity<List<MenuDto>> getMenus() {
-        List<Menu> menus;
-        menus = getAllAvailableMenus();
 
-        List<MenuDto> menuDtos = menus.stream()
-                .map(this::convertToMenuDto)
-                .collect(Collectors.toList());
 
+    @GetMapping()
+    public ResponseEntity<List<MenuDto>> getMenus(@RequestParam(required = false, name = "category") String category) {
+        List<MenuDto> menuDtos = new ArrayList<>();
+
+
+        if(category == null || category.isEmpty()) {
+            menuDtos = getAllAvailableMenus().stream()
+                    .map(this::convertToMenuDto)
+                    .toList();
+        }
+        else{
+            CategoryType categoryType = CategoryType.valueOf(category.toUpperCase());
+            menuDtos = getMenusByCategory(categoryType).stream().map(this::convertToMenuDto).toList();
+        }
         return ResponseEntity.ok(menuDtos);
     }
 
@@ -87,8 +96,9 @@ public class MenuController {
     }
 
 
-    public List<Menu> getMenusByCategory(CategoryType categoryType) {
-        return menuRepository.findByCategory(categoryType.getDisplayName());
+    public List<Menu> getMenusByCategory(CategoryType category) {
+
+        return menuRepository.findByCategory(category.getDisplayName());
     }
 
     public List<Menu> getAllAvailableMenus() {
@@ -127,4 +137,8 @@ public class MenuController {
         menuRepository.deleteById(id);
     }
 
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<String> IllegalArgument(IllegalArgumentException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 } 
