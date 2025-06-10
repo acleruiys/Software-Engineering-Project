@@ -70,7 +70,7 @@ public class MemberController {
 
     // 회원 비밀번호 검증
     @PostMapping("/{memberId}/verify-password")
-    public ResponseEntity<?> verifyMemberPassword(@PathVariable Long memberId, 
+    public ResponseEntity<?> verifyMemberPassword(@PathVariable(name = "memberId") Long memberId,
                                                  @RequestBody Map<String, Object> requestData) {
         try {
             Integer inputPassword = (Integer) requestData.get("password");
