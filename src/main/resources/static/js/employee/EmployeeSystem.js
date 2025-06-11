@@ -245,7 +245,7 @@ export default class EmployeeSystem extends Component {
 
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                this.hideSalesUI();
+                this.hideModal();
             });
         }
 
@@ -311,7 +311,7 @@ export default class EmployeeSystem extends Component {
             const isModalVisible = modalContainer && modalContainer.style.display === 'block';
 
             if (!isClickInside && isModalVisible) {
-                this.hideSalesUI();
+                this.hideModal();
             }
         });
 
@@ -404,7 +404,7 @@ export default class EmployeeSystem extends Component {
         }
     }
 
-    hideSalesUI() {
+    hideModal() {
         this.$target.innerHTML = '';
     }
 }

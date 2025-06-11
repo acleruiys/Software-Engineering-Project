@@ -116,7 +116,7 @@ export default class InventorySystem extends Component {
 
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                this.hideSalesUI();
+                this.hideModal();
             });
         }
 
@@ -183,7 +183,7 @@ export default class InventorySystem extends Component {
             const isModalVisible = modalContainer.style.display === 'block';
 
             if (!isClickInside && isModalVisible) {
-                this.hideSalesUI();
+                this.hideModal();
             }
         });
 
@@ -289,7 +289,7 @@ export default class InventorySystem extends Component {
         }
     }
 
-    hideSalesUI() {
+    hideModal() {
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';
     }

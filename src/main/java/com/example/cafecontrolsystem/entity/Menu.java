@@ -31,15 +31,4 @@ public class Menu {
 
     @Column
     private boolean available = true;
-
-    // 더티체킹
-    public void changeMenu(UpdateMenuDto updateMenuDto){
-        this.price = updateMenuDto.getPrice();
-
-    }
-
-    // 더티체킹
-    public void changeAvailable(){
-        this.available = !this.available;
-    }
 }

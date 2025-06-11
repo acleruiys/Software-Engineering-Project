@@ -5,7 +5,7 @@ export default class MenuSystem extends Component {
         this.state = {
             menuList: [],
             isAdding: false,
-            categoryOptions: [],
+            categoryOptions: ['커피', '디카페인', '논커피/과일라떼', '티', '스무디/프라페', '에이드/주스', '시즌메뉴', '시즌메뉴', '빵', '디저트', '샌드위치', 'MD상품', '세트메뉴', '케이크', '기타'],
             selectedMenuId: null,
             isEditing: false,
             editingMenuId: null,
@@ -20,6 +20,8 @@ export default class MenuSystem extends Component {
                 throw new Error('메뉴를 불러오는데 실패했습니다.');
             }
             const data = await response.json();
+            console.log(1)
+            console.log(data);
             this.state.menuList = data;
             this.renderMenuTable();
         } catch (error) {
@@ -84,9 +86,12 @@ export default class MenuSystem extends Component {
     template() {
         const { menuList, isAdding } = this.state;
         const categoryOptions = this.state.categoryOptions;
+        // console.log(`categoryOptions: ${categoryOptions}`);
         const categorySelectOptions = ['<option value="">카테고리 선택</option>', ...categoryOptions.map(
             option => `<option value="${option}">${option}</option>`
         )].join('');
+
+        // console.log(`categorySelectOptions: ${categorySelectOptions}`);
 
         const menuRows = menuList.map(menu => `
         <tr data-id="${menu.id}">
@@ -184,7 +189,7 @@ export default class MenuSystem extends Component {
 
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                this.hideSalesUI();
+                this.hideModal();
             });
         }
 
@@ -247,7 +252,7 @@ export default class MenuSystem extends Component {
             const isModalVisible = modalContainer.style.display === 'block';
 
             if (!isClickInside && isModalVisible) {
-                this.hideSalesUI();
+                this.hideModal();
             }
         });
 
@@ -357,7 +362,7 @@ export default class MenuSystem extends Component {
         }
     }
 
-    hideSalesUI() {
+    hideModal() {
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';
     }

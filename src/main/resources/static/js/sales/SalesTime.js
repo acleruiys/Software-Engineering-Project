@@ -58,7 +58,7 @@ export default class SalesTime extends Component {
         const closeBtn = this.$target.querySelector('.close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                this.hideSalesUI();
+                this.hideModal();
             });
         }
 
@@ -245,7 +245,7 @@ export default class SalesTime extends Component {
         return summary;
     }
 
-    hideSalesUI() {
+    hideModal() {
         document.querySelector('.overlay').style.display = 'none';
         this.$target.style.display = 'none';
     }
