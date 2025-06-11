@@ -23,7 +23,6 @@ export default class Navbar extends Component {
           <div class="title">회사명</div>
           <ul class="title-ect">
             <li>날짜 및 시간 : <a id="clock">${timeString}</a></li>
-            <li>관리자</li>
           </ul>
         </div>
         <div class="header-right">

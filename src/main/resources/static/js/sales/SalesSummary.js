@@ -175,7 +175,7 @@ export default class SalesSummary extends Component {
         return menus.map((m) => {
             const unit = m.totalQuantity ? m.totalPrice / m.totalQuantity : 0;
             return {
-                category: "-",
+                category: m.category,
                 name: m.menu.trim(),
                 price: unit,
                 qty: m.totalQuantity,

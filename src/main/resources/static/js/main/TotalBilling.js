@@ -26,14 +26,6 @@ export default class TotalBilling extends Component {
     `;
     }
 
-    setEvent() {
-
-    }
-
-    updateValue(item) {
-
-    }
-
     // Billing 컴포넌트에서 호출될 외부 메서드 추가
     updateTotal(orderAmount, discountAmount, orderCount) {
         const billingAmount = Math.max(orderAmount - discountAmount, 0);
