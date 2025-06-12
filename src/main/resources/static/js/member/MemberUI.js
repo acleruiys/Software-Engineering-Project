@@ -373,7 +373,6 @@ class MemberUI {
         editButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const memberId = button.getAttribute('data-id');
-                this.openEditModal(memberId);
             });
         });
 
@@ -382,7 +381,9 @@ class MemberUI {
         deleteButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const phone = button.getAttribute('data-phone');
-                this.confirmDelete(phone);
+                if (confirm('정말로 이 회원을 삭제하시겠습니까?')) {
+                    this.deleteMember(phone);
+                }
             });
         });
 
@@ -410,19 +411,6 @@ class MemberUI {
                 this.closeModal();
             });
         });
-    }
-
-    // 회원 수정 모달 열기
-    openEditModal(memberId) {
-        // 추후 구현 예정
-        console.log(`회원 ID ${memberId} 수정`);
-    }
-
-    // 회원 삭제 확인
-    confirmDelete(phone) {
-        if (confirm('정말로 이 회원을 삭제하시겠습니까?')) {
-            this.deleteMember(phone);
-        }
     }
 
     // 회원 삭제 API 호출

@@ -153,8 +153,6 @@ export default class MenuSystem extends Component {
     `;
     }
 
-    mounted() {}
-
     setEvent() {
         const closeBtn = this.$target.querySelector('.close-btn');
         const addBtn = this.$target.querySelector('.add-btn');
