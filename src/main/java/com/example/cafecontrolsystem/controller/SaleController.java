@@ -88,12 +88,6 @@ public class SaleController {
                                     .orElseThrow(() -> new IllegalArgumentException("Error: 미등록 메뉴 " + saleItemDto.getMenuId())))
                             .price(saleItemDto.getPrice())
                             .quantity(saleItemDto.getQuantity())
-                            .menuOption(saleItemDto.getOptionId() == null ? "" :
-                                    saleItemDto.getOptionId().stream()
-                                            .map(id -> optionRepository.findNameById(id).orElseThrow(
-                                                    () -> new IllegalArgumentException("Error: 미등록 옵션 " + id))
-                                            )
-                                            .collect(Collectors.joining(" ")))
                             .build());
                 });
 
@@ -145,11 +139,6 @@ public class SaleController {
         // member가 null일 때 에러 처리
         if(member == null){
             throw new IllegalArgumentException("Error: MemberId must not be null when using POINT payment");
-        }
-
-        // member point가 가격보다 낮을 경우 에러 처리
-        else if(member.getPoints() < salePaymentDto.getPrice()){
-            throw new IllegalArgumentException("Error: Member point must not be less than price");
         }
         else {
             paymentRepository.save(Payment.builder()
