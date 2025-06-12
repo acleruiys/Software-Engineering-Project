@@ -103,7 +103,7 @@ public class MemberController {
     }
     // 회원 삭제
     @DeleteMapping("/phone/{phone}")
-    public ResponseEntity<?> deleteMember(@PathVariable String phone) {
+    public ResponseEntity<?> deleteMember(@PathVariable(name = "phone") String phone) {
         try {
             boolean deleted = deleteMemberByPhone(phone);
             if (deleted) {
