@@ -153,6 +153,8 @@ export default class MenuSystem extends Component {
     `;
     }
 
+
+
     setEvent() {
         const closeBtn = this.$target.querySelector('.close-btn');
         const addBtn = this.$target.querySelector('.add-btn');
@@ -172,10 +174,14 @@ export default class MenuSystem extends Component {
                     const price = Number(this.$target.querySelector('.input-price').value);
                     const status = this.$target.querySelector('.input-status').value;
 
-                    if (!name || !category || !price || !status) {
-                        alert("모든 값을 입력하세요.");
-                        return;
+                    const isNull = (name, category, price, status) => {
+                        if (!name || !category || !price || !status) {
+                            alert("모든 값을 입력하세요.");
+                            return;
+                        }
                     }
+
+                    isNull(name, category, price, status);
 
                     const newMenu = { name, category, price, status };
                     this.addMenu(newMenu);
@@ -228,6 +234,15 @@ export default class MenuSystem extends Component {
                     const category = this.$target.querySelector('.input-category').value;
                     const price = Number(this.$target.querySelector('.input-price').value);
                     const status = this.$target.querySelector('.input-status').value;
+
+                    const isNull = (name, category, price, status) => {
+                        if (!name || !category || !price || !status) {
+                            alert("모든 값을 입력하세요.");
+                            return;
+                        }
+                    }
+
+                    isNull(name, category, price, status);
 
                     if (!name || !category || !price || !status) {
                         alert("모든 값을 입력하세요.");

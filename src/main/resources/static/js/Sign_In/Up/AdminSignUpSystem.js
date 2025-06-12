@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function login() {
     const loginForm = document.getElementById('loginForm');
     
     loginForm.addEventListener('submit', function(e) {

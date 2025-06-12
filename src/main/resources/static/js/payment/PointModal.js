@@ -114,7 +114,7 @@ export default class Payment {
                 if (res.ok && result.valid) {
 
                     this.target.querySelector('#memberPwd').remove();
-                    this.target.querySelaector('#verifyPwdBtn').remove();
+                    this.target.querySelector('#verifyPwdBtn').remove();
                     document.getElementById('pointInputArea').style.display = 'block';
                 } else {
                     alert(result.message || '비밀번호가 일치하지 않습니다.');

@@ -32,8 +32,13 @@ public class MenuController {
                     .toList();
         }
         else{
-            CategoryType categoryType = CategoryType.valueOf(category.toUpperCase());
-            menuDtos = getMenusByCategory(categoryType).stream().map(this::convertToMenuDto).toList();
+            try {
+                CategoryType categoryType = CategoryType.valueOf(category.toUpperCase());
+                menuDtos = getMenusByCategory(categoryType).stream().map(this::convertToMenuDto).toList();
+            }
+            catch(IllegalArgumentException e){
+                throw new IllegalArgumentException("Error: 사용하지 않는 카테고리입니다" + category.toUpperCase());
+            }
         }
         return ResponseEntity.ok(menuDtos);
     }
@@ -45,7 +50,7 @@ public class MenuController {
     }
 
     @PostMapping
-    public ResponseEntity<MenuDto> addMenu(@RequestBody MenuDto menuDto) {
+    public ResponseEntity<MenuDto> addMenuEntity(@RequestBody MenuDto menuDto) {
         if(menuRepository.findByName(menuDto.getName()).isPresent()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
