@@ -60,7 +60,7 @@ public class SaleController {
             }
     )
     @PostMapping("/summary")
-    public ResponseEntity<ShowSaleSummaryDto> summary(@RequestBody SaleSummaryDateDto saleSummaryDateDto){
+    public ResponseEntity<ShowSaleSummaryDto> summary(@RequestBody SaleSummaryDateDto saleSummaryDateDto) throws IllegalAccessException {
         return ResponseEntity.ok(showSaleSummary(saleSummaryDateDto));
     }
 
@@ -190,8 +190,12 @@ public class SaleController {
     }
 
 
-    public ShowSaleSummaryDto showSaleSummary(SaleSummaryDateDto saleSummaryDateDto){
+    public ShowSaleSummaryDto showSaleSummary(SaleSummaryDateDto saleSummaryDateDto) throws IllegalAccessException {
         List<Object[]> totalInfo = saleRepository.getTotalmember(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate());
+
+        if ((Long) totalInfo.getFirst()[0] == 0) {
+            throw new IllegalAccessException("Error: 해당 기간에 판매 내역이 없습니다.");
+        }
         return ShowSaleSummaryDto.builder()
                 .totalMember((Long) totalInfo.getFirst()[0])
                 .totalPrice((Long) totalInfo.getFirst()[1])
@@ -205,6 +209,11 @@ public class SaleController {
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<String> IllegalArgument(IllegalArgumentException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = IllegalAccessException.class)
+    public ResponseEntity<String> IllegalAccessException(IllegalAccessException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
 }
