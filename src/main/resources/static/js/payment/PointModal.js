@@ -173,10 +173,5 @@ export default class Payment {
 
     }
 
-    updateMemberDisplay() {
-        const event = new CustomEvent('memberPointsUpdated', {
-            detail: this.selectedMember
-        });
-        document.dispatchEvent(event);
-    }
+
 }

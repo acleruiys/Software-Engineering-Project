@@ -90,7 +90,9 @@ public class SaleController {
                             .quantity(saleItemDto.getQuantity())
                             .menuOption(saleItemDto.getOptionId() == null ? "" :
                                     saleItemDto.getOptionId().stream()
-                                            .map(id -> optionRepository.findNameById(id).orElseThrow(() -> new IllegalArgumentException("Error: 미등록 옵션 " + id)))
+                                            .map(id -> optionRepository.findNameById(id).orElseThrow(
+                                                    () -> new IllegalArgumentException("Error: 미등록 옵션 " + id))
+                                            )
                                             .collect(Collectors.joining(" ")))
                             .build());
                 });
