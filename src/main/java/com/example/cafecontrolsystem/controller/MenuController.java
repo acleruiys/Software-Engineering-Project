@@ -46,8 +46,8 @@ public class MenuController {
 
     @PostMapping
     public ResponseEntity<MenuDto> addMenu(@RequestBody MenuDto menuDto) {
-        if(menuRepositry.findByName(menuEntity.getName(menuDto.getName()))){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: 존재하는 메뉴명 입니다. " + menuDto.getname());
+        if(menuRepository.findByName(menuDto.getName()).isPresent()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         Menu menu = convertToMenuEntity(menuDto);
         Menu savedMenu = saveMenu(menu);
