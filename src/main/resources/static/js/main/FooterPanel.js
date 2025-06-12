@@ -100,13 +100,10 @@ export default class FooterPanel extends Component {
             { label: "회원명", value: name },
             { label: "잔여포인트", value: `${parseInt(points).toLocaleString()}P` }
         ];
-        
+
         // UI 업데이트
         this.render();
         this.setEvent();
-        
-        // 회원 선택 알림
-        alert(`회원 ${name}님이 선택되었습니다.`);
     }
 
     // 포인트 업데이트 이벤트 처리
