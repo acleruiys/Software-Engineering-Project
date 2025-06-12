@@ -20,8 +20,6 @@ export default class MenuSystem extends Component {
                 throw new Error('메뉴를 불러오는데 실패했습니다.');
             }
             const data = await response.json();
-            console.log(1)
-            console.log(data);
             this.state.menuList = data;
             this.renderMenuTable();
         } catch (error) {
@@ -39,13 +37,18 @@ export default class MenuSystem extends Component {
                 },
                 body: JSON.stringify(menuData)
             });
+
             if (!response.ok) {
-                throw new Error('메뉴 추가에 실패했습니다.');
+                if (response.status === 401) {
+                    alert('중복된 메뉴명입니다.');
+                } else {
+                    throw new Error('메뉴 추가에 실패했습니다.');
+                }
             }
+
             await this.fetchMenus();
         } catch (error) {
-            console.error('메뉴 추가 오류:', error);
-            alert('메뉴 추가에 실패했습니다.');
+            alert(error.message || '메뉴 추가에 실패했습니다.');
         }
     }
 
@@ -86,12 +89,9 @@ export default class MenuSystem extends Component {
     template() {
         const { menuList, isAdding } = this.state;
         const categoryOptions = this.state.categoryOptions;
-        // console.log(`categoryOptions: ${categoryOptions}`);
         const categorySelectOptions = ['<option value="">카테고리 선택</option>', ...categoryOptions.map(
             option => `<option value="${option}">${option}</option>`
         )].join('');
-
-        // console.log(`categorySelectOptions: ${categorySelectOptions}`);
 
         const menuRows = menuList.map(menu => `
         <tr data-id="${menu.id}">

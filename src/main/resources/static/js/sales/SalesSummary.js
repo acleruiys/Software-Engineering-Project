@@ -112,12 +112,12 @@ export default class SalesSummary extends Component {
 
     bindEvents() {
         this.$target.addEventListener("click", (e) => {
-            if (e.target.closest(".close-btn")) return this.hide();
+            if (e.target.closest(".close-btn")) return this.hideModal();
             if (e.target.closest(".search-btn")) return this.fetchSalesData();
         });
     }
 
-    hide() {
+    hideModal() {
         document.querySelector(".overlay")?.style.setProperty("display", "none");
         this.$target.style.display = "none";
     }
@@ -144,7 +144,15 @@ export default class SalesSummary extends Component {
                 headers: { "Content-Type": "application/json" },
                 body:    JSON.stringify(payload),
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) {
+                console.log(res.status)
+                if(res.status === 401){
+                    alert("매출 데이터가 없습니다");
+                    return;
+                } else {
+                    throw new Error('매출 조회에 실패했습니다.');
+                }
+            };
 
             const api          = await res.json();
             const summaryItems = this.buildSummaryItems(api);
@@ -153,7 +161,7 @@ export default class SalesSummary extends Component {
             this.setState({ summaryItems, saleData, dateRange: { start, end } });
         } catch (err) {
             console.error(err);
-            alert("매출 데이터를 불러오는 데 실패했습니다.");
+            alert("매출 조회에 실패했습니다.");
         }
     }
 
