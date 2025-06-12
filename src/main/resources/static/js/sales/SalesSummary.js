@@ -124,25 +124,31 @@ export default class SalesSummary extends Component {
 
     async fetchSalesData() {
         const start = this.$target.querySelector(".start-date")?.value;
-        const end = this.$target.querySelector(".end-date")?.value;
+        const end   = this.$target.querySelector(".end-date")?.value;
+
         if (!start || !end) return alert("조회 기간을 선택해 주세요.");
+
+        if (new Date(start) > new Date(end)) {
+            alert("시작 날짜가 종료 날짜보다 늦습니다.");
+            return;
+        }
 
         const payload = {
             startDate: `${start}T00:00:00Z`,
-            endDate: `${end}T23:59:59Z`,
+            endDate:   `${end}T23:59:59Z`,
         };
 
         try {
             const res = await fetch("/api/sales/summary", {
-                method: "POST",
+                method:  "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
+                body:    JSON.stringify(payload),
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-            const api = await res.json();
+            const api          = await res.json();
             const summaryItems = this.buildSummaryItems(api);
-            const saleData = this.buildSaleData(api);
+            const saleData     = this.buildSaleData(api);
 
             this.setState({ summaryItems, saleData, dateRange: { start, end } });
         } catch (err) {
@@ -150,6 +156,7 @@ export default class SalesSummary extends Component {
             alert("매출 데이터를 불러오는 데 실패했습니다.");
         }
     }
+
 
     buildSummaryItems({ totalMember = 0, menus = [], payments = [] }) {
         const totalSales = menus.reduce((sum, m) => sum + +m.totalPrice, 0);

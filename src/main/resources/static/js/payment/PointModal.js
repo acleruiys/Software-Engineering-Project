@@ -97,7 +97,7 @@ export default class Payment {
         `;
 
         this.target.querySelector('#verifyPwdBtn').addEventListener('click', async () => {
-            const inputPwd = parseInt(this.target.querySelector('#memberPwd').value);
+            const inputPwd = this.target.querySelector('#memberPwd').value;
             if (!inputPwd || inputPwd.toString().length !== 4) {
                 alert('4자리 숫자 비밀번호를 입력해주세요.');
                 return;
@@ -107,14 +107,14 @@ export default class Payment {
                 const res = await fetch(`/api/members/${this.selectedMember.memberId}/verify-password`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: inputPwd })
+                    body: JSON.stringify({ password: parseInt(inputPwd) }),
                 });
 
                 const result = await res.json();
                 if (res.ok && result.valid) {
 
                     this.target.querySelector('#memberPwd').remove();
-                    this.target.querySelector('#verifyPwdBtn').remove();
+                    this.target.querySelaector('#verifyPwdBtn').remove();
                     document.getElementById('pointInputArea').style.display = 'block';
                 } else {
                     alert(result.message || '비밀번호가 일치하지 않습니다.');
@@ -164,7 +164,7 @@ export default class Payment {
         this.billing.updateDiscountAmount(point);
         this.updateMemberDisplay();
 
-            // 전액 포인트 결제는 바로 처리
+        // 전액 포인트 결제는 바로 처리
         import('./HandlePayment.js').then(({ default: HandlePayment }) => {
             const handler = new HandlePayment({ appInstance: window.__app__ });
             handler.process('POINT');
@@ -173,5 +173,10 @@ export default class Payment {
 
     }
 
-
+    updateMemberDisplay() {
+        const event = new CustomEvent('memberPointsUpdated', {
+            detail: this.selectedMember
+        });
+        document.dispatchEvent(event);
+    }
 }
