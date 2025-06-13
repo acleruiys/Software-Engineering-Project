@@ -190,7 +190,7 @@ public class SaleController {
                 .totalPrice((Long) totalInfo.getFirst()[1])
                 .payments(saleRepository.findPaymentByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()))
                 .menus(saleRepository.findSummaryMenuByDate(saleSummaryDateDto.getStartDate(), saleSummaryDateDto.getEndDate()).stream()
-                        .map(arr -> new SummaryMenuDto((String) (arr[0] + " " + arr[1]), (String) arr[2], ((BigDecimal) arr[3]).longValue(), ((BigDecimal) arr[4]).longValue())).collect(Collectors.toList()))
+                        .map(arr -> new SummaryMenuDto((String) (arr[0]), (String) arr[2], ((BigDecimal) arr[3]).longValue(), ((BigDecimal) arr[4]).longValue())).collect(Collectors.toList()))
                 .build();
     }
 
